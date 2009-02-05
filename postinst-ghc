@@ -1,0 +1,21 @@
+GHC_PKG=#GHCLIBDIR#/bin/ghc-pkg 
+CONFIGFILE=#PKGLIBDIR#/installed-pkg-config
+
+
+case "$1" in
+    abort-deconfigure|abort-remove|abort-upgrade|configure)
+	OLDVERSIONS=`$GHC_PKG --global field #CABALNAME# version 2> /dev/null | sed "s/version: //"`
+	for VERSION in $OLDVERSIONS ; do
+	    $GHC_PKG --global hide #CABALNAME#-$VERSION || true
+	done
+	$GHC_PKG --global --auto-ghci-libs register $CONFIGFILE
+	;;
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+	;;
+esac
+
+
+
+# arch-tag: haskell-devscripts generic GHC postinst template

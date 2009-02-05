@@ -1,0 +1,28 @@
+GHC_PKG=#GHCLIBDIR#/bin/ghc-pkg 
+CONFIGFILE=#PKGLIBDIR#/installed-pkg-config
+
+
+case "$1" in
+    deconfigure|remove)
+	$GHC_PKG unregister --force-files #CABALNAME#-#CABALVERSION# || true
+	rm -vf #PKGLIBDIR#/HS#CABALNAME#-#CABALVERSION#.o
+	OLDPACKAGE=`$GHC_PKG --global latest #CABALNAME# 2> /dev/null` || true
+	if [ -n "$OLDPACKAGE" ] ; then
+	    $GHC_PKG expose $OLDPACKAGE || true
+	fi
+	
+        ;;
+    upgrade)
+	$GHC_PKG unregister #CABALNAME#-#CABALVERSION#
+	rm -vf #PKGLIBDIR#/HS#CABALNAME#-#CABALVERSION#.o
+	;;
+    failed-upgrade)
+        ;;
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+	;;
+esac
+
+
+# arch-tag: haskell-devscripts generic GHC prerm template

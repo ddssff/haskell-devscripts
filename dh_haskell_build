@@ -1,0 +1,207 @@
+#!/usr/bin/perl -w
+# arch-tag: Debhelper script for Haskell
+#
+# Copyright (C) 2004-2006 John Goerzen <jgoerzen@complete.org>
+#           (C) 2006-2007 Arjan Oosting <arjan@debian.org>
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+=head1 NAME
+
+dh_haskell - Builds Cabalized libraries, calculates Haskell dependencies, and adds postinst and prerm Haskell scripts
+
+=cut
+
+use strict;
+use Cwd;
+use File::Find;
+use Debian::Debhelper::Dh_Lib;
+
+use lib '/usr/share/haskell-devscripts/';
+#use lib '/home/arjan/checkout/haskell-devscripts/';
+use Dh_Haskell;
+
+=head1 SYNOPSIS
+
+B<dh_haskell> [S<I<debhelper options>>]
+
+B<dh_haskell_prep> [S<I<debhelper options>>]
+
+B<dh_haskell_configure> [S<I<debhelper options>>]
+
+B<dh_haskell_build> [S<I<debhelper options>>]
+
+B<dh_haskell_install> [S<I<debhelper options>>]
+
+B<dh_haskell_buildinst> [S<I<debhelper options>>]
+
+B<dh_haskell_depends> [S<I<debhelper options>>]
+
+=head1 DESCRIPTION
+
+dh_haskell is a debhelper program that helps with building Haskell libraries.
+
+It does several things.  It can generate postinst and prerm scripts when
+necessary.  It automates building libraries for the different supported
+Haskell systems in Debian.  It generates substvars for your control
+file so that the library packages depend on the appropriate packages.
+In short, it can drive the entire process.
+
+=head1 REQUIREMENTS
+
+dh_haskell assumes that your packages are adhering to the draft Haskell policy.
+
+Your control file must build the binary library files using packages
+named libI<type>-I<name>-I<variation>, where I<type> is ghc5, ghc6, or
+nhc98; I<name> is the name of your package; and I<variation> is dev or
+prof. These packages should be Architecture: any.
+
+The I<prof> package contains profiling enabled libraries. Currently
+only GHC supports profiling. Due to restrictions of the GHC compiler,
+if you provide a I<dev> package you should also provide a
+corresponding I<prof> package.
+
+If you build a Hugs package, name it libhugs-I<name>.  However, dh_haskell
+will also accept libhugs-I<name>-dev for consistency.  Most Hugs packages
+should be Architecture: all.  If your package uses foreign methods,
+maybe it should be Architecture: any (please let me know if you have
+an answer to that).
+
+dh_haskell figures out how to build your package based on the I<type>,
+so you must adhere to this naming scheme.
+
+dh_haskell assumes that the Haskell Cabal (see www.haskell.org/cabal) can
+be used to build your package.  It obtains package name and version
+information from the Cabal Setup.Description file.
+
+=head1 HOW TO PACKAGE A HASKELL LIBRARY
+
+Start from a basic debian/ directory.  Add entries to Build-Depends for
+haskell-devscripts and the compilers for any binaries you will build.
+
+In the clause in control for each binary package, make sure to add
+${haskell:Depends} to the Depends: line.
+
+In rules, in the install target, add dh_haskell.  Your build and configure
+targets should be empty.
+
+Remember that you should add -a to all debhelper calls for multi-binary
+packages.  That goes for dh_haskell too.
+
+Your clean target should contain:
+
+C<-./setup clean>
+C<--rm -rf setup Setup.hi Setup.ho Setup.o .*config* dist>
+
+That's it.  dh_haskell does the rest.
+
+=head1 EXAMPLES
+
+See the Debian source packages for haskelldb, haskell-filepath, haskell-hsql, 
+haskell-http etc.
+
+also see:
+
+darcs get --partial http://www.n-heptane.com/nhlab/repos/cabalDebianTemplate/
+
+=cut
+
+my @buildflags;
+my @haddockflags;
+my @savedargv = @ARGV;
+
+init();
+
+foreach (@ARGV) {
+    if (cabal_version_ge("1.2")) {
+	if (m/^\w*-option=.*$/) {
+	    push @buildflags , "--$_";
+	    next;
+	} elsif (m/^\w*-options=.*$/) {
+	    push @buildflags , "--$_";
+	    next;
+	} elsif (m/^html-location=.*$/){
+	    push @haddockflags , "--$_";
+	    next;
+	} elsif (m/^executables$/) {
+	    push @haddockflags , "--$_";
+	    next;
+	} elsif (m/^css=.*$/) {
+	    push @haddockflags , "--$_";
+	    next;
+	} elsif (m/^hyperlink-source$/) {
+	    push @haddockflags , "--$_";
+	    next;
+	} elsif (m/^hscolour-css=.*$/) {
+	    push @haddockflags , "--$_";
+	    next;
+	}
+    }
+    if (m/^hoogle$/) {
+	push @haddockflags , "--$_";
+    } else {
+	error("Unrecognized argument: $_\n");
+    }
+}
+
+foreach my $package (@{$dh{DOPACKAGES}}) {
+    my $tmp = tmpdir($package);
+    if (is_handled_package($package)) {
+	my $pkgtype = type_of_package($package);
+	my $builddir = builddir($package);
+
+	print "\n ****************************************** \n";
+	print " BUILDING $package FOR $pkgtype";
+	print "\n ****************************************** \n\n";
+
+	if (! -e "$builddir/.setup-config" &&
+	    ! -e "$builddir/dist/setup-config" ) {
+	    print "Running missing dh_haskell_configure call...\n";
+	    doit ("dh_haskell_configure", @savedargv);
+	    print "\n ****************************************** \n";
+	    print " CONTINUE BUILDING $package FOR $pkgtype";
+	    print "\n ****************************************** \n\n";
+	}
+
+
+	my $olddir = getcwd();
+	chdir($builddir);
+	if ( $pkgtype eq "haddock" ) {
+	    doit("./setup", "haddock", @haddockflags);
+	} else {
+	    doit("./setup", "build", @buildflags);
+	}
+	chdir($olddir);
+    }
+}
+
+=head1 BUGS
+
+hugs, ghc6, and ghc5 are the only supported targets at the moment.  Cabal does
+not yet support nhc98.  Note though that there are some known bugs in
+Cabal relating to ghc5 support.
+
+=head1 SEE ALSO
+
+L<debhelper(7)>
+
+=head1 AUTHOR
+
+John Goerzen <jgoerzen@complete.org>
+
+Based on ideas in dh_python by Josselin Mouette <joss@debian.org>
+
+=cut

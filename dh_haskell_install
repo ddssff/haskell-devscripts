@@ -1,0 +1,203 @@
+#!/usr/bin/perl -w
+# arch-tag: Debhelper script for Haskell
+#
+# Copyright (C) 2004-2006 John Goerzen <jgoerzen@complete.org>
+#           (C) 2006-2007 Arjan Oosting <arjan@debian.org>
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+use strict;
+use Cwd;
+use File::Find;
+use Debian::Debhelper::Dh_Lib;
+
+use lib '/usr/share/haskell-devscripts/';
+# use lib '/home/arjan/debian/haskell-devscripts/';
+use Dh_Haskell;
+
+my $haddockpkg;
+my $cabalname = getcabalname();
+my $cabalnameversion = getcabalnameversion();
+
+sub remove_emptydir {
+    my $dir = $_;
+
+    if (-d $dir) {
+	opendir DH, $dir or die "Cannot open '$dir' : $!";
+	foreach my $file (readdir DH) {
+	    next if $file eq "." or $file eq "..";
+	    return;
+	}
+	doit("rmdir", "$File::Find::name");
+    }
+}
+
+sub remove_non_prof_file {
+    my $file = $_;
+
+    if (-f $file && ! ($file =~ /(_p\.a|\.p_hi)$/)) {
+	doit("rm", "-f", "$File::Find::name");
+    }
+}
+
+sub package_description {
+    if (cabal_version_ge("1.2")) {
+	doit("./setup", "register" , "--gen-pkg-config");
+	return $cabalnameversion . ".conf";
+    } else {
+	return ".installed-pkg-config" ;
+    }
+}
+
+init();
+
+my $cwd = getcwd();
+
+if (! -e "$cwd/debian/control") {
+    error("\"debian/control\" not found. Are you sure you are in the correct "
+	  . "directory?");
+}
+
+build_setup();
+
+foreach my $pkg (&getpackages("indep")) {
+    if (&is_handled_package($pkg) &&
+	&type_of_package($pkg) eq "haddock") {
+	$haddockpkg = $pkg
+    }
+}
+
+
+foreach my $package (@{$dh{DOPACKAGES}}) {
+    my $tmp = "$cwd/" . tmpdir($package);
+    if (is_handled_package($package)) {
+	my $pkgtype = type_of_package($package);
+
+	print "\n ****************************************** \n";
+	print " INSTALLING $package FOR $pkgtype";
+	print "\n ****************************************** \n\n";
+
+	my $builddir = builddir($package);
+	chdir($builddir);
+
+	if ($pkgtype eq "hugs") {
+	    doit("install", "-d", "$tmp/usr/lib/hugs/packages/$cabalname");
+	    doit("./setup", "copy", "--destdir=$tmp");
+	    # remove LICENSE file and empty directories
+	    doit("rm", "-f", "$tmp/usr/share/doc/$cabalnameversion/LICENSE");
+	    finddepth({wanted => \&remove_emptydir}, "$tmp/usr/share/doc")
+		unless $dh{NO_ACT};
+	} elsif ($pkgtype eq "ghc6") {
+	    my $pkgdir = getcabalbasepath($pkgtype);
+	    doit("install", "-d", "$tmp$pkgdir");
+	    doit("./setup", "copy", "--destdir=$tmp");
+	    # Remove installed docs as the go into a separete package
+	    doit("rm", "-rf", "$tmp/usr/lib/haskell-packages/ghc6/share/"
+		 . "$cabalnameversion/doc/");
+	    doit("rm", "-rf", "$tmp/usr/lib/haskell-packages/ghc6/share/"
+		 . "doc/$cabalnameversion/");
+	    # Remove empty directories from package
+	    finddepth({wanted => \&remove_emptydir}, "$tmp/usr/lib")
+		unless $dh{NO_ACT};
+
+	    my $inconfig = package_description();
+
+	    if ( ! $dh{NO_ACT}) {
+		open INCONFIG , "<", $inconfig or
+		    die "Cannot read $inconfig: $!";
+		open OUTCONFIG, ">", "$tmp" .
+		    getcabalpkglibpath($pkgtype) . "/installed-pkg-config"
+		    or die "Cannot write installed-pkg-config: $!";
+		my $field;
+		while (<INCONFIG>) {
+		    chomp;
+		    my $out;
+		    if (/([^\s:]+):(.*)/) {
+			$field = $1;
+			print OUTCONFIG "$field:";
+			$_ = $2;
+		    }
+		    if ($field =~ /\w+-dirs/) {
+			s/^\s+//;
+			s/\s+$//;
+			foreach my $dir (split(/\s+/, $_)) {
+			    if ($dir =~ /^$pkgdir/ ) {
+				if ( -d "$tmp$dir" ) {
+				    print OUTCONFIG " $dir";
+				} else {
+				    print "Removing non-existing directory "
+					. "$dir from the $field field.\n";
+				}
+			    } else {
+				if ( ! -d "$dir") {
+				    print "WARNING: package description file "
+					. "mentions non-existing directory \'"
+					. $dir . "\'\n";
+				}
+				print OUTCONFIG " $dir";
+			    }
+			}
+			print OUTCONFIG "\n";
+		    } elsif ($field eq "haddock-interfaces") {
+			if (defined($haddockpkg)) {
+			    if(cabal_version_ge(1.2)) {
+				s%.*/doc/$cabalnameversion/html/(.*\.haddock)%
+                             \ /usr/share/doc/$haddockpkg/html/$cabalname/$1%x;
+			    } else {
+				s%.*/doc(/html/.*\.haddock)%
+                             \ /usr/share/doc/$haddockpkg$1%x;
+			    }
+			    print OUTCONFIG "$_\n";
+			} else {
+			    print OUTCONFIG "\n";
+			}
+		    } elsif ($field eq "haddock-html") {
+			if (defined($haddockpkg)) {
+			    if(cabal_version_ge(1.2)) {
+				s%.*/doc/$cabalnameversion/html%
+                                \ /usr/share/doc/$haddockpkg/html/$cabalname%x;
+			    } else {
+				s%.*/doc(/html)% /usr/share/doc/$haddockpkg$1%;
+			    }
+			    print OUTCONFIG "$_\n";
+			} else {
+			    print OUTCONFIG "\n";
+			}
+		    } else {
+			print OUTCONFIG "$_\n";
+		    }
+		}
+		close INCONFIG;
+		close OUTCONFIG;
+	    }
+	} elsif ($pkgtype eq "ghc6-prof") {
+	    doit("install", "-d", "$tmp" . getcabalbasepath($pkgtype));
+	    doit("./setup", "copy", "--destdir=$tmp");
+	    # Remove the share directory and all none .p_hi and .p_a files.
+	    doit("rm", "-rf", "$tmp/usr/lib/haskell-packages/ghc6/share/");
+	    doit("rm", "-rf", "$tmp/usr/lib/haskell-packages/ghc6/lib/"
+		 . "$cabalnameversion/include");
+	    finddepth({wanted => \&remove_non_prof_file}, "$tmp/usr/lib")
+		unless $dh{NO_ACT};
+	    finddepth({wanted => \&remove_emptydir}, "$tmp/usr/lib")
+		unless $dh{NO_ACT};
+	} elsif ($pkgtype eq "haddock" ) {
+	    doit("install", "-d", "$tmp" . "/usr/share/doc/$package");
+	    doit("cp", "-ar", "dist/doc/html", "$tmp/usr/share/doc/$package");
+	}
+	chdir($cwd);
+    }
+}

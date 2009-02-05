@@ -1,0 +1,24 @@
+Source: haskell-devscripts
+Section: devel
+Priority: optional
+Maintainer: Arjan Oosting <arjan@debian.org>
+Uploaders: John Goerzen <jgoerzen@complete.org>
+Build-Depends: debhelper (>= 4.0.0)
+Build-Depends-Indep: perl
+Standards-Version: 3.8.0
+Vcs-Svn: svn://svn.debian.org/svn/pkg-haskell/packages/haskell-devscripts/trunk
+Vcs-Browser: http://svn.debian.org/wsvn/pkg-haskell/packages/haskell-devscripts/trunk
+
+Package: haskell-devscripts
+Architecture: all
+Depends: dctrl-tools, debhelper, ghc6 (>= 6.4), xutils-dev
+Description: Tools to help Debian developers build Haskell packages
+ This package provides a collection of scripts to help build Haskell
+ packages for Debian.  Unlike haskell-utils, this package is not
+ expected to be installed on the machines of end users.
+ .
+ This package is designed to support Cabalized Haskell libraries.  It
+ is designed to build a library for each supported Debian compiler or
+ interpreter, generate appropriate postinst/prerm files for each one,
+ generate appropriate substvars entries for each one, and install the
+ package in the Debian temporary area as part of the build process.

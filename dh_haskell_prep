@@ -1,0 +1,84 @@
+#!/usr/bin/perl -w
+# arch-tag: Debhelper script for Haskell
+#
+# Copyright (C) 2004-2006 John Goerzen <jgoerzen@complete.org>
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+use strict;
+use File::Find;
+use Debian::Debhelper::Dh_Lib;
+
+use lib '/usr/share/haskell-devscripts/';
+#use lib '/home/arjan/checkout/haskell-devscripts/';
+use Dh_Haskell;
+
+init();
+
+print "Generating meta-information...\n";
+
+foreach my $package (@{$dh{DOPACKAGES}}) {
+	my $tmp = tmpdir($package);
+
+
+	if (is_handled_package($package)) {
+	    # substitute ${haskell:Depends}
+	    my $pkgtype = type_of_package($package);
+	    delsubstvar($package, "haskell:Depends");
+	    addsubstvar($package, "haskell:Depends", 
+			$pkgtype, ">= " . upstream_version(version_of_type($pkgtype)));
+	    if (! ($pkgtype eq "hugs")) {
+		addsubstvar($package, "haskell:Depends",
+			    $pkgtype, "<< " . upstream_version(version_of_type($pkgtype)) . "-999");
+	    }
+
+	    # add postinst/prerm scripts
+	    if ($pkgtype eq "ghc6") {
+		# Build scripts
+		my $ghcver = "ghc-" . upstream_version(version_of_type($pkgtype));
+		my $ghclibdir = `/usr/bin/ghc6 --print-libdir` or die "Could not determine  GHC library directory: $!";
+		my $pkglibdir = getcabalpkglibpath($pkgtype);
+		my $cabalname = getcabalname();
+		my $cabalversion = getcabalversion();
+
+		chomp $ghclibdir;
+
+		print "$ghcver $pkglibdir $cabalname $cabalversion\n";
+		autoscript($package,"postinst","postinst-ghc",
+			   "s%#GHCLIBDIR#%$ghclibdir%;s%#PKGLIBDIR#%$pkglibdir%;s%#CABALNAME#%$cabalname%;s%#CABALVERSION#%$cabalversion%");
+		autoscript($package,"prerm","prerm-ghc",
+			   "s%#GHCLIBDIR#%$ghclibdir%;s%#PKGLIBDIR#%$pkglibdir%;s%#CABALNAME#%$cabalname%;s%#CABALVERSION#%$cabalversion%");
+	    }
+	}
+
+	if (type_of_package($package) eq "ghc6-prof") {
+	    # substitute ${haskell:Depends} for profiling package
+	    my $pkgtype = type_of_package($package);
+	    delsubstvar($package, "haskell:Depends");
+	    addsubstvar($package, "haskell:Depends",
+			$pkgtype, ">= " .
+			upstream_version(version_of_type($pkgtype)));
+	    addsubstvar($package, "haskell:Depends",
+			$pkgtype, "<< " .
+			upstream_version(version_of_type($pkgtype)) . "-999");
+	    # Call isnative becuase it sets $dh{VERSION}
+	    # as a side effect.
+	    isnative($package);
+	    addsubstvar($package, "haskell:Depends",
+			dev_name($package), "= " . $dh{VERSION});
+
+	}
+}
