@@ -131,7 +131,10 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 	chdir($builddir);
 
 	if ($pkgtype eq "hugs") {
-	    doit("./setup", "configure", "--hugs", "--prefix=/usr", @flags );
+            # --extra-include-dirs needed cause hsc2hs does not load the Hugs
+            # includes.
+	    doit("./setup", "configure", "--hugs", "--prefix=/usr",
+                 "--extra-include-dirs=/usr/lib/hugs/include", @flags );
 	} elsif ($pkgtype eq "ghc6" || $pkgtype eq "haddock" ) {
 	    doit("./setup", "configure",
 		 "--prefix=" . getcabalbasepath($pkgtype),
