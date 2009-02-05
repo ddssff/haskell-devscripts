@@ -41,7 +41,7 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 			$pkgtype, ">= " . upstream_version(version_of_type($pkgtype)));
 	    if (! ($pkgtype eq "hugs")) {
 		addsubstvar($package, "haskell:Depends",
-			    $pkgtype, "<< " . upstream_version(version_of_type($pkgtype)) . "-999");
+			    $pkgtype, "<< " . upstream_version(version_of_type($pkgtype)) . "+");
 	    }
 
 	    # add postinst/prerm scripts
@@ -72,7 +72,7 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 			upstream_version(version_of_type($pkgtype)));
 	    addsubstvar($package, "haskell:Depends",
 			$pkgtype, "<< " .
-			upstream_version(version_of_type($pkgtype)) . "-999");
+			upstream_version(version_of_type($pkgtype)) . "+");
 	    # Call isnative becuase it sets $dh{VERSION}
 	    # as a side effect.
 	    isnative($package);
