@@ -32,7 +32,6 @@ use File::Path;
 use Debian::Debhelper::Dh_Lib;
 
 use lib '/usr/share/haskell-devscripts/';
-#use lib '/home/arjan/checkout/haskell-devscripts/';
 use Dh_Haskell;
 
 =head1 SYNOPSIS

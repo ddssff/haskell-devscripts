@@ -23,7 +23,6 @@ use File::Find;
 use Debian::Debhelper::Dh_Lib;
 
 use lib '/usr/share/haskell-devscripts/';
-#use lib '/home/arjan/checkout/haskell-devscripts/';
 use Dh_Haskell;
 
 init();
