@@ -8,7 +8,7 @@ case "$1" in
 	for VERSION in $OLDVERSIONS ; do
 	    $GHC_PKG --global hide #CABALNAME#-$VERSION || true
 	done
-	$GHC_PKG --global --auto-ghci-libs register $CONFIGFILE
+	$GHC_PKG --global register $CONFIGFILE
 	;;
     *)
         echo "postinst called with unknown argument \`$1'" >&2
