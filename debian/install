@@ -9,3 +9,4 @@ dh_haskell_clean        usr/bin/
 prerm-ghc		usr/share/debhelper/autoscripts/
 postinst-ghc		usr/share/debhelper/autoscripts/
 Dh_Haskell.pm		usr/share/haskell-devscripts/
+haskell_devscripts.pm   usr/share/perl5/Debian/Debhelper/Sequence/
