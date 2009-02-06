@@ -88,7 +88,7 @@ sub type_of_package {
 	return $pn[0];
     } elsif ($pkgname =~ m/^libghc6-.+-prof$/) {
 	return "ghc6-prof";
-    } elsif ($pkgname =~ m/^(haskell|libghc6)-.+-doc$/) {
+    } elsif ($pkgname =~ m/-doc$/) {
 	return "haddock";
     }
 }
