@@ -154,6 +154,9 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 		 "--prefix=" . getcabalbasepath($pkgtype),
 		 "--with-compiler=$compiler",
 		 "--disable-library-vanilla",
+                 # This is a workaround for a bug in Cabal, and should be
+                 # removed when the bug is fixed
+                 "--disable-library-for-ghci",
 		 "--enable-library-profiling", @flags);
 	}
 
