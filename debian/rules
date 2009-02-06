@@ -9,53 +9,39 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	touch configure-stamp
+manpages = $(shell cat debian/manpages)
 
+%.1: %.pod
+	pod2man $< > $@
 
-build: build-stamp
+%.1: %
+	pod2man $< > $@
 
-build-stamp: configure-stamp 
-	dh_testdir
-	touch build-stamp
+.PHONY: build
+build: $(manpages)
 
+install-stamp: dh_haskell.1
+	dh install
+
+.PHONY: install
+install: install-stamp
+
+binary-indep-stamp: install-stamp
+	dh binary-indep
+	touch $@
+
+.PHONY: binary-indep
+binary-indep: binary-indep-stamp
+
+.PHONY: binary-arch
+binary-arch: install-stamp
+
+.PHONY: binary
+binary: binary-indep-stamp
+
+.PHONY: clean
 clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp configure-stamp
-	rm -f dh_haskell.1
-	dh_clean 
+	dh clean
+	rm -f $(manpages)
 
-install: build
-	dh_testdir
-	dh_testroot
-	dh_clean -k 
-	dh_installdirs
-	pod2man --name=dh_haskell dh_haskell_build > dh_haskell.1
-	dh_install
 
-binary-arch: build install
-# We have nothing to do by default.
-
-# Build architecture-dependent files here.
-binary-indep: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs 
-	dh_installdocs
-	dh_installexamples
-	dh_installman dh_haskell.1
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure

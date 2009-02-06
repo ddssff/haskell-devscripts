@@ -19,6 +19,12 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+=head1 NAME
+
+dh_haskell_prep - install Cabalized libraries for building
+
+=cut
+
 use strict;
 use Cwd;
 use File::Find;
@@ -26,6 +32,20 @@ use Debian::Debhelper::Dh_Lib;
 
 use lib '/usr/share/haskell-devscripts/';
 use Dh_Haskell;
+
+=head1 SYNOPSIS
+
+B<dh_haskell_prep> [S<I<debhelper options>>]
+
+=head1 DESCRIPTION
+
+dh_haskell_install is a debhelper program that helps with installing Haskell
+libraries.
+
+It automates building libraries for the different supported Haskell systems in
+Debian.
+
+=cut
 
 my $haddockpkg;
 my $cabalname = getcabalname();
@@ -200,3 +220,26 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 	chdir($cwd);
     }
 }
+
+=head1 BUGS
+
+hugs and ghc6 are the only supported targets at the moment.  Cabal does
+not yet support nhc98.
+
+=head1 SEE ALSO
+
+L<dh_haskell(1)>
+L<dh_haskell_prep(1)>
+L<dh_haskell_configure(1)>
+L<dh_haskell_build(1)>
+L<dh_haskell_buildinst(1)>
+L<dh_haskell_depends(1)>
+L<dh_haskell_clean(1)>
+L<debhelper(7)>
+
+=head1 AUTHOR
+
+John Goerzen <jgoerzen@complete.org>
+
+Based on ideas in dh_python by Josselin Mouette <joss@debian.org>
+=cut

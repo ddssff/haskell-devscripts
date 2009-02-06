@@ -21,7 +21,7 @@
 
 =head1 NAME
 
-dh_haskell_configure - prepare and configure Cabalized libraries for building
+dh_haskell_configure - configure Cabalized libraries for building
 
 =cut
 
@@ -52,12 +52,21 @@ B<dh_haskell_configure> [S<I<debhelper options>>]
 [B<with-runghc=>I<PATH>]
 [B<with-runhugs=>I<PATH>]
 [B<haddock-args=>I<args>]
-[B<pfesetup-args=I<args>]
-[B<ranlib-args=I<args>]
-[B<runghc-args=I<args>]
-[B<runhugs-args=I<args>]
+[B<pfesetup-args=>I<args>]
+[B<ranlib-args=>I<args>]
+[B<runghc-args=>I<args>]
+[B<runhugs-args=>I<args>]
+[B<configure-option=>I<options>]
+[B<option=>I<option>]
+[B<options>I<option>]
 
 =head1 DESCRIPTION
+
+dh_haskell_configure is a debhelper program that helps with configuring Haskell
+libraries for build.
+
+It automates building libraries for the different supported Haskell systems in
+Debian.
 =cut
 
 my $compiler = "/usr/bin/ghc6";
@@ -151,3 +160,26 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 	chdir($olddir);
     }
 }
+
+=head1 BUGS
+
+hugs and ghc6 are the only supported targets at the moment.  Cabal does
+not yet support nhc98.
+
+=head1 SEE ALSO
+
+L<dh_haskell(1)>
+L<dh_haskell_prep(1)>
+L<dh_haskell_build(1)>
+L<dh_haskell_install(1)>
+L<dh_haskell_buildinst(1)>
+L<dh_haskell_depends(1)>
+L<dh_haskell_clean(1)>
+L<debhelper(7)>
+
+=head1 AUTHOR
+
+John Goerzen <jgoerzen@complete.org>
+
+Based on ideas in dh_python by Josselin Mouette <joss@debian.org>
+=cut
