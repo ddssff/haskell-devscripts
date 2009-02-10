@@ -50,15 +50,26 @@ sub build_setup {
     }
 }
 
-sub cabal_version_ge {
-    my $requested_version = shift;
-    my $version = `ghc-pkg6 field Cabal version`;
-    chomp $version;
-    $version =~ s/version: // ;
-    system("dpkg --compare-versions $version ge $requested_version");
+sub dpkg_ge {
+    my $version1 = shift;
+    my $version2 = shift;
+    system("dpkg --compare-versions $version1 ge $version2");
     if ($? == -1) { die "Failed to execute: $!\n"; }
     my $exitcode = $? >> 8;
     return ! $exitcode;
+}
+
+sub cabal_version_ge {
+    my $requested_version = shift;
+    my @versions = split('\n', `ghc-pkg6 --global field Cabal version`);
+    my $max = "0";
+    foreach(@versions) {
+        s/^version: //;
+        if (dpkg_ge($_, $max)) {
+            $max = $_;
+        }
+    }
+    dpkg_ge($max, $requested_version);
 }
 
 sub is_handled_package {
