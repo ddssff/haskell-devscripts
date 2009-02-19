@@ -1,3 +1,41 @@
+haskell-devscripts (0.6.15+nmu1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Add a manpage for each command.  Closes: #512554.
+  * Include hlibrary.mk (CDBS class).  Closes: #462482.
+  * Include dh addon.
+  * Use debhelper 7.
+  * Remove references to Arjan home.
+  * Include dh_haskell_clean.
+  * dh_haskell.pod:
+    - Don't reference to cabalDebianTemplate.  Thanks to Jeremy Shaw
+      <jeremy@n-heptane.com>.  Closes: #514129.
+    - Document dh_haskell_depends on how-to.  Thanks to Chris Lamb
+      <lamby@debian.org>. Closes: #502937.
+  * dh_haskell_configure:
+    - Use --extra-include-dirs to add Hugs includes not considered by
+      hsc2hs.  Thanks to John Goerzen <jgoerzen@complete.org>.
+      Closes: #513397.
+    - Disable ghci when building for profiling.
+  * Dh_Haskell.pm:
+    - use more relaxed rule for haddock.  Thanks to John Goerzen
+      <jgoerzen@complete.org>.  Closes: #512555.
+    - Support for more than one version of a ghc-pkg package.
+    - Do not consider user packages.
+  * postinst-ghc: Do not generate GHCi libraries in postinst.  Packages
+    should include them.  Thanks to Kummar Apaiah <akumar@ee.iitm.ac.in>
+    and Arjan Oosting <arjan@debian.org>.  Closes: #455049.
+  * dh_haskell_prep: Uses + instead of -999 on dependencies.  Thanks to
+    Kari Pahula <kaol@debian.org>.  Closes: #511857.
+  * docs/: Remove empty docs dir.
+  * debian/control: Include ${misc:Depends}.
+  * debian/install: Use debian/install instead of
+    debian/haskell-devscripts.install
+  * debian/copyright: Reference GPL-2 and GPL-3 instead of GPL.
+  * debian/docs: Remove empty docs file.
+
+ -- Marco Túlio Gontijo e Silva <marcot@holoscopio.com>  Thu, 05 Feb 2009 13:12:27 -0200
+
 haskell-devscripts (0.6.15) unstable; urgency=high
 
   * Set urgengy to high as it fixes a grave bug.
