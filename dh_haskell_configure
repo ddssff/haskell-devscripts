@@ -120,6 +120,10 @@ foreach (@ARGV) {
     }
 }
 
+if (defined $ENV{DEB_BUILD_OPTIONS} && $ENV{DEB_BUILD_OPTIONS} =~ /noopt/) {
+    push @flags , "--disable-optimization";
+}
+
 build_setup();
 
 foreach my $package (@{$dh{DOPACKAGES}}) {
