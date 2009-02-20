@@ -11,7 +11,7 @@ Vcs-Browser: http://svn.debian.org/wsvn/pkg-haskell/packages/haskell-devscripts/
 
 Package: haskell-devscripts
 Architecture: all
-Depends: dctrl-tools, debhelper, ghc6 (>= 6.4), xutils-dev, ${misc:Depends}
+Depends: dctrl-tools, debhelper, ghc6 (>= 6.4), xutils-dev, cdbs, ${misc:Depends}
 Description: Tools to help Debian developers build Haskell packages
  This package provides a collection of scripts to help build Haskell
  packages for Debian.  Unlike haskell-utils, this package is not
