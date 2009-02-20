@@ -117,6 +117,12 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 	if ( $pkgtype eq "haddock" ) {
 	    doit("./setup", "haddock", @haddockflags);
 	} else {
+            if (defined $ENV{DEB_BUILD_OPTIONS}
+                && $ENV{DEB_BUILD_OPTIONS} =~ /parallel=([0-9]+)/) {
+                doit("./setup", "makefile", @buildflags);
+                $ENV{MAKE}="make" unless exists $ENV{MAKE};
+                doit($ENV{MAKE}, "-j$1");
+            }
 	    doit("./setup", "build", @buildflags);
 	}
 	chdir($olddir);
