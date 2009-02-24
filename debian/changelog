@@ -1,3 +1,38 @@
+haskell-devscripts (0.6.15+nmu4) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Support DEB_BUILD_OPTIONS noopt.  Conforming to Debian Policy 4.9.1.
+  * Support DEB_BUILD_OPTIONS parallel=n.  Conforming to Debian Policy
+    4.9.1.
+  * hlibrary.mk: New version.
+  * postinst-ghc: Use update instead of register.  Thanks to Clifford
+    Beshers <clifford.beshers@gmail.com>.
+  * prerm-ghc:
+    - Don't unregister in upgrade.  Thanks to Joachim Breitner
+    <nomeata@debian.org>.
+    - Don't try to remove .o files.  Thanks to Joachim Breitner
+    <nomeata@debian.org>.
+  * debian/control: Depends on cdbs.
+
+ -- Marco Túlio Gontijo e Silva <marcot@holoscopio.com>  Tue, 24 Feb 2009 14:42:11 -0300
+
+haskell-devscripts (0.6.15+nmu3) unstable; urgency=low
+
+  * Update hlibrary.mk to latest version from kaol
+    + Install .haddock to /usr/lib/ghc-$(GHC6_VERSION)/haddock/ instead of
+      /usr/lib/ghc6-$(GHC6_VERSION)/haddock/
+    + Add calls to dh_haskell_depends in the right places 
+
+ -- Joachim Breitner <nomeata@debian.org>  Mon, 23 Feb 2009 17:23:48 +0100
+
+haskell-devscripts (0.6.15+nmu2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Update hlibray.mk to latest version from kaol. Does not yet close
+    #516241, as that bug also needs to be fixed for dh_haskell_install
+
+ -- Joachim Breitner <nomeata@debian.org>  Fri, 20 Feb 2009 18:21:12 +0100
+
 haskell-devscripts (0.6.15+nmu1) unstable; urgency=low
 
   * Non-maintainer upload.
