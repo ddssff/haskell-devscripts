@@ -1,3 +1,10 @@
+haskell-devscripts (0.6.15+nmu5) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * hlibrary.mk: Use a tab in clean target, not 8 spaces.
+
+ -- Marco Túlio Gontijo e Silva <marcot@holoscopio.com>  Thu, 26 Feb 2009 10:25:24 -0300
+
 haskell-devscripts (0.6.15+nmu4) unstable; urgency=low
 
   * Non-maintainer upload.
