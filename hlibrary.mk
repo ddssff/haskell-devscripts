@@ -62,7 +62,7 @@ clean::
 	rm -rf dist dist-ghc6 dist-hugs $(DEB_SETUP_BIN_NAME) Setup.hi Setup.ho Setup.o .*config*
 	rm -f build-ghc6-stamp build-hugs-stamp
 	rm -rf debian/tmp-inst-ghc6
-        rm -f $(MAKEFILE)
+	rm -f $(MAKEFILE)
 
 $(DEB_SETUP_BIN_NAME):
 	if test ! -e Setup.lhs -a ! -e Setup.hs; then echo "No setup script found!"; exit 1; fi
