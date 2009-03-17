@@ -1,9 +1,24 @@
+haskell-devscripts (0.6.15+nmu7) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Added a configurable DEB_CABAL_PACKAGE variable to hlibrary.mk.
+
+ -- Kari Pahula <kaol@debian.org>  Fri, 13 Mar 2009 12:46:14 +0200
+
+haskell-devscripts (0.6.15+nmu6) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Disabled parallel builds in hlibrary.mk.
+
+ -- Kari Pahula <kaol@debian.org>  Fri, 27 Feb 2009 09:50:47 +0200
+
 haskell-devscripts (0.6.15+nmu5) unstable; urgency=low
 
   * Non-maintainer upload.
-  * hlibrary.mk: Use a tab in clean target, not 8 spaces.
+  * Prepend a line in hlibrary.mk with a tab, not 8 spaces. (Closes: #517028)
+  * Treat .haddock files as arch independent files again.
 
- -- Marco Túlio Gontijo e Silva <marcot@holoscopio.com>  Thu, 26 Feb 2009 10:25:24 -0300
+ -- Kari Pahula <kaol@debian.org>  Wed, 25 Feb 2009 14:21:28 +0200
 
 haskell-devscripts (0.6.15+nmu4) unstable; urgency=low
 
