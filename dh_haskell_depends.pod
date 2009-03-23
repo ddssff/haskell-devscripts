@@ -11,7 +11,7 @@ B<dh_haskell_depends> [S<I<debhelper options>>]
 
 =head1 DESCRIPTION
 
-dh_haskell_prep is a debhelper program that helps with calculating dependencies
+dh_haskell_depends is a debhelper program that helps with calculating dependencies
 for building Haskell libraries.
 
 It automates building libraries for the different supported Haskell systems in
