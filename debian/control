@@ -5,7 +5,7 @@ Maintainer: Arjan Oosting <arjan@debian.org>
 Uploaders: John Goerzen <jgoerzen@complete.org>
 Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl
-Standards-Version: 3.8.0
+Standards-Version: 3.8.1
 Vcs-Svn: svn://svn.debian.org/svn/pkg-haskell/packages/haskell-devscripts/trunk
 Vcs-Browser: http://svn.debian.org/wsvn/pkg-haskell/packages/haskell-devscripts/trunk
 
