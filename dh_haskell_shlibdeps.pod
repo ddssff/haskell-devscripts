@@ -18,6 +18,10 @@ external dependencies for building Haskell libraries.
 It automates building libraries for the different supported Haskell systems in
 Debian.
 
+This script writes the debian/$package.substvars file, including in it the
+shlibs:Depends variable.  So, to use this package, include in the Depends:
+field in debian/control ${shlibs:Depends}.
+
 =head1 BUGS
 
 hugs and ghc6 are the only supported targets at the moment.  Cabal does
