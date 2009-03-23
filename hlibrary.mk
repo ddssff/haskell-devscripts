@@ -113,6 +113,7 @@ install/libghc6-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc6
 		debian/$(notdir $@)/usr/lib/haskell-packages/ghc6/lib/*/
 	dh_haskell_prep -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
+	dh_haskell_shlibdeps -p$(notdir $@)
 	mv dist dist-ghc6
 
 install/libghc6-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc6 install/libghc6-$(CABAL_PACKAGE)-dev

@@ -3,6 +3,7 @@ dh_haskell_configure	usr/bin/
 dh_haskell_build	usr/bin/
 dh_haskell_install	usr/bin/
 dh_haskell_depends	usr/bin/
+dh_haskell_shlibdeps    usr/bin/
 dh_haskell_buildinst	usr/bin/
 dh_haskell_prep 	usr/bin/
 dh_haskell_clean        usr/bin/
