@@ -90,9 +90,6 @@ set -e
 
 . /usr/share/haskell-devscripts/Dh_Haskell.sh
 
-T_DIR=debian/mk-deps
-mkdir $T_DIR 2> /dev/null || true
-
 pkgs=`dh_listpackages $args`
 
 for pkg in $pkgs
@@ -108,13 +105,14 @@ done
 if [ -z "$files" ]
 then
 	echo "No installed package description files can not be found" >&2
-        rm -rf $T_DIR
 	exit 1
 fi
 
 for file in $files
 do
     pkg=`echo $file | cut -d/ -f2 | cut -d- -f2`
+    T_DIR=debian/mk-deps-$pkg
+    mkdir $T_DIR 2> /dev/null || true
     pkgconflocal=$T_DIR/$pkg.package.conf
     pkgdir=`echo $file | sed -ne "s#^.*debian/libghc6-$pkg-dev\(/.*\)/\([^/]\+\)#\1#p"`
     cat $file | sed -e \
@@ -128,6 +126,7 @@ for pkg in $pkgs
 do
     case "$pkg" in
         libghc6-*-dev)
+            T_DIR=debian/mk-deps-$pkg
             sfile=debian/$pkg.substvars
             pkgname=`basename debian/$pkg/usr/lib/haskell-packages/ghc6/lib/* | cut -d- -f1`
             touch $sfile
@@ -138,4 +137,3 @@ do
             ;;
     esac
 done
-rm -rf $T_DIR
