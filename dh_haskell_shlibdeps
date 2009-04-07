@@ -111,7 +111,7 @@ fi
 for file in $files
 do
     pkg=`echo $file | cut -d/ -f2 | cut -d- -f2`
-    T_DIR=debian/mk-deps-$pkg
+    T_DIR=debian/mk-deps-libghc6-$pkg-dev
     mkdir $T_DIR 2> /dev/null || true
     pkgconflocal=$T_DIR/$pkg.package.conf
     pkgdir=`echo $file | sed -ne "s#^.*debian/libghc6-$pkg-dev\(/.*\)/\([^/]\+\)#\1#p"`
