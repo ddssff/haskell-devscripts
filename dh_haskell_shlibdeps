@@ -129,7 +129,7 @@ do
     case "$pkg" in
         libghc6-*-dev)
             sfile=debian/$pkg.substvars
-            pkgname=`echo $pkg | cut -d- -f2`
+            pkgname=`basename debian/$pkg/usr/lib/haskell-packages/ghc6/lib/* | cut -d- -f1`
             touch $sfile
             echo "module Main where main = return ()" > $T_DIR/a.hs
             ghc --make $T_DIR/a.hs -o $T_DIR/a.out -package-conf \
