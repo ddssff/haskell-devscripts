@@ -110,7 +110,7 @@ fi
 
 for file in $files
 do
-    pkg=`echo $file | cut -d/ -f2 | cut -d- -f2`
+    pkg=`echo $file | cut -d/ -f2 | cut -d- -f2 | sed -e 's/-[^-]\+$//'`
     T_DIR=debian/mk-deps-libghc6-$pkg-dev
     mkdir $T_DIR 2> /dev/null || true
     pkgconflocal=$T_DIR/$pkg.package.conf
@@ -128,7 +128,7 @@ do
         libghc6-*-dev)
             T_DIR=debian/mk-deps-$pkg
             sfile=debian/$pkg.substvars
-            pkgname=`basename debian/$pkg/usr/lib/haskell-packages/ghc6/lib/* | cut -d- -f1`
+            pkgname=`basename debian/$pkg/usr/lib/haskell-packages/ghc6/lib/* | sed -e 's/-[^-]\+$//'`
             touch $sfile
             echo "module Main where main = return ()" > $T_DIR/a.hs
             ghc --make $T_DIR/a.hs -o $T_DIR/a.out -package-conf \
