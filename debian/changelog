@@ -2,7 +2,7 @@ haskell-devscripts (0.6.15+nmu9) unstable; urgency=low
   * Non-maintainer upload.
   * dh_haskell_shlibdeps: Treat correctly the names of libraries with
     dash.  Thanks to TANIGUCHI Takaki <takaki@asis.media-as.org>.
-    Closes: #524131, #525568.
+    Closes: #524143, #525568.
 
  -- Marco Túlio Gontijo e Silva <marcot@holoscopio.com>  Tue, 28 Apr 2009 18:38:26 -0300
 
