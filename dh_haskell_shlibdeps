@@ -113,7 +113,7 @@ mkdir $T_DIR 2> /dev/null || true
 echo '[]' > $T_DIR/package.conf
 for file in $files
 do
-    pkg=`echo $file | cut -d/ -f2 | cut -d- -f2 | sed -e 's/-[^-]\+$//'`
+    pkg=`echo $file | cut -d/ -f2 | cut -d- -f2- | sed -e 's/-[^-]\+$//'`
     pkgconflocal=$T_DIR/$pkg.package.conf
     pkgdir=`echo $file | sed -ne "s#^.*debian/libghc6-$pkg-dev\(/.*\)/\([^/]\+\)#\1#p"`
     cat $file | sed -e \
