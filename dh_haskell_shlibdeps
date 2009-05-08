@@ -110,6 +110,7 @@ fi
 
 T_DIR=debian/dh_haskell_shlibdeps
 mkdir $T_DIR 2> /dev/null || true
+echo '[]' > $T_DIR/package.conf
 for file in $files
 do
     pkg=`echo $file | cut -d/ -f2 | cut -d- -f2 | sed -e 's/-[^-]\+$//'`
