@@ -64,7 +64,7 @@ clean::
 	rm -f build-ghc6-stamp build-hugs-stamp
 	rm -rf debian/tmp-inst-ghc6
 	rm -f $(MAKEFILE)
-	rm -rf debian/mk-deps-*
+	rm -rf debian/dh_haskell_shlibdeps
 
 $(DEB_SETUP_BIN_NAME):
 	if test ! -e Setup.lhs -a ! -e Setup.hs; then echo "No setup script found!"; exit 1; fi
