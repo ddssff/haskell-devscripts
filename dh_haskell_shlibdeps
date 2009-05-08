@@ -108,11 +108,11 @@ then
 	exit 1
 fi
 
+T_DIR=debian/dh_haskell_shlibdeps
+mkdir $T_DIR 2> /dev/null || true
 for file in $files
 do
     pkg=`echo $file | cut -d/ -f2 | cut -d- -f2 | sed -e 's/-[^-]\+$//'`
-    T_DIR=debian/mk-deps-libghc6-$pkg-dev
-    mkdir $T_DIR 2> /dev/null || true
     pkgconflocal=$T_DIR/$pkg.package.conf
     pkgdir=`echo $file | sed -ne "s#^.*debian/libghc6-$pkg-dev\(/.*\)/\([^/]\+\)#\1#p"`
     cat $file | sed -e \
@@ -126,7 +126,6 @@ for pkg in $pkgs
 do
     case "$pkg" in
         libghc6-*-dev)
-            T_DIR=debian/mk-deps-$pkg
             sfile=debian/$pkg.substvars
             pkgname=`basename debian/$pkg/usr/lib/haskell-packages/ghc6/lib/* | sed -e 's/-[^-]\+$//'`
             touch $sfile
