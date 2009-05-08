@@ -1,3 +1,18 @@
+haskell-devscripts (0.6.15+nmu10) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * dh_haskell_shlibdeps:
+    - Create empty package.conf before calling ghc-pkg.  Thanks to Jeremy
+      Shaw <jeremy@n-heptane.com>.  Closes: #526998.
+    - Use the same package.conf for all binary
+      packages from the same source.  This allow a package with multiple
+      binaries with internal dependencies to use dh_haskell_shlibdeps.
+    - Treat correctly the names of libraries with dash.
+  * debian/changelog: Correct the wrong bug number in the changelog for
+    0.6.15+nmu9.
+
+ -- Marco Túlio Gontijo e Silva <marcot@holoscopio.com>  Thu, 30 Apr 2009 10:27:13 -0300
+
 haskell-devscripts (0.6.15+nmu9) unstable; urgency=low
   * Non-maintainer upload.
   * dh_haskell_shlibdeps: Treat correctly the names of libraries with
