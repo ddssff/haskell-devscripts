@@ -1,5 +1,5 @@
 Source: haskell-devscripts
-Section: devel
+Section: haskell
 Priority: optional
 Maintainer: Arjan Oosting <arjan@debian.org>
 Uploaders: John Goerzen <jgoerzen@complete.org>
