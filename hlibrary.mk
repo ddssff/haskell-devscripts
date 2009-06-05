@@ -68,7 +68,7 @@ clean::
 
 $(DEB_SETUP_BIN_NAME):
 	if test ! -e Setup.lhs -a ! -e Setup.hs; then echo "No setup script found!"; exit 1; fi
-	for setup in Setup.lhs Setup.hs; do if test -e $$setup; then ghc6 -package Cabal $$setup -o $(DEB_SETUP_BIN_NAME); exit 0; fi; done
+	for setup in Setup.lhs Setup.hs; do if test -e $$setup; then ghc6 --make $$setup -o $(DEB_SETUP_BIN_NAME); exit 0; fi; done
 
 dist-ghc6: $(DEB_SETUP_BIN_NAME)
 	$(DEB_SETUP_BIN_NAME) configure --ghc -v2 \
