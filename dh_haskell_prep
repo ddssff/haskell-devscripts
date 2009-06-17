@@ -57,8 +57,10 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 	    # substitute ${haskell:Depends}
 	    my $pkgtype = type_of_package($package);
 	    delsubstvar($package, "haskell:Depends");
-	    addsubstvar($package, "haskell:Depends", 
-			$pkgtype, ">= " . upstream_version(version_of_type($pkgtype)));
+            if ($pkgtype ne "haddock") {
+                addsubstvar($package, "haskell:Depends",
+                            $pkgtype, ">= " . upstream_version(version_of_type($pkgtype)));
+            }
 	    if (! ($pkgtype eq "hugs")) {
 		addsubstvar($package, "haskell:Depends",
 			    $pkgtype, "<< " . upstream_version(version_of_type($pkgtype)) . "+");
