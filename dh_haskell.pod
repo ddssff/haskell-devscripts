@@ -63,11 +63,11 @@ haskell-devscripts and the compilers for any binaries you will build.
 In the clause in control for each binary package, make sure to add
 ${haskell:Depends} to the Depends: line.
 
-In rules, if you're using debhelper v7, use dh S<I<command>> --with
-haskell_devscripts .
+In rules, if you're using CDBS, include /usr/share/cdbs/1/rules/debhelper.mk
+and /usr/share/cdbs/1/class/hlibrary.mk.  This is the current recommended way
+to package a Haskell Library.
 
-If you're using CDBS, include /usr/share/cdbs/1/rules/debhelper.mk and
-/usr/share/cdbs/1/class/hlibrary.mk.
+If you're using debhelper v7, use dh S<I<command>> --with haskell_devscripts .
 
 If you're simply using debhelper, add dh_haskell in the install target and
 dh_haskell_depends before dh_gencontrol in binary.  Your build and configure
