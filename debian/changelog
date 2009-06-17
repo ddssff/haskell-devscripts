@@ -1,3 +1,16 @@
+haskell-devscripts (0.6.15+nmu11) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Create haskell:Recommends and haskell:Suggests.
+  * dh_haskell_prep: Don't create haskell:Depends for documentation
+    packages. Closes: #532381.
+  * hlibrary.mk: Use --make instead of -package Cabal to build Setup.hs.
+  * dh_haskell_depends: Includes -dev package in -prof Depends.
+  * dh_haskell.pod: Recommend using CDBS and hlibrary.mk.
+  * debian/control: Use Section: haskell.
+
+ -- Marco Túlio Gontijo e Silva <marcot@holoscopio.com>  Fri, 05 Jun 2009 14:38:59 -0300
+
 haskell-devscripts (0.6.15+nmu10) unstable; urgency=low
 
   * Non-maintainer upload.
