@@ -61,7 +61,8 @@ Start from a basic debian/ directory.  Add entries to Build-Depends for
 haskell-devscripts and the compilers for any binaries you will build.
 
 In the clause in control for each binary package, make sure to add
-${haskell:Depends} to the Depends: line.
+${haskell:Depends} to the Depends: line, and the same with Recommends and
+Suggests.
 
 In rules, if you're using CDBS, include /usr/share/cdbs/1/rules/debhelper.mk
 and /usr/share/cdbs/1/class/hlibrary.mk.  This is the current recommended way

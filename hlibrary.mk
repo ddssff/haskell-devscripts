@@ -135,6 +135,7 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc6-$(CABAL_PACKAGE)-doc:: debi
 	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
 	cp -r debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/*.haddock \
 		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
+	dh_haskell_depends -p$(notdir $@)
 	mv dist dist-ghc6
 
 install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME)

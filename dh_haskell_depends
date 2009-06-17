@@ -72,10 +72,15 @@ for pkg in `dh_listpackages $args`; do
 	      echo "No installed package description files can not be found" >&2
 	      exit 1
 	    fi
-	    grep -v ^haskell:Depends $sfile > $sfile.tmp || true
 	    case "$pkg" in
 		libghc6-*-dev)
+	            grep -v -e ^haskell:Depends -e ^haskell:Suggests $sfile \
+                        > $sfile.tmp || true
 		    echo "haskell:Depends=`depends_for_ghc6 $cfiles`" >> $sfile.tmp
+                    doc=`echo $pkg | sed -e 's/-dev$/-doc/'`
+                    prof=`echo $pkg | sed -e 's/-dev$/-prof/'`
+                    suggests="$doc, $prof"
+                    echo "haskell:Suggests=$suggests" >> $sfile.tmp
 		    ;;
 		libghc6-*-prof)
 		    echo "haskell:Depends=`depends_for_ghc6_prof $cfiles`" >> $sfile.tmp
@@ -88,6 +93,23 @@ for pkg in `dh_listpackages $args`; do
 	    echo "haskell:Depends=`depends_for_hugs`" >> $sfile.tmp
 	    mv $sfile.tmp $sfile
 	    ;;
+        libghc6-*-doc|haskell-*-doc)
+            grep -v -e ^haskell:Recommends -e ^haskell:Suggests $sfile \
+                > $sfile.tmp || true
+            recommends=` \
+                find debian/$pkg -name \*.html -exec hxwls -r \{\} \; \
+                | grep ^/ \
+                | cut -d# -f1 \
+                | sort -u \
+                | xargs dpkg -S \
+                | cut -d: -f1 \
+                | sort -u \
+                | sed -e :a -e '$!N; s/\n/, /; ta'`
+            echo "haskell:Recommends=$recommends" >> $sfile.tmp
+            dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/libghc6-\1-dev/'`
+            echo "haskell:Suggests=$dev" >> $sfile.tmp
+            mv $sfile.tmp $sfile
+            ;;
 	*)
 	    ;;
     esac
