@@ -83,7 +83,11 @@ for pkg in `dh_listpackages $args`; do
                     echo "haskell:Suggests=$suggests" >> $sfile.tmp
 		    ;;
 		libghc6-*-prof)
-		    echo "haskell:Depends=`depends_for_ghc6_prof $cfiles`" >> $sfile.tmp
+	            grep -v ^haskell:Depends $sfile > $sfile.tmp || true
+                    dev=`echo $pkg | sed -e 's/-prof$/-dev/'`
+                    version='(=${binary:Version})'
+                    depends="$dev ${version}, `depends_for_ghc6_prof $cfiles`"
+		    echo "haskell:Depends=$depends" >> $sfile.tmp
 		    ;;
 	    esac
 	    mv $sfile.tmp $sfile
