@@ -4,7 +4,8 @@ CONFIGFILE=#PKGLIBDIR#/installed-pkg-config
 
 case "$1" in
     deconfigure|remove)
-	$GHC_PKG unregister --force-files #CABALNAME#-#CABALVERSION# || true
+	$GHC_PKG unregister --no-user-package-conf --force-files \
+            #CABALNAME#-#CABALVERSION# || true
 	OLDPACKAGE=`$GHC_PKG --global latest #CABALNAME# 2> /dev/null` || true
 	if [ -n "$OLDPACKAGE" ] ; then
 	    $GHC_PKG expose $OLDPACKAGE || true

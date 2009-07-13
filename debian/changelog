@@ -1,3 +1,11 @@
+haskell-devscripts (0.6.15+nmu12) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * prerm-ghc: Use ghc-pkg --no-user-package-conf unregister in prerm.
+    Closes: #535967.
+
+ -- Marco Túlio Gontijo e Silva <marcot@riseup.net>  Mon, 13 Jul 2009 08:53:41 -0300
+
 haskell-devscripts (0.6.15+nmu11) unstable; urgency=low
 
   * Non-maintainer upload.
