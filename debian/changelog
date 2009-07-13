@@ -3,6 +3,8 @@ haskell-devscripts (0.6.15+nmu12) unstable; urgency=low
   * Non-maintainer upload.
   * prerm-ghc: Use ghc-pkg --no-user-package-conf unregister in prerm.
     Closes: #535967.
+  * Fix "support for DEB_BUILD_OPTIONS=parallel=n broken"
+    dh_haskell_build: Remove support for parallel=n. (Closes: #536589)
 
  -- Marco Túlio Gontijo e Silva <marcot@riseup.net>  Mon, 13 Jul 2009 08:53:41 -0300
 
