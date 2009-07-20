@@ -10,6 +10,7 @@ haskell-devscripts (0.6.15+nmu12) unstable; urgency=low
 
 haskell-devscripts (0.6.15+nmu11) unstable; urgency=low
 
+  [Marco Túlio Gontijo e Silva]
   * Non-maintainer upload.
   * Create haskell:Recommends and haskell:Suggests.
   * dh_haskell_prep: Don't create haskell:Depends for documentation
@@ -18,6 +19,9 @@ haskell-devscripts (0.6.15+nmu11) unstable; urgency=low
   * dh_haskell_depends: Includes -dev package in -prof Depends.
   * dh_haskell.pod: Recommend using CDBS and hlibrary.mk.
   * debian/control: Use Section: haskell.
+
+  [Joachim Breitner]
+  * debian/control: add ${perl:Depends}
 
  -- Marco Túlio Gontijo e Silva <marcot@holoscopio.com>  Fri, 05 Jun 2009 14:38:59 -0300
 
