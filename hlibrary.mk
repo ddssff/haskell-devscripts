@@ -61,7 +61,7 @@ endif
 clean::
 	test ! -x $(DEB_SETUP_BIN_NAME) || $(DEB_SETUP_BIN_NAME) clean
 	rm -rf dist dist-ghc6 dist-hugs $(DEB_SETUP_BIN_NAME) Setup.hi Setup.ho Setup.o .*config*
-	rm -f build-ghc6-stamp build-hugs-stamp
+	rm -f build-ghc6-stamp build-hugs-stamp build-haddock-stamp
 	rm -rf debian/tmp-inst-ghc6
 	rm -f $(MAKEFILE)
 	rm -rf debian/dh_haskell_shlibdeps
@@ -84,12 +84,15 @@ build-ghc6-stamp: dist-ghc6
 	mv dist dist-ghc6
 	touch build-ghc6-stamp
 
-build/libghc6-$(CABAL_PACKAGE)-prof build/libghc6-$(CABAL_PACKAGE)-dev:: build-ghc6-stamp
+build/libghc6-$(CABAL_PACKAGE)-prof build/libghc6-$(CABAL_PACKAGE)-dev:: build-ghc6-stamp build-haddock-stamp
 
-build/haskell-$(CABAL_PACKAGE)-doc build/libghc6-$(CABAL_PACKAGE)-doc:: dist-ghc6
+build-haddock-stamp:
 	mv dist-ghc6 dist
 	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock $(DEB_HADDOCK_OPTS)
 	mv dist dist-ghc6
+	touch build-haddock-stamp
+
+build/haskell-$(CABAL_PACKAGE)-doc build/libghc6-$(CABAL_PACKAGE)-doc:: dist-ghc6 build-haddock-stamp
 
 dist-hugs: $(DEB_SETUP_BIN_NAME)
 	$(DEB_SETUP_BIN_NAME) configure --hugs --prefix=/usr -v2 $(DEB_SETUP_HUGS_CONFIGURE_ARGS)
@@ -112,6 +115,10 @@ install/libghc6-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc6
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
 	cp dist/installed-pkg-config \
 		debian/$(notdir $@)/usr/lib/haskell-packages/ghc6/lib/*/
+	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
+	[ 0 = `ls debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/ 2>/dev/null | wc -l` ] || \
+		cp -r debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/*.haddock \
+		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
 	dh_haskell_prep -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_shlibdeps -p$(notdir $@)
@@ -132,9 +139,9 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc6-$(CABAL_PACKAGE)-doc:: debi
 	cd debian/tmp-inst-ghc6/ ; find ./$(DEB_HADDOCK_HTML_DIR)/ \
 		! -name "*.haddock" -exec install -Dm 644 '{}' \
 		../$(notdir $@)/'{}' ';'
-	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
-	cp -r debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/*.haddock \
-		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
+	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_DIR)/../desc/
+	grep -E '^(haddock-|name|version)' dist/installed-pkg-config > \
+		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)/../desc/$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	mv dist dist-ghc6
 
