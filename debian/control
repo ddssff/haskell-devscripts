@@ -6,8 +6,7 @@ Uploaders: Marco Túlio Gontijo e Silva <marcot@riseup.net>
 Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl
 Standards-Version: 3.8.1
-Vcs-Svn: svn://svn.debian.org/svn/pkg-haskell/packages/haskell-devscripts/trunk
-Vcs-Browser: http://svn.debian.org/wsvn/pkg-haskell/packages/haskell-devscripts/trunk
+Vcs-Darcs: http://darcs.debian.org/pkg-haskell/haskell-devscripts
 
 Package: haskell-devscripts
 Architecture: all
