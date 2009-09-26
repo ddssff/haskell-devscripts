@@ -1,8 +1,8 @@
 Source: haskell-devscripts
 Section: haskell
 Priority: optional
-Maintainer: Arjan Oosting <arjan@debian.org>
-Uploaders: John Goerzen <jgoerzen@complete.org>
+Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
+Uploaders: Marco Túlio Gontijo e Silva <marcot@riseup.net>
 Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl
 Standards-Version: 3.8.1
