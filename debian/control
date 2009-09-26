@@ -10,7 +10,14 @@ Vcs-Darcs: http://darcs.debian.org/pkg-haskell/haskell-devscripts
 
 Package: haskell-devscripts
 Architecture: all
-Depends: dctrl-tools, debhelper, ghc6 (>= 6.4), xutils-dev, cdbs, ${misc:Depends}, ${perl:Depends}, html-xml-utils
+Depends: dctrl-tools
+  , debhelper
+  , ghc6 (>= 6.4)
+  , xutils-dev
+  , cdbs
+  , ${misc:Depends}
+  , ${perl:Depends}
+  , html-xml-utils
 Description: Tools to help Debian developers build Haskell packages
  This package provides a collection of scripts to help build Haskell
  packages for Debian.  Unlike haskell-utils, this package is not
