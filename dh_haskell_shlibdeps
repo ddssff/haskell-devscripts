@@ -1,7 +1,7 @@
 #!/bin/sh
 # arch-tag: Debhelper script for Haskell
 #
-# Copyright (C) 2009 Marco Túlio Gontijo e Silva <marcot@holoscopio.com>
+# Copyright (C) 2009 Marco Túlio Gontijo e Silva <marcot@riseup.net>
 # Based on mk-haskell-depends by Martin Sjögren <sjogren@debian.org>
 #
 # CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE LEGAL
