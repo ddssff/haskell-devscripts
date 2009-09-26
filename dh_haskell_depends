@@ -74,32 +74,52 @@ for pkg in `dh_listpackages $args`; do
 	    fi
 	    case "$pkg" in
 		libghc6-*-dev)
-	            grep -v -e ^haskell:Depends -e ^haskell:Suggests $sfile \
-                        > $sfile.tmp || true
+	            grep -v \
+                        -e ^haskell:Depends \
+                        -e ^haskell:Recommends \
+                        -e ^haskell:Suggests \
+                        $sfile > $sfile.tmp || true
 		    echo "haskell:Depends=`depends_for_ghc6 $cfiles`" >> $sfile.tmp
+                    echo "haskell:Recommends=" >> $sfile.tmp
                     doc=`echo $pkg | sed -e 's/-dev$/-doc/'`
                     prof=`echo $pkg | sed -e 's/-dev$/-prof/'`
                     suggests="$doc, $prof"
                     echo "haskell:Suggests=$suggests" >> $sfile.tmp
 		    ;;
 		libghc6-*-prof)
-	            grep -v ^haskell:Depends $sfile > $sfile.tmp || true
+	            grep -v \
+                        -e ^haskell:Depends \
+                        -e ^haskell:Recommends \
+                        -e ^haskell:Suggests \
+                        $sfile > $sfile.tmp || true
                     dev=`echo $pkg | sed -e 's/-prof$/-dev/'`
                     version='(=${binary:Version})'
                     depends="$dev ${version}, `depends_for_ghc6_prof $cfiles`"
 		    echo "haskell:Depends=$depends" >> $sfile.tmp
+                    echo "haskell:Recommends=" >> $sfile.tmp
+                    echo "haskell:Suggests=" >> $sfile.tmp
 		    ;;
 	    esac
 	    mv $sfile.tmp $sfile
 	    ;;
 	libhugs-*)
-	    grep -v ^haskell:Depends $sfile > $sfile.tmp || true
+	    grep -v \
+                -e ^haskell:Depends \
+                -e ^haskell:Recommends \
+                -e ^haskell:Suggests \
+                $sfile > $sfile.tmp || true
 	    echo "haskell:Depends=`depends_for_hugs`" >> $sfile.tmp
+            echo "haskell:Recommends=" >> $sfile.tmp
+            echo "haskell:Suggests=" >> $sfile.tmp
 	    mv $sfile.tmp $sfile
 	    ;;
         libghc6-*-doc|haskell-*-doc)
-            grep -v -e ^haskell:Recommends -e ^haskell:Suggests $sfile \
-                > $sfile.tmp || true
+	    grep -v \
+                -e ^haskell:Depends \
+                -e ^haskell:Recommends \
+                -e ^haskell:Suggests \
+                $sfile > $sfile.tmp || true
+            echo "haskell:Depends=" >> $sfile.tmp
             recommends=` \
                 find debian/$pkg -name \*.html -exec hxwls -r \{\} \; \
                 | grep ^/ \
