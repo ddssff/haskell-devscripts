@@ -1,4 +1,4 @@
-haskell-devscripts (0.6.15+nmu14) unstable; urgency=low
+haskell-devscripts (0.6.16) unstable; urgency=low
 
   * Change Marco Túlio's e-mail.
   * dh_haskell_depends: Create empty haskell: variables.
