@@ -5,6 +5,7 @@ haskell-devscripts (0.6.15+nmu14) unstable; urgency=low
   * dh_haskell_shlibdeps: Change license.
   * debian/control: Use Debian Haskell Group as Maintainer.
   * debian/control: Update Vcs-Darcs to Debian Haskell Group darcs.
+  * debian/control: Use new Standards-Version.
   * debian/control: Use one line per package in Depends.
 
  -- Marco Túlio Gontijo e Silva <marcot@riseup.net>  Sat, 26 Sep 2009 20:19:04 -0300

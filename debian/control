@@ -5,7 +5,7 @@ Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.or
 Uploaders: Marco Túlio Gontijo e Silva <marcot@riseup.net>
 Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl
-Standards-Version: 3.8.1
+Standards-Version: 3.8.3
 Vcs-Darcs: http://darcs.debian.org/pkg-haskell/haskell-devscripts
 
 Package: haskell-devscripts
