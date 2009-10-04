@@ -104,6 +104,6 @@ rest:
   Copyright: Copyright (C) 2004 John Goerzen
   Upstream Author: John Goerzen <jgoerzen@complete.org>
   License:
-    This program is licensed under the GNU GPL.  Debian users may find the GPL
-    at /usr/share/common-licenses/GPL.
+    This program is licensed under the GNU GPL 2.1.  Debian users may find the
+    GPL at /usr/share/common-licenses/GPL-2.
 

@@ -1,5 +1,6 @@
 haskell-devscripts (0.6.16) unstable; urgency=low
 
+  [ Marco Túlio Gontijo e Silva ]
   * Change Marco Túlio's e-mail.
   * dh_haskell_depends: Create empty haskell: variables.
   * dh_haskell_shlibdeps: Change license.
@@ -9,7 +10,10 @@ haskell-devscripts (0.6.16) unstable; urgency=low
   * debian/control: Use DM-Upload-Allowed.
   * debian/control: Use one line per package in Depends.
 
- -- Marco Túlio Gontijo e Silva <marcot@riseup.net>  Sat, 26 Sep 2009 20:19:04 -0300
+  [ Joachim Breitner ]
+  * Refer to GPL-2 in John’s copyright statement, with his permission
+
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 04 Oct 2009 10:43:54 +0200
 
 haskell-devscripts (0.6.15+nmu13) unstable; urgency=low
 
