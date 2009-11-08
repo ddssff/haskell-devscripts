@@ -1,3 +1,9 @@
+haskell-devscripts (0.6.17) UNRELEASED; urgency=low
+
+  * hlibrary.mk: Allow spaces before : in cabal fields.
+
+ -- Marco Túlio Gontijo e Silva <marcot@riseup.net>  Sun, 08 Nov 2009 16:55:31 -0200
+
 haskell-devscripts (0.6.16) unstable; urgency=low
 
   [ Marco Túlio Gontijo e Silva ]

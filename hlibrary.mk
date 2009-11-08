@@ -18,7 +18,8 @@
 # 02111-1307 USA.
 
 DEB_CABAL_PACKAGE ?= $(shell cat *.cabal |\
- perl -ne 'if (/^name:\s*(.*)$$/i) {$$_ = $$1; tr/A-Z/a-z/; print; exit 0;}')
+ perl -ne \
+ 'if (/^name\s*:\s*(.*)$$/i) {$$_ = $$1; tr/A-Z/a-z/; print; exit 0;}')
 CABAL_PACKAGE=$(DEB_CABAL_PACKAGE)
 
 ENABLE_PROFILING = $(shell egrep -qe '^Package: libghc6-.*-prof$$' debian/control && echo --enable-library-profiling; exit 0)
