@@ -1,9 +1,3 @@
-dh_haskell.1
 dh_haskell_prep.1
-dh_haskell_configure.1
-dh_haskell_build.1
-dh_haskell_install.1
-dh_haskell_buildinst.1
 dh_haskell_depends.1
 dh_haskell_shlibdeps.1
-dh_haskell_clean.1

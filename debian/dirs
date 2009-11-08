@@ -1,5 +1,4 @@
 usr/bin
 usr/share/debhelper/autoscripts
 usr/share/haskell-devscripts
-usr/share/perl5/Debian/Debhelper/Sequence
 usr/share/cdbs/1/class/

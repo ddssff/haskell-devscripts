@@ -20,7 +20,7 @@ manpages = $(shell cat debian/manpages)
 .PHONY: build
 build: $(manpages)
 
-install-stamp: dh_haskell.1
+install-stamp:
 	dh install
 
 .PHONY: install

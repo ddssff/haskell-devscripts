@@ -1,15 +1,8 @@
-dh_haskell		usr/bin/
-dh_haskell_configure	usr/bin/
-dh_haskell_build	usr/bin/
-dh_haskell_install	usr/bin/
 dh_haskell_depends	usr/bin/
 dh_haskell_shlibdeps    usr/bin/
-dh_haskell_buildinst	usr/bin/
 dh_haskell_prep 	usr/bin/
-dh_haskell_clean        usr/bin/
 prerm-ghc		usr/share/debhelper/autoscripts/
 postinst-ghc		usr/share/debhelper/autoscripts/
 Dh_Haskell.pm		usr/share/haskell-devscripts/
 Dh_Haskell.sh           usr/share/haskell-devscripts/
-haskell_devscripts.pm   usr/share/perl5/Debian/Debhelper/Sequence/
 hlibrary.mk             usr/share/cdbs/1/class

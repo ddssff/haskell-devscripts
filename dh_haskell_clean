@@ -1,3 +1,0 @@
-#!/bin/sh
-
-rm -rf setup Setup.hi Setup.o debian/mk-deps-*
