@@ -1,4 +1,4 @@
-haskell-devscripts (0.6.17) UNRELEASED; urgency=low
+haskell-devscripts (0.6.17) unstable; urgency=low
 
   * hlibrary.mk: Allow spaces before : in cabal fields.
   * Remove unsuported packaging scripts, leaving only the standard
