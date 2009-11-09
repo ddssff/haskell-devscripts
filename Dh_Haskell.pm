@@ -131,13 +131,13 @@ sub profiling_name {
 }
 
 sub getcabalname {
-    my $retval = `grep -i ^Name *.cabal | awk '{print \$2}'`;
+    my $retval = `grep -i ^Name *.cabal | tr ':' ' ' | awk '{print \$2}'`;
     chomp $retval;
     return $retval;
 }
 
 sub getcabalversion {
-    my $retval = `grep -i ^Version *.cabal | awk '{print \$2}'`;
+    my $retval = `grep -i ^Version *.cabal | tr ':' ' ' | awk '{print \$2}'`;
     chomp $retval;
     return $retval;
 }

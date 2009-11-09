@@ -1,3 +1,9 @@
+haskell-devscripts (0.6.18) UNRELEASED; urgency=low
+
+  * dh_haskell_prep: Allow spaces before : in cabal fields.
+
+ -- Marco Túlio Gontijo e Silva <marcot@riseup.net>  Mon, 09 Nov 2009 14:44:32 -0200
+
 haskell-devscripts (0.6.17) unstable; urgency=low
 
   * hlibrary.mk: Allow spaces before : in cabal fields.
