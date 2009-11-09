@@ -1,4 +1,4 @@
-haskell-devscripts (0.6.18) UNRELEASED; urgency=low
+haskell-devscripts (0.6.18) unstable; urgency=low
 
   * dh_haskell_prep: Allow spaces before : in cabal fields.
 
