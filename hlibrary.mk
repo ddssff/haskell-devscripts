@@ -57,6 +57,8 @@ ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
    OPTIMIZATION = --disable-optimization
 endif
 
+DEB_DH_MD5SUMS_ARGS += -Xpackage.conf.d
+
 clean::
 	rm -rf dist dist-ghc6 dist-hugs $(DEB_SETUP_BIN_NAME) Setup.hi Setup.ho Setup.o .*config*
 	rm -f build-ghc6-stamp build-hugs-stamp build-haddock-stamp
@@ -101,8 +103,8 @@ install/libghc6-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc6
 	cd debian/tmp-inst-ghc6 ; find usr/lib/haskell-packages/ghc6/lib/ \
 		\( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
-	cp dist/installed-pkg-config \
-		debian/$(notdir $@)/usr/lib/haskell-packages/ghc6/lib/*/
+	$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc6 --gen-pkg-config | sed -r 's,.*: ,,' |\
+		xargs -I PKG install -Dm 644 PKG debian/$(notdir $@)/var/lib/ghc-$(GHC6_VERSION)/packages.conf.d/PKG
 	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
 	[ 0 = `ls debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/ 2>/dev/null | wc -l` ] || \
 		cp -r debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/*.haddock \

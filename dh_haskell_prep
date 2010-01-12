@@ -65,24 +65,6 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 		addsubstvar($package, "haskell:Depends",
 			    $pkgtype, "<< " . upstream_version(version_of_type($pkgtype)) . "+");
 	    }
-
-	    # add postinst/prerm scripts
-	    if ($pkgtype eq "ghc6") {
-		# Build scripts
-		my $ghcver = "ghc-" . upstream_version(version_of_type($pkgtype));
-		my $ghclibdir = `/usr/bin/ghc6 --print-libdir` or die "Could not determine  GHC library directory: $!";
-		my $pkglibdir = getcabalpkglibpath($pkgtype);
-		my $cabalname = getcabalname();
-		my $cabalversion = getcabalversion();
-
-		chomp $ghclibdir;
-
-		print "$ghcver $pkglibdir $cabalname $cabalversion\n";
-		autoscript($package,"postinst","postinst-ghc",
-			   "s%#GHCLIBDIR#%$ghclibdir%;s%#PKGLIBDIR#%$pkglibdir%;s%#CABALNAME#%$cabalname%;s%#CABALVERSION#%$cabalversion%");
-		autoscript($package,"prerm","prerm-ghc",
-			   "s%#GHCLIBDIR#%$ghclibdir%;s%#PKGLIBDIR#%$pkglibdir%;s%#CABALNAME#%$cabalname%;s%#CABALVERSION#%$cabalversion%");
-	    }
 	}
 
 	if (type_of_package($package) eq "ghc6-prof") {
