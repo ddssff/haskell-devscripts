@@ -21,6 +21,7 @@ DEB_CABAL_PACKAGE ?= $(shell cat *.cabal |\
  perl -ne \
  'if (/^name\s*:\s*(.*)$$/i) {$$_ = $$1; tr/A-Z/a-z/; print; exit 0;}')
 CABAL_PACKAGE=$(DEB_CABAL_PACKAGE)
+CABAL_VERSION=$(shell cat *.cabal | egrep -i '^\s*version:' | head -n1 | sed -r 's,^\s*version:\s*,,')
 
 ENABLE_PROFILING = $(shell egrep -qe '^Package: libghc6-.*-prof$$' debian/control && echo --enable-library-profiling; exit 0)
 
@@ -32,15 +33,12 @@ DEB_COMPRESS_EXCLUDE += .haddock
 # - provide more hooks
 # - get this included in the cdbs package once this gets mature enough (maybe?)
 
-# For now, you can find the newest version in
-# http://people.debian.org/~kaol/repos/hlibrary/
-
 DEB_SETUP_BIN_NAME ?= debian/hlibrary.setup
 DEB_HADDOCK_HTML_DIR ?= /usr/share/doc/libghc6-$(CABAL_PACKAGE)-doc/html/
 
 # most likely you don't need to touch this one
 GHC6_VERSION = $(shell ghc --numeric-version)
-DEB_HADDOCK_DIR ?= /usr/share/ghc6-doc/ghc-$(GHC6_VERSION)/haddock/
+DEB_HADDOCK_DIR ?= /usr/lib/ghc-$(GHC6_VERSION)/haddock/$(CABAL_PACKAGE)-$(CABAL_VERSION)/
 
 ifndef DEB_NO_IMPLICIT_HADDOCK_HYPERLINK
 DEB_HADDOCK_OPTS += --hyperlink-source
@@ -140,9 +138,6 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc6-$(CABAL_PACKAGE)-doc:: debi
 	cd debian/tmp-inst-ghc6/ ; find ./$(DEB_HADDOCK_HTML_DIR)/ \
 		! -name "*.haddock" -exec install -Dm 644 '{}' \
 		../$(notdir $@)/'{}' ';'
-	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_DIR)/../desc/
-	grep -E '^(haddock-|name|version)' dist/installed-pkg-config > \
-		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)/../desc/$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	mv dist dist-ghc6
 
