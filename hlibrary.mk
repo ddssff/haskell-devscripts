@@ -58,7 +58,6 @@ ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 endif
 
 clean::
-	test ! -x $(DEB_SETUP_BIN_NAME) || $(DEB_SETUP_BIN_NAME) clean
 	rm -rf dist dist-ghc6 dist-hugs $(DEB_SETUP_BIN_NAME) Setup.hi Setup.ho Setup.o .*config*
 	rm -f build-ghc6-stamp build-hugs-stamp build-haddock-stamp
 	rm -rf debian/tmp-inst-ghc6
@@ -72,43 +71,33 @@ $(DEB_SETUP_BIN_NAME):
 dist-ghc6: $(DEB_SETUP_BIN_NAME)
 	$(DEB_SETUP_BIN_NAME) configure --ghc -v2 \
 		--prefix=/usr --libdir=/usr/lib/haskell-packages/ghc6/lib \
+		--builddir=dist-ghc6 \
 		--haddockdir=$(DEB_HADDOCK_DIR) \
 		--htmldir=$(DEB_HADDOCK_HTML_DIR) $(ENABLE_PROFILING) \
 		$(DEB_SETUP_GHC6_CONFIGURE_ARGS) $(OPTIMIZATION)
-	mv dist dist-ghc6
 
 build-ghc6-stamp: dist-ghc6
-	mv dist-ghc6 dist
-	$(BUILD_GHC6)
-	mv dist dist-ghc6
+	$(BUILD_GHC6) --builddir=dist-ghc6
 	touch build-ghc6-stamp
 
 build/libghc6-$(CABAL_PACKAGE)-prof build/libghc6-$(CABAL_PACKAGE)-dev:: build-ghc6-stamp build-haddock-stamp
 
 build-haddock-stamp:
-	mv dist-ghc6 dist
-	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock $(DEB_HADDOCK_OPTS)
-	mv dist dist-ghc6
+	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock --builddir=dist-ghc6 $(DEB_HADDOCK_OPTS)
 	touch build-haddock-stamp
 
 build/haskell-$(CABAL_PACKAGE)-doc build/libghc6-$(CABAL_PACKAGE)-doc:: dist-ghc6 build-haddock-stamp
 
 dist-hugs: $(DEB_SETUP_BIN_NAME)
-	$(DEB_SETUP_BIN_NAME) configure --hugs --prefix=/usr -v2 $(DEB_SETUP_HUGS_CONFIGURE_ARGS)
-	mv dist dist-hugs
+	$(DEB_SETUP_BIN_NAME) configure --hugs --prefix=/usr -v2 --builddir=dist-hugs $(DEB_SETUP_HUGS_CONFIGURE_ARGS)
 
 build/libhugs-$(CABAL_PACKAGE):: dist-hugs
-	mv dist-hugs dist
-	$(DEB_SETUP_BIN_NAME) build
-	mv dist dist-hugs
+	$(DEB_SETUP_BIN_NAME) build --builddir=dist-hugs
 
-debian/tmp-inst-ghc6: $(DEB_SETUP_BIN_NAME)
-	mv dist-ghc6 dist
-	$(DEB_SETUP_BIN_NAME) copy --destdir=debian/tmp-inst-ghc6
-	mv dist dist-ghc6
+debian/tmp-inst-ghc6: $(DEB_SETUP_BIN_NAME) dist-ghc6
+	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-ghc6 --destdir=debian/tmp-inst-ghc6
 
 install/libghc6-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc6
-	mv dist-ghc6 dist
 	cd debian/tmp-inst-ghc6 ; find usr/lib/haskell-packages/ghc6/lib/ \
 		\( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
@@ -121,31 +110,24 @@ install/libghc6-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc6
 	dh_haskell_prep -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_shlibdeps -p$(notdir $@)
-	mv dist dist-ghc6
 
 install/libghc6-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc6 install/libghc6-$(CABAL_PACKAGE)-dev
-	mv dist-ghc6 dist
 	cd debian/tmp-inst-ghc6 ; find usr/lib/haskell-packages/ghc6/lib/ \
 		! \( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
 	dh_haskell_prep -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
-	mv dist dist-ghc6
 
 install/haskell-$(CABAL_PACKAGE)-doc install/libghc6-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc6
-	mv dist-ghc6 dist
 	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_HTML_DIR)
 	cd debian/tmp-inst-ghc6/ ; find ./$(DEB_HADDOCK_HTML_DIR)/ \
 		! -name "*.haddock" -exec install -Dm 644 '{}' \
 		../$(notdir $@)/'{}' ';'
 	dh_haskell_depends -p$(notdir $@)
-	mv dist dist-ghc6
 
-install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME)
-	mv dist-hugs dist
-	$(DEB_SETUP_BIN_NAME) copy --destdir=debian/libhugs-$(CABAL_PACKAGE)
+install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs
+	$(DEB_SETUP_BIN_NAME) copy --destdir=debian/libhugs-$(CABAL_PACKAGE) --builddir=dist-hugs
 	rm -rf debian/libhugs-$(CABAL_PACKAGE)/usr/share/doc/*
 	dh_haskell_prep -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
-	mv dist dist-hugs
 
