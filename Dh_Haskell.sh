@@ -126,7 +126,7 @@ find_config_for_ghc6(){
 	*)
 	    ;;
     esac
-    for f in debian/$pkg/var/lib/ghc-*/packages.conf.d/* ; do
+    for f in debian/$pkg/var/lib/ghc-*/package.conf.d/* ; do
 	if [ -f "$f" ] ; then
 	    echo $f
 	    break

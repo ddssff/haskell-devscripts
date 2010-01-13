@@ -104,7 +104,7 @@ install/libghc6-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc6
 		\( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
 	$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc6 --gen-pkg-config | sed -r 's,.*: ,,' |\
-		xargs -I PKG install -Dm 644 PKG debian/$(notdir $@)/var/lib/ghc-$(GHC6_VERSION)/packages.conf.d/PKG
+		xargs -I PKG install -Dm 644 PKG debian/$(notdir $@)/var/lib/ghc-$(GHC6_VERSION)/package.conf.d/PKG
 	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
 	[ 0 = `ls debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/ 2>/dev/null | wc -l` ] || \
 		cp -r debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/*.haddock \
