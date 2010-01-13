@@ -30,6 +30,7 @@ not yet support nhc98.
 =head1 SEE ALSO
 
 L<dh_haskell_depends(1)>
+L<dh_haskell_provides(1)>
 L<debhelper(7)>
 
 =head1 AUTHOR

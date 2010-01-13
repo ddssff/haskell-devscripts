@@ -1,3 +1,4 @@
+dh_haskell_provides	usr/bin/
 dh_haskell_depends	usr/bin/
 dh_haskell_shlibdeps    usr/bin/
 Dh_Haskell.pm		usr/share/haskell-devscripts/

@@ -68,6 +68,18 @@ providing_package_for_ghc6_prof(){
     echo $package
 }
 
+cabal_package_ids(){
+    local config
+    local package_ids
+    until [ -z "$1" ]
+    do
+      config=$1
+      package_ids="$package_ids `grep-dctrl -n -i -s Id "" $config`"
+      shift
+    done
+    echo $package_ids
+}
+
 cabal_depends(){
     local config
     local dep
@@ -109,6 +121,32 @@ depends_for_ghc6_prof(){
     done
 
     dependencies $packages
+}
+
+provides_for_ghc6(){
+    local dep
+    local packages
+    for package_id in `cabal_package_ids $@` ; do
+	packages=", $packages `package_id_to_virtual_package dev $package_id`"
+    done
+    echo $packages | sed -e 's/^,[ ]*//'
+}
+
+provides_for_ghc6_prof(){
+    local dep
+    local packages
+    for package_id in `cabal_package_ids $@` ; do
+	packages=", $packages `package_id_to_virtual_package prof $package_id`"
+    done
+    echo $packages | sed -e 's/^,[ ]*//'
+}
+
+package_id_to_virtual_package(){
+	local type
+	local id
+	type="$1"
+	echo $2 | tr A-Z a-z | \
+		perl -pe 's/([a-z0-9]+)-([0-9\.]+)-(.....).........................../libghc6-\1-'$type'-\2-\3/'
 }
 
 depends_for_hugs(){

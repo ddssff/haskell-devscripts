@@ -109,6 +109,7 @@ install/libghc6-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc6
 	[ 0 = `ls debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/ 2>/dev/null | wc -l` ] || \
 		cp -r debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/*.haddock \
 		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
+	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_shlibdeps -p$(notdir $@)
 
@@ -116,6 +117,7 @@ install/libghc6-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc6 install/libghc6-$(C
 	cd debian/tmp-inst-ghc6 ; find usr/lib/haskell-packages/ghc6/lib/ \
 		! \( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
+	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 
 install/haskell-$(CABAL_PACKAGE)-doc install/libghc6-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc6
