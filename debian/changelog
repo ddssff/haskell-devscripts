@@ -1,3 +1,13 @@
+haskell-devscripts (0.6.18+nmu1) UNRELEASED; urgency=low
+
+  [ Kari Pahula ]
+  * Install Haddock files to /usr/lib/ghc-$VER/haddock/$PKG-$VER
+  * Use --builddir Cabal option instead of shuffling dist/ dirs around
+  * Remove postinst/prerm scripts
+  * Put package.conf into package.conf.d
+
+ -- Joachim Breitner <nomeata@debian.org>  Wed, 13 Jan 2010 14:28:53 +0100
+
 haskell-devscripts (0.6.18) unstable; urgency=low
 
   * dh_haskell_prep: Allow spaces before : in cabal fields.
