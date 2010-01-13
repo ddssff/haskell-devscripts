@@ -20,18 +20,6 @@ dependency(){
     echo "$package (>= $version), $package (<< $next_upstream_version)"
 }
 
-dependencies(){
-    local package
-    local packages
-    local deps
-    packages=$@
-    for package in `sort_uniq $packages` ; do
-	deps="$deps, `dependency $package`"
-    done
-
-    echo $deps | sed -e 's/^,[ ]*//'
-}
-
 providing_package_for_ghc6(){
     local package
     local dep
@@ -103,24 +91,52 @@ cabal_depends(){
     echo $final_depends
 }
 
+hashed_dependency(){
+    local type
+    local pkgid
+    local virpkg
+    type=$1
+    pkgid=$2
+    virtual_pkg=`package_id_to_virtual_package $type $pkgid`
+    # As a transition measure, check if dpkg knows about this virtual package
+    if dpkg-query -W $virtual_pkg >/dev/null 2>/dev/null;
+    then
+   	 echo $virpkg
+    fi
+}
+
 depends_for_ghc6(){
     local dep
     local packages
-    for dep in `cabal_depends $@` ; do
-	packages="$packages `providing_package_for_ghc6 $dep`"
+    local pkgid
+    for pkgid in `cabal_depends $@` ; do
+	dep=`hashed_dependency dev $pkgid`
+	if [ -z "$dep" ]
+	then
+	  pkg=`providing_package_for_ghc6 $pkgid`
+	  dep=`dependency $pkg`
+	fi
+	packages="$packages, $dep"
     done
 
-    dependencies $packages
+    echo $packages | sed -e 's/^,[ ]*//'
 }
 
 depends_for_ghc6_prof(){
     local dep
     local packages
-    for dep in `cabal_depends $@` ; do
-	packages="$packages `providing_package_for_ghc6_prof $dep`"
+    local pkgid
+    for pkgid in `cabal_depends $@` ; do
+	dep=`hashed_dependency prof $pkgid`
+	if [ -z "$dep" ]
+	then
+	  pkg=`providing_package_for_ghc6_prof $pkgid`
+	  dep=`dependency $pkg`
+	fi
+	packages="$packages, $dep"
     done
 
-    dependencies $packages
+    echo $packages | sed -e 's/^,[ ]*//'
 }
 
 provides_for_ghc6(){
