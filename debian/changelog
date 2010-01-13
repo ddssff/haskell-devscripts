@@ -7,7 +7,7 @@ haskell-devscripts (0.6.19) UNRELEASED; urgency=low
   * Put package.conf into package.conf.d
 
   [ Joachim Breitner ]
-  * Remove dh_haskell_prep, not needed any more 
+  * Remove dh_haskell_prep, not needed any more (Closes: #516414)
   * Create dh_haskell_provides, to create a ${haskell:Provides} substvar
     containing a string derived from the cabal package name, version and ABI
     hash.
