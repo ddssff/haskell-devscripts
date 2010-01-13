@@ -29,7 +29,6 @@ not yet support nhc98.
 
 =head1 SEE ALSO
 
-L<dh_haskell_prep(1)>
 L<dh_haskell_depends(1)>
 L<debhelper(7)>
 

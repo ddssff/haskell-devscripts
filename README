@@ -67,8 +67,7 @@ not yet support nhc98.
 SEE ALSO
 --------
 
-The manpages of dh_haskell_prep(1), dh_haskell_depends(1) and
-dh_haskell_shlibdeps(1).
+The manpages of dh_haskell_depends(1) and dh_haskell_shlibdeps(1).
 
 AUTHOR
 ------
