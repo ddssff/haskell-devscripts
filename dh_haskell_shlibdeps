@@ -50,10 +50,9 @@ for file in $files
 do
     pkg=`echo $file | cut -d/ -f2 | cut -d- -f2- | sed -e 's/-[^-]\+$//'`
     pkgconflocal=$T_DIR/$pkg.package.conf
-    pkgdir=`echo $file | sed -ne "s#^.*debian/libghc6-$pkg-dev\(/.*\)/\([^/]\+\)#\1#p"`
     cat $file | sed -e \
         "/^\(import\|library\|include\)-dirs: / { \
-        s#$pkgdir#$PWD/debian/libghc6-$pkg-dev$pkgdir#g }" \
+        s#/usr#$PWD/debian/libghc6-$pkg-dev/usr#g }" \
         > $pkgconflocal
     ghc-pkg -f $T_DIR/package.conf register $pkgconflocal --force \
         2>&1 > /dev/null || true
