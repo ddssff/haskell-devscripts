@@ -21,7 +21,7 @@ DEB_CABAL_PACKAGE ?= $(shell cat *.cabal |\
  perl -ne \
  'if (/^name\s*:\s*(.*)$$/i) {$$_ = $$1; tr/A-Z/a-z/; print; exit 0;}')
 CABAL_PACKAGE=$(DEB_CABAL_PACKAGE)
-CABAL_VERSION=$(shell cat *.cabal | egrep -i '^\s*version:' | head -n1 | sed -r 's,^\s*version:\s*,,')
+CABAL_VERSION=$(shell cat *.cabal | egrep -i '^\s*version:' | head -n1 | sed -r 's,^\s*version:\s*,,i')
 
 ENABLE_PROFILING = $(shell egrep -qe '^Package: libghc6-.*-prof$$' debian/control && echo --enable-library-profiling; exit 0)
 
