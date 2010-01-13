@@ -1,3 +1,7 @@
+strip_hash(){
+	echo "$1" | sed 's/-................................$//'
+}
+
 sort_uniq(){
     {
 	for i in "$@" ; do
@@ -34,7 +38,7 @@ providing_package_for_ghc6(){
     local dir
     local dirs
     local lib
-    dep=$1
+    dep=`strip_hash $1`
     dirs=`ghc-pkg6 field $dep library-dirs | cut -d':' -f 2`
     lib=`ghc-pkg6 field $dep hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
@@ -52,7 +56,7 @@ providing_package_for_ghc6_prof(){
     local dir
     local dirs
     local lib
-    dep=$1
+    dep=`strip_hash $1`
     dirs=`ghc-pkg6 field $dep library-dirs | cut -d':' -f 2`
     lib=`ghc-pkg6 field $dep hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
