@@ -12,7 +12,7 @@ haskell-devscripts (0.6.19) UNRELEASED; urgency=low
     containing a string derived from the cabal package name, version and ABI
     hash.
   * Depend on the virtual package names provided by dh_haskell_provides, if
-    dpkg knows about them.
+    dpkg knows about them. (Closes: #518308, #507912)
   * Bump ghc6 dependency to (>= 6.12)
 
  -- Joachim Breitner <nomeata@debian.org>  Wed, 13 Jan 2010 14:28:53 +0100
