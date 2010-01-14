@@ -27,8 +27,8 @@ providing_package_for_ghc6(){
     local dirs
     local lib
     dep=`strip_hash $1`
-    dirs=`ghc-pkg6 field $dep library-dirs | cut -d':' -f 2`
-    lib=`ghc-pkg6 field $dep hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
+    dirs=`ghc-pkg6 field $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
+    lib=`ghc-pkg6 field $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
 	if [ -e "${dir}/lib${lib}.a" ] ; then
 	    package=`dpkg-query -S ${dir}/lib${lib}.a | cut -d':' -f 1` || exit $?
@@ -45,8 +45,8 @@ providing_package_for_ghc6_prof(){
     local dirs
     local lib
     dep=`strip_hash $1`
-    dirs=`ghc-pkg6 field $dep library-dirs | cut -d':' -f 2`
-    lib=`ghc-pkg6 field $dep hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
+    dirs=`ghc-pkg6 field $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
+    lib=`ghc-pkg6 field $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
 	if [ -e "${dir}/lib${lib}_p.a" ] ; then
 	    package=`dpkg-query -S ${dir}/lib${lib}_p.a | cut -d':' -f 1` || exit $?
