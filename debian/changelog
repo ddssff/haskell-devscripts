@@ -1,4 +1,4 @@
-haskell-devscripts (0.6.19) UNRELEASED; urgency=low
+haskell-devscripts (0.6.19) experimental; urgency=low
 
   [ Kari Pahula ]
   * Install Haddock files to /usr/lib/ghc-$VER/haddock/$PKG-$VER
@@ -15,7 +15,7 @@ haskell-devscripts (0.6.19) UNRELEASED; urgency=low
     dpkg knows about them. (Closes: #518308, #507912)
   * Bump ghc6 dependency to (>= 6.12)
 
- -- Joachim Breitner <nomeata@debian.org>  Wed, 13 Jan 2010 14:28:53 +0100
+ -- Joachim Breitner <nomeata@debian.org>  Thu, 28 Jan 2010 22:45:23 +0100
 
 haskell-devscripts (0.6.18) unstable; urgency=low
 
