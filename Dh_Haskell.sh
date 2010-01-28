@@ -101,7 +101,7 @@ hashed_dependency(){
     # As a transition measure, check if dpkg knows about this virtual package
     if dpkg-query -W $virtual_pkg >/dev/null 2>/dev/null;
     then
-   	 echo $virpkg
+   	 echo $virtual_pkg
     fi
 }
 
