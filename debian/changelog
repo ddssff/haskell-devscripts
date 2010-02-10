@@ -1,8 +1,9 @@
-haskell-devscripts (0.6.20) UNRELEASED; urgency=low
+haskell-devscripts (0.7) unstable; urgency=low
 
+  [ Marco Túlio Gontijo e Silva ]
   * debian/control: Add haddock and hscolour as Dependencies:.
 
- -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 09 Feb 2010 15:35:19 -0200
+ -- Joachim Breitner <nomeata@debian.org>  Wed, 10 Feb 2010 12:39:56 +0100
 
 haskell-devscripts (0.6.19) experimental; urgency=low
 
