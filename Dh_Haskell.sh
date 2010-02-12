@@ -161,6 +161,7 @@ package_id_to_virtual_package(){
 	local type
 	type="$1"
 	echo $2 | tr A-Z a-z | \
+            grep '[a-z0-9]\+-[0-9\.]\+-................................' | \
 		perl -pe 's/([a-z0-9]+)-([0-9\.]+)-(.....).........................../libghc6-\1-'$type'-\2-\3/'
 }
 
