@@ -159,7 +159,6 @@ provides_for_ghc6_prof(){
 
 package_id_to_virtual_package(){
 	local type
-	local id
 	type="$1"
 	echo $2 | tr A-Z a-z | \
 		perl -pe 's/([a-z0-9]+)-([0-9\.]+)-(.....).........................../libghc6-\1-'$type'-\2-\3/'
