@@ -1,4 +1,4 @@
-haskell-devscripts (0.7.2) UNRELEASED; urgency=low
+haskell-devscripts (0.7.2) unstable; urgency=low
 
   * Dh_Haskell.sh: Remove unused variable.
   * Dh_Haskell.sh: Remove packages without hash-id from the list.
@@ -6,7 +6,7 @@ haskell-devscripts (0.7.2) UNRELEASED; urgency=low
     a Debian-package.
   * debian/control: Update Uploader e-mail.
 
- -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Fri, 12 Feb 2010 13:39:17 -0200
+ -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Fri, 12 Feb 2010 14:02:38 -0200
 
 haskell-devscripts (0.7.1) unstable; urgency=low
 
