@@ -114,9 +114,14 @@ depends_for_ghc6(){
 	if [ -z "$dep" ]
 	then
 	  pkg=`providing_package_for_ghc6 $pkgid`
-	  dep=`dependency $pkg`
+          if [ -n "$pkg" ]
+          then
+	      dep=`dependency $pkg`
+	      packages="$packages, $dep"
+          fi
+        else
+	    packages="$packages, $dep"
 	fi
-	packages="$packages, $dep"
     done
 
     echo $packages | sed -e 's/^,[ ]*//'
