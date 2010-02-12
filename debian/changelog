@@ -4,6 +4,7 @@ haskell-devscripts (0.7.2) UNRELEASED; urgency=low
   * Dh_Haskell.sh: Remove packages without hash-id from the list.
   * Dh_Haskell.sh: Treat haskell-package dependencies that doesn't need
     a Debian-package.
+  * debian/control: Update Uploader e-mail.
 
  -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Fri, 12 Feb 2010 13:39:17 -0200
 
