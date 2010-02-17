@@ -1,9 +1,11 @@
-haskell-devscripts (0.7.3) UNRELEASED; urgency=low
+haskell-devscripts (0.7.3) unstable; urgency=low
 
   * Priority extra 
   * Fix dh_haskell_provides with packages with a dash in the cabal name 
+  * dh_haskell_* looks at files given  on the command line _or_ at the
+    expected place 
 
- -- Joachim Breitner <nomeata@debian.org>  Fri, 12 Feb 2010 17:29:43 +0100
+ -- Joachim Breitner <nomeata@debian.org>  Wed, 17 Feb 2010 16:27:45 +0100
 
 haskell-devscripts (0.7.2) unstable; urgency=low
 

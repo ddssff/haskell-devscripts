@@ -31,8 +31,9 @@ for pkg in $pkgs
 do
     case "$pkg" in
         libghc6-*-dev)
-            config=`find_config_for_ghc6 $pkg`
-            [ -f "$config" ] && files="$files $config"
+	    if [ -z "$files" ] ; then
+		files=`find_config_for_ghc6 $pkg`
+	    fi
             ;;
     esac
 done
