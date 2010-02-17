@@ -183,6 +183,9 @@ find_config_for_ghc6(){
     local pkg
     pkg=$1
     case "$pkg" in
+	ghc6-prof)
+	    pkg=ghc6
+	    ;;
 	libghc6-*-prof)
 	    pkg=`echo $pkg | sed -e 's/-prof$/-dev/'`
 	    ;;
@@ -192,7 +195,7 @@ find_config_for_ghc6(){
     for f in debian/$pkg/var/lib/ghc-*/package.conf.d/* ; do
 	if [ -f "$f" ] ; then
 	    echo $f
-	    break
+	    echo " "
 	fi
     done
 }

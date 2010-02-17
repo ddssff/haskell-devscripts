@@ -55,14 +55,19 @@
 
 set -e 
 
-. /usr/share/haskell-devscripts/Dh_Haskell.sh
+if test -e debian/Dh_Haskell.sh
+then
+	. debian/Dh_Haskell.sh
+else
+	. /usr/share/haskell-devscripts/Dh_Haskell.sh
+fi
 
 for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars
     touch $sfile
 
     case "$pkg" in
-	libghc6-*-dev|libghc6-*-prof)
+	libghc6-*-dev|libghc6-*-prof|ghc6|ghc-prof)
 	    config=`find_config_for_ghc6 $pkg`
 	    if [ -f "$config" ] ; then
 		cfiles="$files $config"
@@ -74,13 +79,13 @@ for pkg in `dh_listpackages $args`; do
 	      exit 1
 	    fi
 	    case "$pkg" in
-		libghc6-*-dev)
+		libghc6-*-dev|ghc6)
 	            grep -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
 	            echo "haskell:Provides=`provides_for_ghc6 $cfiles`" >> $sfile.tmp
 		    ;;
-		libghc6-*-prof)
+		libghc6-*-prof|ghc6-prof)
 	            grep -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
