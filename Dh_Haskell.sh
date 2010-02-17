@@ -148,7 +148,7 @@ provides_for_ghc6(){
     local dep
     local packages
     for package_id in `cabal_package_ids $@` ; do
-	packages=", $packages `package_id_to_virtual_package dev $package_id`"
+	packages="$packages, `package_id_to_virtual_package dev $package_id`"
     done
     echo $packages | sed -e 's/^,[ ]*//'
 }
@@ -157,7 +157,7 @@ provides_for_ghc6_prof(){
     local dep
     local packages
     for package_id in `cabal_package_ids $@` ; do
-	packages=", $packages `package_id_to_virtual_package prof $package_id`"
+	packages="$packages, `package_id_to_virtual_package prof $package_id`"
     done
     echo $packages | sed -e 's/^,[ ]*//'
 }

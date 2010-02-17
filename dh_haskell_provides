@@ -67,10 +67,9 @@ for pkg in `dh_listpackages $args`; do
     touch $sfile
 
     case "$pkg" in
-	libghc6-*-dev|libghc6-*-prof|ghc6|ghc-prof)
-	    config=`find_config_for_ghc6 $pkg`
-	    if [ -f "$config" ] ; then
-		cfiles="$files $config"
+	libghc6-*-dev|libghc6-*-prof|ghc6|ghc6-prof)
+	    if [ -z "$files" ] ; then
+		cfiles=`find_config_for_ghc6 $pkg`
 	    else
 		cfiles="$files"
 	    fi
