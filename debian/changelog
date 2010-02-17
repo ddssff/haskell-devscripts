@@ -1,6 +1,7 @@
 haskell-devscripts (0.7.3) UNRELEASED; urgency=low
 
   * Priority extra 
+  * Fix dh_haskell_provides with packages with a dash in the cabal name 
 
  -- Joachim Breitner <nomeata@debian.org>  Fri, 12 Feb 2010 17:29:43 +0100
 
