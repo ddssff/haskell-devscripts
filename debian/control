@@ -14,7 +14,7 @@ Package: haskell-devscripts
 Architecture: all
 Depends: dctrl-tools
   , debhelper
-  , ghc6 (>= 6.12)
+  , ghc6 (>= 6.12.1-10)
   , xutils-dev
   , cdbs
   , ${misc:Depends}
