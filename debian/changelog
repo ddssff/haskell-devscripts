@@ -1,33 +1,3 @@
-haskell-devscripts (0.7.7) unstable; urgency=low
-
-  * Fix "Haskell cleanup fails if optional hlibrary.setup is missing"
-    changing the way the shell conditional is done.  Thanks to Jonas
-    Smedegaard <dr@jones.dk>. (Closes: #576447)
-
- -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Sun, 04 Apr 2010 22:36:51 -0300
-
-haskell-devscripts (0.7.6) unstable; urgency=low
-
-  * Remove Dh_Haskell.pm.
-  * source/format: Use 3.0 (native).
-  * Fix "GREP_OPTIONS breaks build" cleaning GREP_OPTIONS in hlibrary.mk
-    (Closes: #573925)
-  * Move DEB_BUILD_DEPENDENCIES = build-arch to hlibrary.mk, instead of
-    all packages debian/rules.
-  * Fix "hlibrary.mk should do cleanup" by including Setup clean in the
-    clean:: target of hlibrary.mk.  (Closes: #575128)
-
- -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 30 Mar 2010 21:06:16 -0300
-
-haskell-devscripts (0.7.5) unstable; urgency=low
-
-  * hlibrary.mk: Create HASKELL_HIDE_PACKAGES variable, to make it
-    possible to create packages hidden by default.
-  * hlibrary.mk: Include package.conf file in md5sums, since it doesn't
-    change.
-
- -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 09 Mar 2010 21:37:30 -0300
-
 haskell-devscripts (0.7.4) unstable; urgency=low
 
   * Prevent building of packages with ghc6 << 6.12.1-10 
