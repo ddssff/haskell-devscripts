@@ -1,11 +1,11 @@
-haskell-devscripts (0.7.5) UNRELEASED; urgency=low
+haskell-devscripts (0.7.5) unstable; urgency=low
 
   * hlibrary.mk: Create HASKELL_HIDE_PACKAGES variable, to make it
     possible to create packages hidden by default.
   * hlibrary.mk: Include package.conf file in md5sums, since it doesn't
     change.
 
- -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Fri, 05 Mar 2010 19:50:39 -0300
+ -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 09 Mar 2010 21:37:30 -0300
 
 haskell-devscripts (0.7.4) unstable; urgency=low
 
