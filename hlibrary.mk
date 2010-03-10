@@ -57,8 +57,6 @@ ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
    OPTIMIZATION = --disable-optimization
 endif
 
-DEB_DH_MD5SUMS_ARGS += -Xpackage.conf.d
-
 clean::
 	rm -rf dist dist-ghc6 dist-hugs $(DEB_SETUP_BIN_NAME) Setup.hi Setup.ho Setup.o .*config*
 	rm -f build-ghc6-stamp build-hugs-stamp build-haddock-stamp
