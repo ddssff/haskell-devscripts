@@ -17,6 +17,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
+export GREP_OPTIONS :=
+
 DEB_CABAL_PACKAGE ?= $(shell cat *.cabal |\
  perl -ne \
  'if (/^name\s*:\s*(.*)$$/i) {$$_ = $$1; tr/A-Z/a-z/; print; exit 0;}')
