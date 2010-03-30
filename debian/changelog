@@ -4,6 +4,8 @@ haskell-devscripts (0.7.6) UNRELEASED; urgency=low
   * source/format: Use 3.0 (native).
   * Fix "GREP_OPTIONS breaks build" cleaning GREP_OPTIONS in hlibrary.mk
     (Closes: #573925)
+  * Move DEB_BUILD_DEPENDENCIES = build-arch to hlibrary.mk, instead of
+    all packages debian/rules.
 
  -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 23 Mar 2010 16:45:54 -0300
 
