@@ -6,6 +6,8 @@ haskell-devscripts (0.7.6) UNRELEASED; urgency=low
     (Closes: #573925)
   * Move DEB_BUILD_DEPENDENCIES = build-arch to hlibrary.mk, instead of
     all packages debian/rules.
+  * Fix "hlibrary.mk should do cleanup" by including Setup clean in the
+    clean:: target of hlibrary.mk.  (Closes: #575128)
 
  -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 23 Mar 2010 16:45:54 -0300
 
