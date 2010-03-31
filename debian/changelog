@@ -1,4 +1,4 @@
-haskell-devscripts (0.7.6) UNRELEASED; urgency=low
+haskell-devscripts (0.7.6) unstable; urgency=low
 
   * Remove Dh_Haskell.pm.
   * source/format: Use 3.0 (native).
@@ -9,7 +9,7 @@ haskell-devscripts (0.7.6) UNRELEASED; urgency=low
   * Fix "hlibrary.mk should do cleanup" by including Setup clean in the
     clean:: target of hlibrary.mk.  (Closes: #575128)
 
- -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 23 Mar 2010 16:45:54 -0300
+ -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 30 Mar 2010 21:06:16 -0300
 
 haskell-devscripts (0.7.5) unstable; urgency=low
 
