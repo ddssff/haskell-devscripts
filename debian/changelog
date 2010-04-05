@@ -1,3 +1,11 @@
+haskell-devscripts (0.7.7) UNRELEASED; urgency=low
+
+  * Fix "Haskell cleanup fails if optional hlibrary.setup is missing"
+    changing the way the shell conditional is done.  Thanks to Jonas
+    Smedegaard <dr@jones.dk>. (Closes: #576447)
+
+ -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Sun, 04 Apr 2010 22:35:42 -0300
+
 haskell-devscripts (0.7.6) unstable; urgency=low
 
   * Remove Dh_Haskell.pm.
