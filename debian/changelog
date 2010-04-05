@@ -1,6 +1,7 @@
 haskell-devscripts (0.7.8) UNRELEASED; urgency=low
 
   * Parse cabal files more liberaly in hlibrary.mk 
+  * Wrong see also in dh_haskell_provides (Closes: #576504)
 
  -- Joachim Breitner <nomeata@debian.org>  Sat, 20 Feb 2010 19:49:26 +0100
 
