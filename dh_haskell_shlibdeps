@@ -53,7 +53,7 @@ do
     pkgconflocal=$T_DIR/$pkg.package.conf
     cat $file | sed -e \
         "/^\(import\|library\|include\)-dirs: / { \
-        s#/usr#$PWD/debian/libghc6-$pkg-dev/usr#g }" \
+        s#/usr/lib/haskell-packages#$PWD/debian/libghc6-$pkg-dev/usr/lib/haskell-packages#g }" \
         > $pkgconflocal
     ghc-pkg -f $T_DIR/package.conf register $pkgconflocal --force \
         2>&1 > /dev/null || true
