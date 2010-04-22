@@ -1,10 +1,3 @@
-haskell-devscripts (0.7.9) UNRELEASED; urgency=low
-
-  * dh_haskell_shlibdeps: Mangle paths in package descriptions more
-    selectively 
-
- -- Joachim Breitner <nomeata@debian.org>  Fri, 16 Apr 2010 21:32:13 +0200
-
 haskell-devscripts (0.7.8) unstable; urgency=low
 
   * Parse cabal files more liberaly in hlibrary.mk 

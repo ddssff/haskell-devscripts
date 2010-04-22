@@ -82,7 +82,15 @@ for pkg in `dh_listpackages $args`; do
                     echo "haskell:Recommends=" >> $sfile.tmp
                     doc=`echo $pkg | sed -e 's/-dev$/-doc/'`
                     prof=`echo $pkg | sed -e 's/-dev$/-prof/'`
-                    suggests="$doc, $prof"
+                    grep $doc debian/control > /dev/null \
+                        && suggests="$doc" \
+                        || suggests=""
+                    if grep $prof debian/control > /dev/null
+                    then
+                        [ "$suggests" = "" ] \
+                            && suggests="$prof" \
+                            || suggests="$suggests, $prof"
+                    fi
                     echo "haskell:Suggests=$suggests" >> $sfile.tmp
 		    ;;
 		libghc6-*-prof)
@@ -130,7 +138,8 @@ for pkg in `dh_listpackages $args`; do
                 | sed -e :a -e '$!N; s/\n/, /; ta'`
             echo "haskell:Recommends=$recommends" >> $sfile.tmp
             dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/libghc6-\1-dev/'`
-            echo "haskell:Suggests=$dev" >> $sfile.tmp
+            grep $dev debian/control && suggests="$dev" || suggests=""
+            echo "haskell:Suggests=$suggests" >> $sfile.tmp
             mv $sfile.tmp $sfile
             ;;
 	*)
