@@ -82,10 +82,10 @@ for pkg in `dh_listpackages $args`; do
                     echo "haskell:Recommends=" >> $sfile.tmp
                     doc=`echo $pkg | sed -e 's/-dev$/-doc/'`
                     prof=`echo $pkg | sed -e 's/-dev$/-prof/'`
-                    grep $doc debian/control > /dev/null \
+                    grep -v '^#' debian/control | grep $doc > /dev/null \
                         && suggests="$doc" \
                         || suggests=""
-                    if grep $prof debian/control > /dev/null
+                    if grep -v '^#' debian/control | grep $prof > /dev/null
                     then
                         [ "$suggests" = "" ] \
                             && suggests="$prof" \
@@ -138,7 +138,9 @@ for pkg in `dh_listpackages $args`; do
                 | sed -e :a -e '$!N; s/\n/, /; ta'`
             echo "haskell:Recommends=$recommends" >> $sfile.tmp
             dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/libghc6-\1-dev/'`
-            grep $dev debian/control && suggests="$dev" || suggests=""
+            grep -v '^#' debian/control | grep $dev > /dev/null \
+                && suggests="$dev" \
+                || suggests=""
             echo "haskell:Suggests=$suggests" >> $sfile.tmp
             mv $sfile.tmp $sfile
             ;;
