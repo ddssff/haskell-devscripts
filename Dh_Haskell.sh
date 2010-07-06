@@ -123,7 +123,7 @@ depends_for_ghc6(){
 	      dep=`dependency $pkg`
 	      packages="$packages, $dep"
 	  else
-	      echo "WARNING: No Debian package provides haskell package $pkgid."
+	      echo "WARNING: No Debian package provides haskell package $pkgid." >&2
           fi
         else
 	    packages="$packages, $dep"
@@ -147,7 +147,7 @@ depends_for_ghc6_prof(){
 	      dep=`dependency $pkg`
 	      packages="$packages, $dep"
 	  else
-	      echo "WARNING: No Debian package provides haskell package $pkgid."
+	      echo "WARNING: No Debian package provides haskell package $pkgid." >&2
           fi
         else
 	    packages="$packages, $dep"
