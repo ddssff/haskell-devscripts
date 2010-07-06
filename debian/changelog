@@ -1,9 +1,9 @@
-haskell-devscripts (0.7.11) UNRELEASED; urgency=low
+haskell-devscripts (0.7.11) unstable; urgency=low
 
   * Better error checking when figuring out providing package, should help
     debug or even fix bug #588001. 
 
- -- Joachim Breitner <nomeata@debian.org>  Tue, 06 Jul 2010 11:16:35 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 06 Jul 2010 11:18:09 +0200
 
 haskell-devscripts (0.7.10) unstable; urgency=low
 
