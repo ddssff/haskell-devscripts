@@ -122,6 +122,8 @@ depends_for_ghc6(){
           then
 	      dep=`dependency $pkg`
 	      packages="$packages, $dep"
+	  else
+	      echo "WARNING: No Debian package provides haskell package $pkgid."
           fi
         else
 	    packages="$packages, $dep"
@@ -140,9 +142,16 @@ depends_for_ghc6_prof(){
 	if [ -z "$dep" ]
 	then
 	  pkg=`providing_package_for_ghc6_prof $pkgid`
-	  dep=`dependency $pkg`
+          if [ -n "$pkg" ]
+          then
+	      dep=`dependency $pkg`
+	      packages="$packages, $dep"
+	  else
+	      echo "WARNING: No Debian package provides haskell package $pkgid."
+          fi
+        else
+	    packages="$packages, $dep"
 	fi
-	packages="$packages, $dep"
     done
 
     echo $packages | sed -e 's/^,[ ]*//'
