@@ -1,8 +1,8 @@
-haskell-devscripts (0.7.12) UNRELEASED; urgency=low
+haskell-devscripts (0.7.12) unstable; urgency=low
 
   * Send error messages to stdout
 
- -- Joachim Breitner <nomeata@debian.org>  Tue, 06 Jul 2010 11:48:43 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 06 Jul 2010 11:48:53 +0200
 
 haskell-devscripts (0.7.11) unstable; urgency=low
 
