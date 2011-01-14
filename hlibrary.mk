@@ -85,7 +85,7 @@ build-ghc6-stamp: dist-ghc6
 	$(BUILD_GHC6) --builddir=dist-ghc6
 	touch build-ghc6-stamp
 
-build/libghc6-$(CABAL_PACKAGE)-prof build/libghc6-$(CABAL_PACKAGE)-dev:: build-ghc6-stamp build-haddock-stamp
+build/libghc6-$(CABAL_PACKAGE)-prof build/libghc6-$(CABAL_PACKAGE)-dev:: build-ghc6-stamp
 
 build-haddock-stamp:
 	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock --builddir=dist-ghc6 $(DEB_HADDOCK_OPTS)
@@ -110,10 +110,6 @@ install/libghc6-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc6
 		$(if $(HASKELL_HIDE_PACKAGES),sed -i 's/^exposed: True$$/exposed: False/' $$pkg_config;) \
 		install -Dm 644 $$pkg_config debian/$(notdir $@)/var/lib/ghc-$(GHC6_VERSION)/package.conf.d/$$pkg_config; \
 		rm -f $$pkg_config
-	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
-	[ 0 = `ls debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/ 2>/dev/null | wc -l` ] || \
-		cp -r debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/*.haddock \
-		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_shlibdeps -p$(notdir $@)
@@ -130,6 +126,10 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc6-$(CABAL_PACKAGE)-doc:: debi
 	cd debian/tmp-inst-ghc6/ ; find ./$(DEB_HADDOCK_HTML_DIR)/ \
 		! -name "*.haddock" -exec install -Dm 644 '{}' \
 		../$(notdir $@)/'{}' ';'
+	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
+	[ 0 = `ls debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/ 2>/dev/null | wc -l` ] || \
+		cp -r debian/tmp-inst-ghc6/$(DEB_HADDOCK_DIR)/*.haddock \
+		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
 	dh_haskell_depends -p$(notdir $@)
 
 install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs
