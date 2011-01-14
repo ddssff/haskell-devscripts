@@ -3,6 +3,7 @@ haskell-devscripts (0.7.13) UNRELEASED; urgency=low
   * Fix ".haddock file in -dev creates broken symlinks in
     /usr/share/doc/ghc6-doc/html/libraries/index.html" by moving .haddock
     file to -doc package. (Closes: #586723)
+  * Update Uploader name.
 
  -- Marco Silva <marcot@debian.org>  Fri, 14 Jan 2011 12:37:29 -0200
 

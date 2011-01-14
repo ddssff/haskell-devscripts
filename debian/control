@@ -2,7 +2,7 @@ Source: haskell-devscripts
 Section: haskell
 Priority: extra
 Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
-Uploaders: Marco Túlio Gontijo e Silva <marcot@debian.org>, Joachim Breitner <nomeata@debian.org>
+Uploaders: Marco Silva <marcot@debian.org>, Joachim Breitner <nomeata@debian.org>
 Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl
 Standards-Version: 3.8.4
