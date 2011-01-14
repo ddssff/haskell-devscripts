@@ -11,8 +11,8 @@ hlibrary.mk:
 
 dh_haskell_shlibdeps:
   Copyright:
-    Copyright (C) 2009 Marco Túlio Gontijo e Silva <marcot@holoscopio.com>
-  Upstream Author: Marco Túlio Gontijo e Silva <marcot@holoscopio.com>
+    Copyright (C) 2009 Marco Silva <marcot@debian.org>
+  Upstream Author: Marco Silva <marcot@debian.org>
   License:
     CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE LEGAL
     SERVICES. DISTRIBUTION OF THIS CC0 WAIVER DOES NOT CREATE AN
