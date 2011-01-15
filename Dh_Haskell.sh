@@ -24,7 +24,7 @@ ghc_pkg_field(){
     ghc-pkg6 --global field $@ | head -n1
 }
 
-providing_package_for_ghc6(){
+providing_package_for_ghc(){
     local package
     local dep
     local dir
@@ -42,7 +42,7 @@ providing_package_for_ghc6(){
     echo $package
 }
 
-providing_package_for_ghc6_prof(){
+providing_package_for_ghc_prof(){
     local package
     local dep
     local dir
@@ -109,7 +109,7 @@ hashed_dependency(){
     fi
 }
 
-depends_for_ghc6(){
+depends_for_ghc(){
     local dep
     local packages
     local pkgid
@@ -117,7 +117,7 @@ depends_for_ghc6(){
 	dep=`hashed_dependency dev $pkgid`
 	if [ -z "$dep" ]
 	then
-	  pkg=`providing_package_for_ghc6 $pkgid`
+	  pkg=`providing_package_for_ghc $pkgid`
           if [ -n "$pkg" ]
           then
 	      dep=`dependency $pkg`
@@ -133,7 +133,7 @@ depends_for_ghc6(){
     echo $packages | sed -e 's/^,[ ]*//'
 }
 
-depends_for_ghc6_prof(){
+depends_for_ghc_prof(){
     local dep
     local packages
     local pkgid
@@ -141,7 +141,7 @@ depends_for_ghc6_prof(){
 	dep=`hashed_dependency prof $pkgid`
 	if [ -z "$dep" ]
 	then
-	  pkg=`providing_package_for_ghc6_prof $pkgid`
+	  pkg=`providing_package_for_ghc_prof $pkgid`
           if [ -n "$pkg" ]
           then
 	      dep=`dependency $pkg`
@@ -157,7 +157,7 @@ depends_for_ghc6_prof(){
     echo $packages | sed -e 's/^,[ ]*//'
 }
 
-provides_for_ghc6(){
+provides_for_ghc(){
     local dep
     local packages
     for package_id in `cabal_package_ids $@` ; do
@@ -166,7 +166,7 @@ provides_for_ghc6(){
     echo $packages | sed -e 's/^,[ ]*//'
 }
 
-provides_for_ghc6_prof(){
+provides_for_ghc_prof(){
     local dep
     local packages
     for package_id in `cabal_package_ids $@` ; do
@@ -180,7 +180,7 @@ package_id_to_virtual_package(){
 	type="$1"
 	echo $2 | tr A-Z a-z | \
             grep '[a-z0-9]\+-[0-9\.]\+-................................' | \
-		perl -pe 's/([a-z0-9-]+)-([0-9\.]+)-(.....).........................../libghc6-\1-'$type'-\2-\3/'
+		perl -pe 's/([a-z0-9-]+)-([0-9\.]+)-(.....).........................../libghc-\1-'$type'-\2-\3/'
 }
 
 depends_for_hugs(){
@@ -191,15 +191,15 @@ depends_for_hugs(){
     echo "hugs (>= $upstream_version)"
 }
 
-find_config_for_ghc6(){
+find_config_for_ghc(){
     local f
     local pkg
     pkg=$1
     case "$pkg" in
-	ghc6-prof)
-	    pkg=ghc6
+	ghc-prof)
+	    pkg=ghc
 	    ;;
-	libghc6-*-prof)
+	libghc-*-prof)
 	    pkg=`echo $pkg | sed -e 's/-prof$/-dev/'`
 	    ;;
 	*)

@@ -67,9 +67,9 @@ for pkg in `dh_listpackages $args`; do
     touch $sfile
 
     case "$pkg" in
-	libghc6-*-dev|libghc6-*-prof|ghc6|ghc6-prof)
+	libghc-*-dev|libghc-*-prof|ghc|ghc-prof)
 	    if [ -z "$files" ] ; then
-		cfiles=`find_config_for_ghc6 $pkg`
+		cfiles=`find_config_for_ghc $pkg`
 	    else
 		cfiles="$files"
 	    fi
@@ -78,17 +78,17 @@ for pkg in `dh_listpackages $args`; do
 	      exit 1
 	    fi
 	    case "$pkg" in
-		libghc6-*-dev|ghc6)
+		libghc-*-dev|ghc)
 	            grep -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
-	            echo "haskell:Provides=`provides_for_ghc6 $cfiles`" >> $sfile.tmp
+	            echo "haskell:Provides=`provides_for_ghc $cfiles`" >> $sfile.tmp
 		    ;;
-		libghc6-*-prof|ghc6-prof)
+		libghc-*-prof|ghc-prof)
 	            grep -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
-	            echo "haskell:Provides=`provides_for_ghc6_prof $cfiles`" >> $sfile.tmp
+	            echo "haskell:Provides=`provides_for_ghc_prof $cfiles`" >> $sfile.tmp
 		    ;;
 	    esac
 	    mv $sfile.tmp $sfile

@@ -20,7 +20,7 @@ REQUIREMENTS
 dh_haskell assumes that your packages are adhering to the draft Haskell policy.
 
 Your control file must build the binary library files using packages
-named libghc6-<name>-<variation>, where <name> is the name of your package; and
+named libghc-<name>-<variation>, where <name> is the name of your package; and
 <variation> is dev, prof or doc. These packages should be Architecture: any
 (dev, and proc) or all (doc).
 
@@ -61,7 +61,7 @@ See the Debian source packages for haskell-src-exts, haskell-ghc-paths.
 BUGS
 ----
 
-hugs and ghc6 are the only supported targets at the moment.  Cabal does
+hugs and ghc are the only supported targets at the moment.  Cabal does
 not yet support nhc98.
 
 SEE ALSO

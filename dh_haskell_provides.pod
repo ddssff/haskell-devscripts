@@ -15,8 +15,8 @@ dh_haskell_provides is a debhelper program that calculates the correct virtual
 package to provide, so that dependencies can guarantee ABI stability.
 
 For a package with an idea of package-version-longhashstring, it generates a
-virtual package of the form libghc6-package-dev-version-longh for the -dev
-package and libghc6-package-prof-version-longh for the prof package
+virtual package of the form libghc-package-dev-version-longh for the -dev
+package and libghc-package-prof-version-longh for the prof package
 respectively.
 
 This script writes the debian/$package.substvars file, including in it the

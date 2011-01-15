@@ -30,9 +30,9 @@ pkgs=`dh_listpackages $args`
 for pkg in $pkgs
 do
     case "$pkg" in
-        libghc6-*-dev)
+        libghc-*-dev)
 	    if [ -z "$files" ] ; then
-		files=`find_config_for_ghc6 $pkg`
+		files=`find_config_for_ghc $pkg`
 	    fi
             ;;
     esac
@@ -53,7 +53,7 @@ do
     pkgconflocal=$T_DIR/$pkg.package.conf
     cat $file | sed -e \
         "/^\(import\|library\|include\)-dirs: / { \
-        s#/usr/lib/haskell-packages#$PWD/debian/libghc6-$pkg-dev/usr/lib/haskell-packages#g }" \
+        s#/usr/lib/haskell-packages#$PWD/debian/libghc-$pkg-dev/usr/lib/haskell-packages#g }" \
         > $pkgconflocal
     ghc-pkg -f $T_DIR/package.conf register $pkgconflocal --force \
         2>&1 > /dev/null || true
@@ -61,9 +61,9 @@ done
 for pkg in $pkgs
 do
     case "$pkg" in
-        libghc6-*-dev)
+        libghc-*-dev)
             sfile=debian/$pkg.substvars
-            pkgname=`basename debian/$pkg/usr/lib/haskell-packages/ghc6/lib/* | sed -e 's/-[^-]\+$//'`
+            pkgname=`basename debian/$pkg/usr/lib/haskell-packages/ghc/lib/* | sed -e 's/-[^-]\+$//'`
             touch $sfile
             echo "module Main where main = return ()" > $T_DIR/a.hs
             ghc --make $T_DIR/a.hs -o $T_DIR/a.out -package-conf \

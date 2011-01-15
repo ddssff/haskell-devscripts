@@ -61,9 +61,9 @@ for pkg in `dh_listpackages $args`; do
     touch $sfile
 
     case "$pkg" in
-	libghc6-*-dev|libghc6-*-prof)
+	libghc-*-dev|libghc-*-prof)
 	    if [ -z "$files" ] ; then
-		cfiles=`find_config_for_ghc6 $pkg`
+		cfiles=`find_config_for_ghc $pkg`
 	    else
 		cfiles="$files"
 	    fi
@@ -72,13 +72,13 @@ for pkg in `dh_listpackages $args`; do
 	      exit 1
 	    fi
 	    case "$pkg" in
-		libghc6-*-dev)
+		libghc-*-dev)
 	            grep -v \
                         -e ^haskell:Depends \
                         -e ^haskell:Recommends \
                         -e ^haskell:Suggests \
                         $sfile > $sfile.tmp || true
-		    echo "haskell:Depends=`depends_for_ghc6 $cfiles`" >> $sfile.tmp
+		    echo "haskell:Depends=`depends_for_ghc $cfiles`" >> $sfile.tmp
                     echo "haskell:Recommends=" >> $sfile.tmp
                     doc=`echo $pkg | sed -e 's/-dev$/-doc/'`
                     prof=`echo $pkg | sed -e 's/-dev$/-prof/'`
@@ -93,7 +93,7 @@ for pkg in `dh_listpackages $args`; do
                     fi
                     echo "haskell:Suggests=$suggests" >> $sfile.tmp
 		    ;;
-		libghc6-*-prof)
+		libghc-*-prof)
 	            grep -v \
                         -e ^haskell:Depends \
                         -e ^haskell:Recommends \
@@ -101,7 +101,7 @@ for pkg in `dh_listpackages $args`; do
                         $sfile > $sfile.tmp || true
                     dev=`echo $pkg | sed -e 's/-prof$/-dev/'`
                     version='(=${binary:Version})'
-                    depends="$dev ${version}, `depends_for_ghc6_prof $cfiles`"
+                    depends="$dev ${version}, `depends_for_ghc_prof $cfiles`"
 		    echo "haskell:Depends=$depends" >> $sfile.tmp
                     echo "haskell:Recommends=" >> $sfile.tmp
                     echo "haskell:Suggests=" >> $sfile.tmp
@@ -120,7 +120,7 @@ for pkg in `dh_listpackages $args`; do
             echo "haskell:Suggests=" >> $sfile.tmp
 	    mv $sfile.tmp $sfile
 	    ;;
-        libghc6-*-doc|haskell-*-doc)
+        libghc-*-doc|haskell-*-doc)
 	    grep -v \
                 -e ^haskell:Depends \
                 -e ^haskell:Recommends \
@@ -137,7 +137,7 @@ for pkg in `dh_listpackages $args`; do
                 | sort -u \
                 | sed -e :a -e '$!N; s/\n/, /; ta'`
             echo "haskell:Recommends=$recommends" >> $sfile.tmp
-            dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/libghc6-\1-dev/'`
+            dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/libghc-\1-dev/'`
             grep -v '^#' debian/control | grep $dev > /dev/null \
                 && suggests="$dev" \
                 || suggests=""
