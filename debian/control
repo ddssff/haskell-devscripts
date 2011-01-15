@@ -19,7 +19,7 @@ Depends: dctrl-tools
   , ${perl:Depends}
   , html-xml-utils
   , hscolour (>= 1.8)
-  , haddock
+  , ghc-haddock
 Description: Tools to help Debian developers build Haskell packages
  This package provides a collection of scripts to help build Haskell
  packages for Debian.  Unlike haskell-utils, this package is not
