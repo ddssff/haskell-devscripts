@@ -6,6 +6,8 @@ haskell-devscripts (0.7.13) UNRELEASED; urgency=low
   * Update Uploader name.
   * debian/copyright: Update name.
   * Use ghc instead of ghc6
+  * debian/control: Remove xutils-dev, since lndir is not being used
+    anymore.
 
  -- Marco Silva <marcot@debian.org>  Fri, 14 Jan 2011 12:37:29 -0200
 
