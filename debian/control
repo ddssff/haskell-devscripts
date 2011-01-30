@@ -16,7 +16,6 @@ Depends: dctrl-tools
   , ghc
   , cdbs
   , ${misc:Depends}
-  , ${perl:Depends}
   , html-xml-utils
   , hscolour (>= 1.8)
   , ghc-haddock
