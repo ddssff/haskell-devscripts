@@ -1,4 +1,4 @@
-haskell-devscripts (0.8) UNRELEASED; urgency=low
+haskell-devscripts (0.8) experimental; urgency=low
 
   [ Marco Silva ]
   * Fix ".haddock file in -dev creates broken symlinks in
@@ -14,7 +14,7 @@ haskell-devscripts (0.8) UNRELEASED; urgency=low
   [ Joachim Breitner ]
   * Bump standards version, no change
 
- -- Marco Silva <marcot@debian.org>  Fri, 14 Jan 2011 12:37:29 -0200
+ -- Joachim Breitner <nomeata@debian.org>  Fri, 04 Mar 2011 10:31:07 +0530
 
 haskell-devscripts (0.7.12) unstable; urgency=low
 
