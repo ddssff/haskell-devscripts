@@ -1,4 +1,4 @@
-haskell-devscripts (0.7.13) UNRELEASED; urgency=low
+haskell-devscripts (0.8) UNRELEASED; urgency=low
 
   * Fix ".haddock file in -dev creates broken symlinks in
     /usr/share/doc/ghc6-doc/html/libraries/index.html" by moving .haddock
