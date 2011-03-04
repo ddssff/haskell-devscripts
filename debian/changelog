@@ -1,5 +1,6 @@
 haskell-devscripts (0.8) UNRELEASED; urgency=low
 
+  [ Marco Silva ]
   * Fix ".haddock file in -dev creates broken symlinks in
     /usr/share/doc/ghc6-doc/html/libraries/index.html" by moving .haddock
     file to -doc package. (Closes: #586723)
@@ -9,6 +10,9 @@ haskell-devscripts (0.8) UNRELEASED; urgency=low
   * debian/control: Remove xutils-dev, since lndir is not being used
     anymore.
   * Update package name from haddock to ghc-haddock.
+
+  [ Joachim Breitner ]
+  * Bump standards version, no change
 
  -- Marco Silva <marcot@debian.org>  Fri, 14 Jan 2011 12:37:29 -0200
 
