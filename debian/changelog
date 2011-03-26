@@ -1,3 +1,9 @@
+haskell-devscripts (0.8.1) UNRELEASED; urgency=low
+
+  * Add dependency on virtual haddock interface package to -doc packages
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 26 Mar 2011 12:40:25 +0530
+
 haskell-devscripts (0.8) experimental; urgency=low
 
   [ Marco Silva ]
