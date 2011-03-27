@@ -19,6 +19,11 @@
 
 export GREP_OPTIONS :=
 
+# Set a dummy HOME variable upon build. Some build daemons do not set HOME, but
+# cabal expects it to be available.
+export HOME = /homedoesnotexistatbuildtime
+
+
 DEB_CABAL_PACKAGE ?= $(shell cat *.cabal |\
  perl -ne \
  'if (/^name\s*:\s*(.*?)\s*$$/i) {$$_ = $$1; tr/A-Z/a-z/; print; exit 0;}')

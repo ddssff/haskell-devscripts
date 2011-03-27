@@ -1,3 +1,10 @@
+haskell-devscripts (0.8.3) UNRELEASED; urgency=low
+
+  * Set HOME to some (non-existant) path in hlibrary.mk. Some buildds have
+    this variable not set, causing builds to fail.
+
+ -- Joachim Breitner <nomeata@debian.org>  Mon, 28 Mar 2011 00:30:39 +0530
+
 haskell-devscripts (0.8.2) unstable; urgency=low
 
   * Upload to unstable
