@@ -1,3 +1,9 @@
+haskell-devscripts (0.8.4) UNRELEASED; urgency=low
+
+  * hlibrary.mk: Include .hs in DEB_COMPRESS_EXCLUDE
+
+ -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 12 Apr 2011 09:34:22 -0300
+
 haskell-devscripts (0.8.3) unstable; urgency=low
 
   * Set HOME to some (non-existant) path in hlibrary.mk. Some buildds have

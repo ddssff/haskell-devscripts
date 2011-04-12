@@ -32,7 +32,7 @@ CABAL_VERSION=$(shell cat *.cabal | egrep -i '^\s*version:' | head -n1 | sed -r 
 
 ENABLE_PROFILING = $(shell egrep -qe '^Package: libghc-.*-prof$$' debian/control && echo --enable-library-profiling; exit 0)
 
-DEB_COMPRESS_EXCLUDE += .haddock
+DEB_COMPRESS_EXCLUDE += .haddock .hs
 
 # TODO:
 # - some of this would probably be useful for generic Haskell programs,
