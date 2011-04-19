@@ -21,7 +21,7 @@ dependency(){
 }
 
 ghc_pkg_field(){
-    ghc-pkg6 --global field $@ | head -n1
+    ghc-pkg --global field $@ | head -n1
 }
 
 providing_package_for_ghc(){
