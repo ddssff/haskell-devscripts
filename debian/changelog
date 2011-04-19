@@ -1,4 +1,4 @@
-haskell-devscripts (0.8.4) UNRELEASED; urgency=low
+haskell-devscripts (0.8.4) unstable; urgency=low
 
   [ Marco Túlio Gontijo e Silva ]
   * hlibrary.mk: Include .hs in DEB_COMPRESS_EXCLUDE
@@ -6,7 +6,7 @@ haskell-devscripts (0.8.4) UNRELEASED; urgency=low
   [ Joachim Breitner ]
   * Call ghc-pkg, not ghc-pkg6 (patch by David Fox) 
 
- -- Marco Túlio Gontijo e Silva <marcot@debian.org>  Tue, 12 Apr 2011 09:34:22 -0300
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 19 Apr 2011 10:24:32 +0530
 
 haskell-devscripts (0.8.3) unstable; urgency=low
 
