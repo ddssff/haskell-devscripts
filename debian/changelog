@@ -1,3 +1,10 @@
+haskell-devscripts (0.8.5) UNRELEASED; urgency=low
+
+  * s/GHC6/GHC in GHC_VERSION, BUILD_GHC, DEB_SETUP_GHC_CONFIGURE_ARGS, but
+    provide/use the “other” variable too, to avoid breaking existing packages.
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 04 Jun 2011 22:21:01 +0200
+
 haskell-devscripts (0.8.4) unstable; urgency=low
 
   [ Marco Túlio Gontijo e Silva ]

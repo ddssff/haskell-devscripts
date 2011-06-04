@@ -45,19 +45,21 @@ DEB_HADDOCK_HTML_DIR ?= /usr/share/doc/libghc-$(CABAL_PACKAGE)-doc/html/
 
 # most likely you don't need to touch this one
 GHC6_VERSION = $(shell ghc --numeric-version)
-DEB_HADDOCK_DIR ?= /usr/lib/ghc-$(GHC6_VERSION)/haddock/$(CABAL_PACKAGE)-$(CABAL_VERSION)/
+GHC_VERSION = $(shell ghc --numeric-version)
+DEB_HADDOCK_DIR ?= /usr/lib/ghc-$(GHC_VERSION)/haddock/$(CABAL_PACKAGE)-$(CABAL_VERSION)/
 
 ifndef DEB_NO_IMPLICIT_HADDOCK_HYPERLINK
 DEB_HADDOCK_OPTS += --hyperlink-source
 endif
 
+BUILD_GHC := $(DEB_SETUP_BIN_NAME) build
 BUILD_GHC6 := $(DEB_SETUP_BIN_NAME) build
 MAKEFILE := debian/hlibrary.Makefile
 
 #ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 #    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 #    MAKEFLAGS := -j$(NUMJOBS)
-#    BUILD_GHC6 := $(DEB_SETUP_BIN_NAME) makefile -f $(MAKEFILE) && $(MAKE) $(MAKEFLAGS) -f $(MAKEFILE) && $(BUILD_GHC6)
+#    BUILD_GHC := $(DEB_SETUP_BIN_NAME) makefile -f $(MAKEFILE) && $(MAKE) $(MAKEFLAGS) -f $(MAKEFILE) && $(BUILD_GHC)
 #endif
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
@@ -84,10 +86,10 @@ dist-ghc: $(DEB_SETUP_BIN_NAME)
 		--builddir=dist-ghc \
 		--haddockdir=$(DEB_HADDOCK_DIR) \
 		--htmldir=$(DEB_HADDOCK_HTML_DIR) $(ENABLE_PROFILING) \
-		$(DEB_SETUP_GHC6_CONFIGURE_ARGS) $(OPTIMIZATION)
+		$(DEB_SETUP_GHC6_CONFIGURE_ARGS) $(DEB_SETUP_GHC_CONFIGURE_ARGS) $(OPTIMIZATION)
 
 build-ghc-stamp: dist-ghc
-	$(BUILD_GHC6) --builddir=dist-ghc
+	$(BUILD_GHC) --builddir=dist-ghc
 	touch build-ghc-stamp
 
 build/libghc-$(CABAL_PACKAGE)-prof build/libghc-$(CABAL_PACKAGE)-dev:: build-ghc-stamp
@@ -113,7 +115,7 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
 	pkg_config=`$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc --gen-pkg-config | sed -r 's,.*: ,,'`; \
 		$(if $(HASKELL_HIDE_PACKAGES),sed -i 's/^exposed: True$$/exposed: False/' $$pkg_config;) \
-		install -Dm 644 $$pkg_config debian/$(notdir $@)/var/lib/ghc-$(GHC6_VERSION)/package.conf.d/$$pkg_config; \
+		install -Dm 644 $$pkg_config debian/$(notdir $@)/var/lib/ghc-$(GHC_VERSION)/package.conf.d/$$pkg_config; \
 		rm -f $$pkg_config
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
