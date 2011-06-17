@@ -46,7 +46,7 @@ DEB_HADDOCK_HTML_DIR ?= /usr/share/doc/libghc-$(CABAL_PACKAGE)-doc/html/
 # most likely you don't need to touch this one
 GHC6_VERSION = $(shell ghc --numeric-version)
 GHC_VERSION = $(shell ghc --numeric-version)
-DEB_HADDOCK_DIR ?= /usr/lib/ghc-$(GHC_VERSION)/haddock/$(CABAL_PACKAGE)-$(CABAL_VERSION)/
+DEB_HADDOCK_DIR ?= /usr/lib/ghc-doc/haddock/$(CABAL_PACKAGE)-$(CABAL_VERSION)/
 
 ifndef DEB_NO_IMPLICIT_HADDOCK_HYPERLINK
 DEB_HADDOCK_OPTS += --hyperlink-source

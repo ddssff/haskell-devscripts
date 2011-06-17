@@ -1,3 +1,9 @@
+haskell-devscripts (0.8.6) UNRELEASED; urgency=low
+
+  * Install .haddock files in version-agnostic path
+
+ -- Joachim Breitner <nomeata@debian.org>  Fri, 17 Jun 2011 17:52:55 +0200
+
 haskell-devscripts (0.8.5) unstable; urgency=low
 
   * s/GHC6/GHC in GHC_VERSION, BUILD_GHC, DEB_SETUP_GHC_CONFIGURE_ARGS, but
