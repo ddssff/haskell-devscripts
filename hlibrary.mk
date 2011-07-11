@@ -115,7 +115,7 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
 	pkg_config=`$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc --gen-pkg-config | sed -r 's,.*: ,,'`; \
 		$(if $(HASKELL_HIDE_PACKAGES),sed -i 's/^exposed: True$$/exposed: False/' $$pkg_config;) \
-		install -Dm 644 $$pkg_config debian/$(notdir $@)/var/lib/ghc-$(GHC_VERSION)/package.conf.d/$$pkg_config; \
+		install -Dm 644 $$pkg_config debian/$(notdir $@)/var/lib/ghc/package.conf.d/$$pkg_config; \
 		rm -f $$pkg_config
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)

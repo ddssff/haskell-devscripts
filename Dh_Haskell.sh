@@ -205,7 +205,7 @@ find_config_for_ghc(){
 	*)
 	    ;;
     esac
-    for f in debian/$pkg/var/lib/ghc-*/package.conf.d/*.conf ; do
+    for f in debian/$pkg/var/lib/ghc/package.conf.d/*.conf ; do
 	if [ -f "$f" ] ; then
 	    echo $f
 	    echo " "
