@@ -107,7 +107,6 @@ for pkg in `dh_listpackages $args`; do
                     echo "haskell:Suggests=" >> $sfile.tmp
 		    ;;
 	    esac
-	    mv $sfile.tmp $sfile
 	    ;;
 	libhugs-*)
 	    grep -v \
@@ -118,7 +117,6 @@ for pkg in `dh_listpackages $args`; do
 	    echo "haskell:Depends=`depends_for_hugs`" >> $sfile.tmp
             echo "haskell:Recommends=" >> $sfile.tmp
             echo "haskell:Suggests=" >> $sfile.tmp
-	    mv $sfile.tmp $sfile
 	    ;;
         libghc-*-doc|haskell-*-doc)
 	    grep -v \
@@ -143,9 +141,13 @@ for pkg in `dh_listpackages $args`; do
                 && suggests="$dev" \
                 || suggests=""
             echo "haskell:Suggests=$suggests" >> $sfile.tmp
-            mv $sfile.tmp $sfile
             ;;
 	*)
+            cp $sfile $sfile.tmp
 	    ;;
     esac
+
+    echo "haskell:Data-Depends=`cat debian/data-depends`" >> $sfile.tmp
+
+    mv $sfile.tmp $sfile
 done
