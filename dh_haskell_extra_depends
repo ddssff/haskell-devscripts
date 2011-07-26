@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# Determine package dependencies from installed-pkg-config file
+# Determine package extra dependencies from package metadata
 #
 # Copyright (C) 2011 Giovanni Mascellani <gio@debian.org>
 #
@@ -56,13 +56,13 @@ set -e
 
 . /usr/share/haskell-devscripts/Dh_Haskell.sh
 
-datadeps=''
+extradeps=''
 for dep in `cabal_depends $files` ; do
     dep_package_ver=`echo $dep | grep '^.\+-[0-9\.]\+-................................$' | sed 's|^\(.\+\)-\([0-9.]\+\)-[0-9a-f]\+$|\1-\2|'`
-    data_packages_file=/usr/lib/haskell-packages/ghc/lib/$dep_package_ver/data-packages
-    if [ -f $data_packages_file ] ; then
-        datadeps="$datadeps, `cat $data_packages_file`"
+    extra_packages_file=/usr/lib/haskell-packages/ghc/lib/$dep_package_ver/extra-packages
+    if [ -f $extra_packages_file ] ; then
+        extradeps="$extradeps, `cat $extra_packages_file`"
     fi
 done
-echo $datadeps | sed -e 's/^,[ ]*//' > debian/data-depends
+echo $extradeps | sed -e 's/^,[ ]*//' > debian/extra-depends
 

@@ -147,7 +147,7 @@ for pkg in `dh_listpackages $args`; do
 	    ;;
     esac
 
-    echo "haskell:Data-Depends=`cat debian/data-depends`" >> $sfile.tmp
+    echo "haskell:Extra-Depends=`cat debian/extra-depends`" >> $sfile.tmp
 
     mv $sfile.tmp $sfile
 done

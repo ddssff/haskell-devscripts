@@ -73,7 +73,7 @@ clean::
 	rm -rf dist dist-ghc dist-hugs $(DEB_SETUP_BIN_NAME) Setup.hi Setup.ho Setup.o .*config*
 	rm -f build-ghc-stamp build-hugs-stamp build-haddock-stamp
 	rm -rf debian/tmp-inst-ghc
-	rm -f debian/data-depends
+	rm -f debian/extra-depends
 	rm -f $(MAKEFILE)
 	rm -rf debian/dh_haskell_shlibdeps
 
@@ -110,12 +110,12 @@ build/libhugs-$(CABAL_PACKAGE):: dist-hugs
 debian/tmp-inst-ghc: $(DEB_SETUP_BIN_NAME) dist-ghc
 	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-ghc --destdir=debian/tmp-inst-ghc
 
-debian/data-depends: debian/tmp-inst-ghc
+debian/extra-depends: debian/tmp-inst-ghc
 	pkg_config=`$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc --gen-pkg-config | sed -r 's,.*: ,,'` ; \
-		dh_haskell_data_depends $$pkg_config ; \
+		dh_haskell_extra_depends $$pkg_config ; \
 		rm $$pkg_config
 
-install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/data-depends
+install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
 	cd debian/tmp-inst-ghc ; find usr/lib/haskell-packages/ghc/lib/ \
 		\( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
@@ -123,21 +123,21 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/data-depends
 		$(if $(HASKELL_HIDE_PACKAGES),sed -i 's/^exposed: True$$/exposed: False/' $$pkg_config;) \
 		install -Dm 644 $$pkg_config debian/$(notdir $@)/var/lib/ghc/package.conf.d/$$pkg_config; \
 		rm -f $$pkg_config
-	if [ 'z$(DEB_GHC_DATA_PACKAGES)' != 'z' ] ; then \
-		echo '$(DEB_GHC_DATA_PACKAGES)' > debian/$(notdir $@)/usr/lib/haskell-packages/ghc/lib/$(CABAL_PACKAGE)-$(CABAL_VERSION)/data-packages ; \
+	if [ 'z$(DEB_GHC_EXTRA_PACKAGES)' != 'z' ] ; then \
+		echo '$(DEB_GHC_EXTRA_PACKAGES)' > debian/$(notdir $@)/usr/lib/haskell-packages/ghc/lib/$(CABAL_PACKAGE)-$(CABAL_VERSION)/extra-packages ; \
 	fi
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_shlibdeps -p$(notdir $@)
 
-install/libghc-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc install/libghc-$(CABAL_PACKAGE)-dev debian/data-depends
+install/libghc-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc install/libghc-$(CABAL_PACKAGE)-dev debian/extra-depends
 	cd debian/tmp-inst-ghc ; find usr/lib/haskell-packages/ghc/lib/ \
 		! \( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 
-install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc debian/data-depends
+install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc debian/extra-depends
 	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_HTML_DIR)
 	cd debian/tmp-inst-ghc/ ; find ./$(DEB_HADDOCK_HTML_DIR)/ \
 		! -name "*.haddock" -exec install -Dm 644 '{}' \
@@ -148,7 +148,7 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debia
 		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
 	dh_haskell_depends -p$(notdir $@)
 
-install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs debian/data-depends
+install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs debian/extra-depends
 	$(DEB_SETUP_BIN_NAME) copy --destdir=debian/libhugs-$(CABAL_PACKAGE) --builddir=dist-hugs
 	rm -rf debian/libhugs-$(CABAL_PACKAGE)/usr/share/doc/*
 	dh_haskell_depends -p$(notdir $@)
