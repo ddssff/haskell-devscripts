@@ -1,9 +1,9 @@
-haskell-devscripts (0.8.8) UNRELEASED; urgency=low
+haskell-devscripts (0.8.8) unstable; urgency=low
 
   * Team upload.
   * Added support to track data packages.
 
- -- Giovanni Mascellani <gio@debian.org>  Tue, 26 Jul 2011 00:19:44 +0200
+ -- Giovanni Mascellani <gio@debian.org>  Thu, 28 Jul 2011 14:30:59 +0200
 
 haskell-devscripts (0.8.7) unstable; urgency=low
 
