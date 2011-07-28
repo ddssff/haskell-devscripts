@@ -135,11 +135,11 @@ for pkg in `dh_listpackages $args`; do
                 | cut -d: -f1 \
                 | sort -u \
                 | sed -e :a -e '$!N; s/\n/, /; ta'`
-            echo "haskell:Recommends=$recommends" >> $sfile.tmp
             dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/libghc-\1-dev/'`
             grep -v '^#' debian/control | grep $dev > /dev/null \
-                && suggests="$dev" \
-                || suggests=""
+                && recommends="$recommends, $dev" \
+                || recommends="$recommends"
+            echo "haskell:Recommends=$recommends" >> $sfile.tmp
             echo "haskell:Suggests=$suggests" >> $sfile.tmp
             ;;
 	*)
