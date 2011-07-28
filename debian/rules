@@ -9,13 +9,15 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+DEB_VERSION := $(shell dpkg-parsechangelog | egrep '^Version:' | cut -f 2 -d ' ')
+
 manpages = $(shell cat debian/manpages)
 
 %.1: %.pod
-	pod2man $< > $@
+	pod2man -c 'Haskell devscripts documentation' -r 'Haskell devscripts $(DEB_VERSION)' $< > $@
 
 %.1: %
-	pod2man $< > $@
+	pod2man -c 'Haskell devscripts documentation' -r 'Haskell devscripts $(DEB_VERSION)' $< > $@
 
 .PHONY: build
 build: $(manpages)

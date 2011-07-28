@@ -2,8 +2,10 @@ haskell-devscripts (0.8.9) UNRELEASED; urgency=low
 
   * Make -doc packages recommend -dev instead of suggesting. It's likely that
     people installing documentation want the library too. (Closes: #635754)
+  * Fix the header and footer in manpages (Haskell is quite the opposite
+    of Perl!).
 
- -- Iain Lane <laney@debian.org>  Thu, 28 Jul 2011 15:54:16 +0100
+ -- Giovanni Mascellani <gio@debian.org>  Thu, 28 Jul 2011 18:06:10 +0200
 
 haskell-devscripts (0.8.8) unstable; urgency=low
 
