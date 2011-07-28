@@ -18,9 +18,9 @@ It automates building libraries for the different supported Haskell systems in
 Debian.
 
 This script writes the debian/$package.substvars file, including in it the
-haskell:Depends, haskell:Recommends and haskell:Suggests variable.  So, to use
-this package, include in the Depends: field in debian/control
-${haskell:Depends}, and do the same for Recommends and Suggests.
+haskell:Depends, haskell:Recommends, haskell:Suggests and haskell:Extra-Depends
+variable.  So, to use this package, include in the Depends: field in debian/control
+${haskell:Depends}, and do the same for Recommends, Suggests and Extra-Depends.
 
 =head1 BUGS
 
@@ -31,6 +31,7 @@ not yet support nhc98.
 
 L<dh_haskell_provides(1)>
 L<dh_haskell_shlibdeps(1)>
+L<dh_haskell_extra_depends(1)>
 L<debhelper(7)>
 
 =head1 AUTHOR
