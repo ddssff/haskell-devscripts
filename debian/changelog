@@ -1,11 +1,17 @@
 haskell-devscripts (0.8.9) UNRELEASED; urgency=low
 
+  [ Giovanni Mascellani ]
   * Make -doc packages recommend -dev instead of suggesting. It's likely that
     people installing documentation want the library too. (Closes: #635754)
   * Fix the header and footer in manpages (Haskell is quite the opposite
     of Perl!).
   * Write a manpage for dh_haskell_extra_depends and improve dh_haskell_depends.
     Some other work is to be done.
+
+  [ Joachim Breitner ]
+  * Depend on dh-buildinfo. This stores a file in /usr/share/*/doc listing the
+    version of all the build dependencies, and might be handy some time if we
+    need to recompile stuff.
 
  -- Giovanni Mascellani <gio@debian.org>  Thu, 28 Jul 2011 18:19:36 +0200
 

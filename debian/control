@@ -13,6 +13,7 @@ Package: haskell-devscripts
 Architecture: all
 Depends: dctrl-tools
   , debhelper
+  , dh-buildinfo
   , ghc (>= 7.0.4-3)
   , cdbs
   , ${misc:Depends}
