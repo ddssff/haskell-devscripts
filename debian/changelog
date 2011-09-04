@@ -1,4 +1,4 @@
-haskell-devscripts (0.8.9) UNRELEASED; urgency=low
+haskell-devscripts (0.8.9) unstable; urgency=low
 
   [ Giovanni Mascellani ]
   * Make -doc packages recommend -dev instead of suggesting. It's likely that
@@ -16,7 +16,7 @@ haskell-devscripts (0.8.9) UNRELEASED; urgency=low
     ghci, to allow packages to selectively disable features (e.g. TH,
     annotations) then.
 
- -- Giovanni Mascellani <gio@debian.org>  Thu, 28 Jul 2011 18:19:36 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 04 Sep 2011 19:30:50 +0200
 
 haskell-devscripts (0.8.8) unstable; urgency=low
 
