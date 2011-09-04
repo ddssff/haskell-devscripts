@@ -12,6 +12,9 @@ haskell-devscripts (0.8.9) UNRELEASED; urgency=low
   * Depend on dh-buildinfo. This stores a file in /usr/share/*/doc listing the
     version of all the build dependencies, and might be handy some time if we
     need to recompile stuff.
+  * Pass --ghc-option=-DDEBIAN_NO_GHCI to configure if ghc does not support
+    ghci, to allow packages to selectively disable features (e.g. TH,
+    annotations) then.
 
  -- Giovanni Mascellani <gio@debian.org>  Thu, 28 Jul 2011 18:19:36 +0200
 

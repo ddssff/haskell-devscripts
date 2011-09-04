@@ -32,6 +32,8 @@ CABAL_VERSION=$(shell cat *.cabal | egrep -i '^\s*version:' | head -n1 | sed -r 
 
 ENABLE_PROFILING = $(shell egrep -qe '^Package: libghc-.*-prof$$' debian/control && echo --enable-library-profiling; exit 0)
 
+NO_GHCI_FLAG = $(shell test -e /usr/bin/ghci || echo --ghc-option=-DDEBIAN_NO_GHCI; exit 0)
+
 DEB_COMPRESS_EXCLUDE += .haddock .hs
 
 # TODO:
@@ -86,7 +88,7 @@ dist-ghc: $(DEB_SETUP_BIN_NAME)
 		--prefix=/usr --libdir=/usr/lib/haskell-packages/ghc/lib \
 		--builddir=dist-ghc \
 		--haddockdir=$(DEB_HADDOCK_DIR) \
-		--htmldir=$(DEB_HADDOCK_HTML_DIR) $(ENABLE_PROFILING) \
+		--htmldir=$(DEB_HADDOCK_HTML_DIR) $(ENABLE_PROFILING) $(NO_GHCI_FLAG) \
 		$(DEB_SETUP_GHC6_CONFIGURE_ARGS) $(DEB_SETUP_GHC_CONFIGURE_ARGS) $(OPTIMIZATION)
 
 build-ghc-stamp: dist-ghc
