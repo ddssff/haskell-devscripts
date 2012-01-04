@@ -30,6 +30,8 @@ DEB_CABAL_PACKAGE ?= $(shell cat *.cabal |\
 CABAL_PACKAGE=$(DEB_CABAL_PACKAGE)
 CABAL_VERSION=$(shell cat *.cabal | egrep -i '^\s*version:' | head -n1 | sed -r 's,^\s*version:\s*,,i'| sed -r 's,\s*$$,,i')
 
+DEB_ENABLE_TESTS ?= no
+
 ENABLE_PROFILING = $(shell egrep -qe '^Package: libghc-.*-prof$$' debian/control && echo --enable-library-profiling; exit 0)
 
 NO_GHCI_FLAG = $(shell test -e /usr/bin/ghci || echo --ghc-option=-DDEBIAN_NO_GHCI; exit 0)
@@ -66,6 +68,12 @@ ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
    OPTIMIZATION = --disable-optimization
 endif
 
+ifeq ($(DEB_ENABLE_TESTS),yes)
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+   TESTS = --enable-tests
+endif
+endif
+
 DEB_BUILD_DEPENDENCIES = build-arch
 
 clean::
@@ -87,13 +95,29 @@ dist-ghc: $(DEB_SETUP_BIN_NAME)
 		--builddir=dist-ghc \
 		--haddockdir=$(DEB_HADDOCK_DIR) \
 		--htmldir=$(DEB_HADDOCK_HTML_DIR) $(ENABLE_PROFILING) $(NO_GHCI_FLAG) \
-		$(DEB_SETUP_GHC6_CONFIGURE_ARGS) $(DEB_SETUP_GHC_CONFIGURE_ARGS) $(OPTIMIZATION)
+		$(DEB_SETUP_GHC6_CONFIGURE_ARGS) $(DEB_SETUP_GHC_CONFIGURE_ARGS) $(OPTIMIZATION) $(TESTS)
 
 build-ghc-stamp: dist-ghc
 	$(DEB_SETUP_BIN_NAME) build --builddir=dist-ghc
-	touch build-ghc-stamp
+	touch $@
 
-build/libghc-$(CABAL_PACKAGE)-prof build/libghc-$(CABAL_PACKAGE)-dev:: build-ghc-stamp
+ifeq ($(DEB_ENABLE_TESTS),yes)
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+check-ghc-stamp: build-ghc-stamp
+	$(DEB_SETUP_BIN_NAME) test --builddir=dist-ghc
+	touch $@
+else
+check-ghc-stamp: build-ghc-stamp
+	@echo DEB_BUILD_OPTIONS contains nocheck, not running checks
+	touch $@
+endif
+else
+check-ghc-stamp: build-ghc-stamp
+	@echo DEB_ENABLE_TESTS not set to yes, not running any tests.
+	touch $@
+endif
+
+build/libghc-$(CABAL_PACKAGE)-prof build/libghc-$(CABAL_PACKAGE)-dev:: build-ghc-stamp check-ghc-stamp
 
 build-haddock-stamp:
 	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock --builddir=dist-ghc $(DEB_HADDOCK_OPTS)
