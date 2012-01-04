@@ -1,9 +1,9 @@
-haskell-devscripts (0.8.10) UNRELEASED; urgency=low
+haskell-devscripts (0.8.10) unstable; urgency=low
 
   * Run Cabal-defined testsuites, if DEB_ENABLE_TESTS = yes is set in
     debian/rules.
 
- -- Joachim Breitner <nomeata@debian.org>  Wed, 04 Jan 2012 19:53:51 +0100
+ -- Joachim Breitner <nomeata@debian.org>  Wed, 04 Jan 2012 20:13:14 +0100
 
 haskell-devscripts (0.8.9) unstable; urgency=low
 
