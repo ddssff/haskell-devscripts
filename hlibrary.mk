@@ -54,8 +54,6 @@ ifndef DEB_NO_IMPLICIT_HADDOCK_HYPERLINK
 DEB_HADDOCK_OPTS += --hyperlink-source
 endif
 
-BUILD_GHC := $(DEB_SETUP_BIN_NAME) build
-BUILD_GHC6 := $(DEB_SETUP_BIN_NAME) build
 MAKEFILE := debian/hlibrary.Makefile
 
 #ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
@@ -92,7 +90,7 @@ dist-ghc: $(DEB_SETUP_BIN_NAME)
 		$(DEB_SETUP_GHC6_CONFIGURE_ARGS) $(DEB_SETUP_GHC_CONFIGURE_ARGS) $(OPTIMIZATION)
 
 build-ghc-stamp: dist-ghc
-	$(BUILD_GHC) --builddir=dist-ghc
+	$(DEB_SETUP_BIN_NAME) build --builddir=dist-ghc
 	touch build-ghc-stamp
 
 build/libghc-$(CABAL_PACKAGE)-prof build/libghc-$(CABAL_PACKAGE)-dev:: build-ghc-stamp
