@@ -1,3 +1,11 @@
+haskell-devscripts (0.8.11) UNRELEASED; urgency=low
+
+  * Conflict with ghc >= 7.4; as haddock --interface-name behaves differently
+    then. A new haskell-devscripts upload will happen when ghc-7.4 enters
+    unstable.
+
+ -- Joachim Breitner <nomeata@debian.org>  Thu, 05 Jan 2012 13:19:02 +0100
+
 haskell-devscripts (0.8.10) unstable; urgency=low
 
   * Run Cabal-defined testsuites, if DEB_ENABLE_TESTS = yes is set in
