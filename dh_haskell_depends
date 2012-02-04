@@ -124,7 +124,7 @@ for pkg in `dh_listpackages $args`; do
                 -e ^haskell:Recommends \
                 -e ^haskell:Suggests \
                 $sfile > $sfile.tmp || true
-	    depends=`haddock --interface-version`
+	    depends=haddock-interface-`haddock --interface-version`
             echo "haskell:Depends=$depends" >> $sfile.tmp
             recommends=` \
                 find debian/$pkg -name \*.html -exec hxwls -r \{\} \; \

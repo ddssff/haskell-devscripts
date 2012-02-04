@@ -14,13 +14,12 @@ Architecture: all
 Depends: dctrl-tools
   , debhelper
   , dh-buildinfo
-  , ghc (>= 7.0.4-3)
+  , ghc (>= 7.4)
   , cdbs
   , ${misc:Depends}
   , html-xml-utils
   , hscolour (>= 1.8)
-  , ghc-haddock (>= 7.0.2-5)
-Conflicts: ghc (>= 7.4)
+  , ghc-haddock (>= 7.4)
 Description: Tools to help Debian developers build Haskell packages
  This package provides a collection of scripts to help build Haskell
  packages for Debian.  Unlike haskell-utils, this package is not
