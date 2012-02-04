@@ -1,9 +1,9 @@
-haskell-devscripts (0.8.12) UNRELEASED; urgency=low
+haskell-devscripts (0.8.12) unstable; urgency=low
 
   * Depend on ghc >= 7.4, adjusting to its haddock --interface-version
     behaviour. 
 
- -- Joachim Breitner <nomeata@debian.org>  Sat, 04 Feb 2012 10:49:16 +0100
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 04 Feb 2012 10:50:33 +0100
 
 haskell-devscripts (0.8.11) unstable; urgency=low
 
