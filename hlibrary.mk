@@ -135,7 +135,7 @@ debian/tmp-inst-ghc: $(DEB_SETUP_BIN_NAME) dist-ghc
 	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-ghc --destdir=debian/tmp-inst-ghc
 
 debian/extra-depends: debian/tmp-inst-ghc
-	pkg_config=`$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc --gen-pkg-config | sed -r 's,.*: ,,'` ; \
+	pkg_config=`$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'` ; \
 		dh_haskell_extra_depends $$pkg_config ; \
 		rm $$pkg_config
 
@@ -143,7 +143,7 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
 	cd debian/tmp-inst-ghc ; find usr/lib/haskell-packages/ghc/lib/ \
 		\( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
-	pkg_config=`$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc --gen-pkg-config | sed -r 's,.*: ,,'`; \
+	pkg_config=`$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`; \
 		$(if $(HASKELL_HIDE_PACKAGES),sed -i 's/^exposed: True$$/exposed: False/' $$pkg_config;) \
 		install -Dm 644 $$pkg_config debian/$(notdir $@)/var/lib/ghc/package.conf.d/$$pkg_config; \
 		rm -f $$pkg_config
