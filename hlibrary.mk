@@ -52,6 +52,7 @@ GHC6_VERSION = $(shell ghc --numeric-version)
 GHC_VERSION = $(shell ghc --numeric-version)
 DEB_HADDOCK_DIR ?= /usr/lib/ghc-doc/haddock/$(CABAL_PACKAGE)-$(CABAL_VERSION)/
 
+DEB_HADDOCK_OPTS += --hoogle
 ifndef DEB_NO_IMPLICIT_HADDOCK_HYPERLINK
 DEB_HADDOCK_OPTS += --hyperlink-source
 endif
