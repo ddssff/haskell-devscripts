@@ -39,17 +39,17 @@ readFileGz file
 --    return $ BL8.unpack . decompress $ c
   | otherwise = readFile file
 
-readAndPrint :: URL -> String -> FilePath -> FilePath -> IO ()
-readAndPrint prefix strip outdir file = do
+readAndPrint :: FilePath -> FilePath -> FilePath -> IO ()
+readAndPrint strip outdir file = do
   f <- readFileGz file
   writeFile outfile $ filterHaddock url f
     where dropgz f | takeExtension f == ".gz" = dropExtension f
                    | otherwise                = f
           outfile = outdir </> takeFileName (dropgz file)
-          url = prefix ++ (fromMaybe "" . stripPrefix strip . dropFileName $ file)
+          url = normalise $ "file:/" ++ (fromMaybe "" . stripPrefix strip . dropFileName $ file)
 
 main :: IO ()
 main = do
-  [p, s, o] <- getArgs
+  [s, o] <- getArgs
   c <- getContents
-  mapM_ (readAndPrint p s o) (lines c)
+  mapM_ (readAndPrint s o) (lines c)
