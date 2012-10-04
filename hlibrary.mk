@@ -57,6 +57,9 @@ ifndef DEB_NO_IMPLICIT_HADDOCK_HYPERLINK
 DEB_HADDOCK_OPTS += --hyperlink-source
 endif
 
+DEB_HOOGLE_URLPREFIX = http://localhost/cgi-bin/hoogle/file
+DEB_HOOGLE_TXT_DIR = /usr/lib/ghc-doc/hoogle/
+
 MAKEFILE := debian/hlibrary.Makefile
 
 #ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
@@ -171,6 +174,10 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debia
 	[ 0 = `ls debian/tmp-inst-ghc/$(DEB_HADDOCK_DIR)/ 2>/dev/null | wc -l` ] || \
 		cp -r debian/tmp-inst-ghc/$(DEB_HADDOCK_DIR)/*.haddock \
 		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
+	mkdir -p debian/$(notdir $@)/$(DEB_HOOGLE_TXT_DIR)
+	find debian/$(notdir $@)/$(DEB_HADDOCK_HTML_DIR) -name "*.txt" | \
+	  /usr/bin/haddock-collect $(DEB_HOOGLE_URLPREFIX) \
+	  debian/$(notdir $@) debian/$(notdir $@)/$(DEB_HOOGLE_TXT_DIR)
 	dh_haskell_depends -p$(notdir $@)
 
 install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs debian/extra-depends
