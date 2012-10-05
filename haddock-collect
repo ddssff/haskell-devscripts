@@ -2,27 +2,13 @@
 {-# OPTIONS -Wall #-}
 
 import Data.List
-import Data.Char
 import Data.Maybe
 import System.Environment
 import System.FilePath
---import qualified Data.ByteString.Lazy as BL
---import qualified Data.ByteString.Lazy.Char8 as BL8
---import Codec.Compression.GZip
 
 type URL = String
 
 -- copy from hoogle/src/Recipe/Hackage.hs
-haddockHacks :: [String] -> [String]
-haddockHacks = map (unwords . map f . words) . filter (not . isPrefixOf "@version ")
-    where
-        f "::" = "::"
-        f (':':xs) = "(:" ++ xs ++ ")"
-        f ('!':'!':x:xs) | isAlpha x = xs
-        f ('!':x:xs) | isAlpha x || x `elem` "[(" = x:xs
-        f x | x `elem` ["[overlap","ok]","[incoherent]"] = ""
-        f x = x
-
 haddockPackageUrl :: URL -> [String] -> [String]
 haddockPackageUrl x = concatMap f
     where f y | "@package " `isPrefixOf` y = ["@url " ++ x, y]
@@ -30,26 +16,21 @@ haddockPackageUrl x = concatMap f
 -- copy end
 
 filterHaddock :: URL -> String -> String
-filterHaddock url = unlines . haddockHacks . haddockPackageUrl url . lines
-
-readFileGz :: FilePath -> IO String
-readFileGz file
---  | takeExtension file == ".gz" = do
---    c <- BL.readFile file
---    return $ BL8.unpack . decompress $ c
-  | otherwise = readFile file
+filterHaddock url = unlines . haddockPackageUrl url . lines
 
 readAndPrint :: FilePath -> FilePath -> FilePath -> IO ()
 readAndPrint strip outdir file = do
-  f <- readFileGz file
+  f <- readFile file
   writeFile outfile $ filterHaddock url f
-    where dropgz f | takeExtension f == ".gz" = dropExtension f
-                   | otherwise                = f
-          outfile = outdir </> takeFileName (dropgz file)
+    where outfile = outdir </> takeFileName file
           url = normalise $ "file:/" ++ (fromMaybe "" . stripPrefix strip . dropFileName $ file)
+
+usage :: IO ()
+usage = putStrLn "Usage: echo SOMEWHERE/HOOGLE_DATABASE.txt | haddock-collect STRIP OUTDIR"
 
 main :: IO ()
 main = do
-  [s, o] <- getArgs
-  c <- getContents
-  mapM_ (readAndPrint s o) (lines c)
+  a <- getArgs
+  if a == [] || a == ["-h"] || length a /= 2 then usage
+    else do c <- getContents
+            mapM_ (readAndPrint (a !! 0) (a !! 1)) (lines c)
