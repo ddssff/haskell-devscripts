@@ -176,6 +176,7 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debia
 		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
 	find debian/$(notdir $@)/$(DEB_HADDOCK_HTML_DIR) -name "*.txt" \
 		-printf "%p $(DEB_HOOGLE_TXT_DIR)/%f\n" >> debian/libghc-$(CABAL_PACKAGE)-doc.links
+	sed -i s,^debian/libghc-$(CABAL_PACKAGE)-doc,, debian/libghc-$(CABAL_PACKAGE)-doc.links
 	dh_haskell_depends -p$(notdir $@)
 
 install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs debian/extra-depends
