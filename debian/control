@@ -14,7 +14,7 @@ Architecture: all
 Depends: dctrl-tools
   , debhelper
   , dh-buildinfo
-  , ghc (>= 7.4)
+  , ghc (>= 7.6)
   , cdbs
   , ${misc:Depends}
   , html-xml-utils
