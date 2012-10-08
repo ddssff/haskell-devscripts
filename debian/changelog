@@ -9,6 +9,9 @@ haskell-devscripts (0.8.13) UNRELEASED; urgency=low
   * Need --html option to fix bug that --hoogle option don't output html file.
   * Support to create /usr/lib/ghc-doc/hoogle/*.txt for hoogle package.
 
+  [ Joachim Breitner ]
+  * Symlink hoogle’s txt files to /usr/lib/ghc-doc/hoogle/
+
  -- Joachim Breitner <nomeata@debian.org>  Mon, 30 Jul 2012 16:24:09 +0200
 
 haskell-devscripts (0.8.12) unstable; urgency=low
