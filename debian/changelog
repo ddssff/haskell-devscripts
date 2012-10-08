@@ -1,4 +1,4 @@
-haskell-devscripts (0.8.13) UNRELEASED; urgency=low
+haskell-devscripts (0.8.13) experimental; urgency=low
 
   [ Joachim Breitner ]
   * Improve parsing of "Setup register" output, patch by David Fox
@@ -14,7 +14,7 @@ haskell-devscripts (0.8.13) UNRELEASED; urgency=low
   * Bump ghc dependency to 7.6 
   * Bump standards version 
 
- -- Joachim Breitner <nomeata@debian.org>  Mon, 30 Jul 2012 16:24:09 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Mon, 08 Oct 2012 21:14:50 +0200
 
 haskell-devscripts (0.8.12) unstable; urgency=low
 
