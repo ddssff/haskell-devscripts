@@ -186,3 +186,9 @@ install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs debian/extra-
 	rm -rf debian/libhugs-$(CABAL_PACKAGE)/usr/share/doc/*
 	dh_haskell_depends -p$(notdir $@)
 
+
+# Support for installing executables
+$(patsubst debian/%.haskell-binaries,install/%,$(wildcard debian/*.haskell-binaries)):: debian/tmp-inst-ghc
+	xargs --arg-file=debian/$(cdbs_curpkg).haskell-binaries \
+	      -I {binary} \
+	      dh_install -p$(cdbs_curpkg) dist-ghc/build/{binary}/{binary} usr/bin

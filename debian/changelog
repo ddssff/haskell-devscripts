@@ -4,6 +4,8 @@ haskell-devscripts (0.8.14) UNRELEASED; urgency=low
     Clifford Beshers for the patch.
   * Use cdbsn' $(DEB_PACKAGES) instead of parsing debian/control to see if
     profiling is desired.
+  * Support installing Cabal-built binaries: Put the name of the binary in
+    debian/pkg.haskell-binaries to ship the binary in that package
 
  -- Joachim Breitner <nomeata@debian.org>  Sun, 27 Jan 2013 19:35:58 +0100
 
