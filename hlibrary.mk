@@ -32,7 +32,9 @@ CABAL_VERSION=$(shell cat *.cabal | egrep -i '^\s*version:' | head -n1 | sed -r 
 
 DEB_ENABLE_TESTS ?= no
 
-ENABLE_PROFILING = $(shell egrep -qe '^Package: libghc-.*-prof$$' debian/control && echo --enable-library-profiling; exit 0)
+ifneq (,$(filter libghc-$(CABAL_PACKAGE)-prof,$(DEB_PACKAGES)))
+ENABLE_PROFILING = --enable-library-profiling
+endif
 
 NO_GHCI_FLAG = $(shell test -e /usr/bin/ghci || echo --ghc-option=-DDEBIAN_NO_GHCI; exit 0)
 

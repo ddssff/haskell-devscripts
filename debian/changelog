@@ -2,6 +2,8 @@ haskell-devscripts (0.8.14) UNRELEASED; urgency=low
 
   * Explicitly mention which Prelude to use in dh_haskell_shlibdeps, thanks to
     Clifford Beshers for the patch.
+  * Use cdbsn' $(DEB_PACKAGES) instead of parsing debian/control to see if
+    profiling is desired.
 
  -- Joachim Breitner <nomeata@debian.org>  Sun, 27 Jan 2013 19:35:58 +0100
 
