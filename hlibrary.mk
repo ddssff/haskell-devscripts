@@ -32,6 +32,8 @@ CABAL_VERSION=$(shell cat *.cabal | egrep -i '^\s*version:' | head -n1 | sed -r 
 
 DEB_ENABLE_TESTS ?= no
 
+DEB_DH_GENCONTROL_ARGS_libghc-$(CABAL_PACKAGE)-dev += -- '-DGHC-Package=$${haskell:ghc-package}'
+
 ifneq (,$(filter libghc-$(CABAL_PACKAGE)-prof,$(DEB_PACKAGES)))
 ENABLE_PROFILING = --enable-library-profiling
 endif

@@ -6,6 +6,7 @@ haskell-devscripts (0.8.14) UNRELEASED; urgency=low
     profiling is desired.
   * Support installing Cabal-built binaries: Put the name of the binary in
     debian/pkg.haskell-binaries to ship the binary in that package
+  * Add GHC-Package field to the Packages file 
 
  -- Joachim Breitner <nomeata@debian.org>  Sun, 27 Jan 2013 19:35:58 +0100
 
