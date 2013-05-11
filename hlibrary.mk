@@ -194,5 +194,7 @@ define newline
 
 
 endef
+$(patsubst debian/%.haskell-binaries,build/%,$(wildcard debian/*.haskell-binaries)):: build-ghc-stamp
+
 $(patsubst debian/%.haskell-binaries,install/%,$(wildcard debian/*.haskell-binaries)):: debian/tmp-inst-ghc
 	$(foreach binary,$(shell cat debian/$(cdbs_curpkg).haskell-binaries),dh_install -p$(cdbs_curpkg) dist-ghc/build/$(binary)/$(binary) usr/bin $(newline))
