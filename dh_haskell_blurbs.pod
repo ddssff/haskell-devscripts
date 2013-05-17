@@ -1,0 +1,39 @@
+=head1 NAME
+
+dh_haskell_blurb - standard haskell package description blurbs
+
+=head1 SYNOPSIS
+
+B<dh_haskell_blurbs> [S<I<debhelper options>>]
+[B<-X>I<package>]
+[B<--exclude=>I<package>]
+[S<I<file>> ...]
+
+=head1 DESCRIPTION
+
+dh_haskell_blurbs is a debhelper program provides substvars for the standard blurbs occurring in Haskell package descriptions.
+
+To use it, move the common parts of the description to the source stanza:
+
+ X-Description: Cool library
+  This is a pure Haskell implementation of coolness. It is cooler
+  than implementation via foreign languages, because we can.
+
+And then use the following for every Haskell library package stanza, C<dev>, C<prof> and C<doc>:
+
+ Description: ${haskell:ShortDescription}${haskell:ShortBlurb}
+  ${haskell:LongDescription}
+  .
+  ${haskell:Blurb}
+
+
+=head1 SEE ALSO
+
+L<dh_haskell_depends(1)>
+L<dh_haskell_shlibdeps(1)>
+L<dh_haskell_provides(1)>
+L<debhelper(7)>
+
+=head1 AUTHOR
+
+Joachim Breitner <nomeata@debian.org>

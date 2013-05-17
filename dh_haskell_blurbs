@@ -1,0 +1,73 @@
+#! /bin/sh
+#
+# Create substvars for the Haskell package description blurbs
+#
+# Copyright (C) 2013 Joachim Breitner <nomeata@debian.org>
+
+set -e 
+
+for pkg in `dh_listpackages $args`; do
+    case "$pkg" in
+	libghc-*-dev)
+	    what=Dev
+	    ;;
+	libghc-*-prof)
+	    what=Prof
+	    ;;
+	libghc-*-doc)
+	    what=Doc
+	    ;;
+    esac 
+    if [ -z "$what" ]; then continue; fi
+
+    sfile=debian/$pkg.substvars
+    touch $sfile
+
+    grep -v \
+	-e ^haskell:Blurb \
+	-e ^haskell:ShortBlurb \
+	-e ^haskell:LongDescription \
+	-e ^haskell:ShortDescription \
+	$sfile > $sfile.tmp || true
+
+    case "$pkg" in
+	libghc-*-dev) cat >> $sfile.tmp <<'__END__' ;;
+haskell:ShortBlurb=
+haskell:Blurb=This package provides a library for the Haskell programming language.${Newline}See http://www.haskell.org/ for more information on Haskell.
+__END__
+
+	libghc-*-prof) cat >> $sfile.tmp <<'__END__' ;;
+haskell:ShortBlurb=; profiling libraries
+haskell:Blurb=This package provides a library for the Haskell programming language, compiled${Newline}for profiling.  See http://www.haskell.org/ for more information on Haskell.
+__END__
+
+	libghc-*-doc) cat >> $sfile.tmp <<'__END__' ;;
+haskell:ShortBlurb=; documentation
+haskell:Blurb=This package provides the documentation for a library for the Haskell${Newline}programming language.${Newline}See http://www.haskell.org/ for more information on Haskell.
+__END__
+
+    esac
+
+    shortDescription="$(
+	cat debian/control |
+	grep-dctrl -F Source '' -s X-Description -n|
+	head -n1
+	)"
+
+    longDescription="$(
+	cat debian/control |
+	grep-dctrl -F Source '' -s X-Description -n|
+	sed 's/^[\t ]//;s/^\.$//'|	 # remove initial space
+	tail -n +2|			 # skip short description
+	perl -pe 's/\n$/\${Newline}/'    # prepare for dpkg-gencontrol
+	# perl -pe 's/\${Newline}$//'    # but not final lineline
+	# Remove when http://bugs.debian.org/680871 is fixed
+	)"
+
+    cat >> $sfile.tmp <<__END__
+haskell:ShortDescription=$shortDescription
+haskell:LongDescription=$longDescription
+__END__
+
+    mv $sfile.tmp $sfile
+done

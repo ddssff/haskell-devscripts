@@ -161,6 +161,7 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_shlibdeps -p$(notdir $@)
+	dh_haskell_blurbs -p$(notdir $@)
 
 install/libghc-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc install/libghc-$(CABAL_PACKAGE)-dev debian/extra-depends
 	cd debian/tmp-inst-ghc ; find usr/lib/haskell-packages/ghc/lib/ \
@@ -168,6 +169,7 @@ install/libghc-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc install/libghc-$(CABA
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
+	dh_haskell_blurbs -p$(notdir $@)
 
 install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc debian/extra-depends
 	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_HTML_DIR)
@@ -182,11 +184,13 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debia
 		-printf "%p $(DEB_HOOGLE_TXT_DIR)/%f\n" >> debian/libghc-$(CABAL_PACKAGE)-doc.links
 	sed -i s,^debian/libghc-$(CABAL_PACKAGE)-doc,, debian/libghc-$(CABAL_PACKAGE)-doc.links
 	dh_haskell_depends -p$(notdir $@)
+	dh_haskell_blurbs -p$(notdir $@)
 
 install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs debian/extra-depends
 	$(DEB_SETUP_BIN_NAME) copy --destdir=debian/libhugs-$(CABAL_PACKAGE) --builddir=dist-hugs
 	rm -rf debian/libhugs-$(CABAL_PACKAGE)/usr/share/doc/*
 	dh_haskell_depends -p$(notdir $@)
+	dh_haskell_blurbs -p$(notdir $@)
 
 
 # Support for installing executables

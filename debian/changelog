@@ -1,3 +1,13 @@
+haskell-devscripts (0.8.15) UNRELEASED; urgency=low
+
+  * dh_haskell_blurbs added, provides substitution variables for the common
+    package description blurbs, and also for reading the package description
+    from the Source’s Description field.
+    Until http://bugs.debian.org/680871 is fixed this does not work well for
+    packages with multiple paragraphs in their description.
+
+ -- Joachim Breitner <nomeata@debian.org>  Fri, 17 May 2013 20:59:46 +0200
+
 haskell-devscripts (0.8.14) experimental; urgency=low
 
   * Explicitly mention which Prelude to use in dh_haskell_shlibdeps, thanks to
