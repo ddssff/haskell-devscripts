@@ -90,8 +90,8 @@ do
 		exit 1
 	    fi
 
-            ghc --make $T_DIR/a.hs -o $T_DIR/a.out -package-conf \
-                $T_DIR/package.conf -package $pkgname
+            ghc --make $T_DIR/a.hs -o $T_DIR/a.out\
+	    	-package-db $T_DIR/package.conf -package $pkgname
             dpkg-shlibdeps -x$libffi -x$libgmp -Tdebian/$pkg.substvars $T_DIR/a.out
             ;;
     esac
