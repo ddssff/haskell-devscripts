@@ -15,7 +15,11 @@ manpages = $(shell cat debian/manpages)
 	pod2man -c 'Haskell devscripts documentation' -r 'Haskell devscripts $(DEB_VERSION)' $< > $@
 
 .PHONY: build
-build: $(manpages)
+build-indep: $(manpages)
+
+build-arch:
+
+build: build-arch build-indep
 
 install-stamp:
 	dh install
@@ -28,10 +32,10 @@ binary-indep-stamp: install-stamp
 	touch $@
 
 .PHONY: binary-indep
-binary-indep: binary-indep-stamp
+binary-indep: build-indep binary-indep-stamp
 
 .PHONY: binary-arch
-binary-arch: install-stamp
+binary-arch: build-arch install-stamp
 
 .PHONY: binary
 binary: binary-indep-stamp

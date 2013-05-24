@@ -3,7 +3,7 @@ Section: haskell
 Priority: extra
 Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
 Uploaders: Marco Silva <marcot@debian.org>, Joachim Breitner <nomeata@debian.org>
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: perl
 Standards-Version: 3.9.4
 Vcs-Darcs: http://darcs.debian.org/pkg-haskell/haskell-devscripts
