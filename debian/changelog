@@ -1,4 +1,4 @@
-haskell-devscripts (0.8.16) UNRELEASED; urgency=low
+haskell-devscripts (0.8.16) unstable; urgency=low
 
   * Remove some unnecssary build-depends version constraints (found by cme) 
   * Avoid adding dependencies on libffi and libgmp to libghc-*-foo (Closes:
@@ -6,7 +6,7 @@ haskell-devscripts (0.8.16) UNRELEASED; urgency=low
   * Bump compat level
   * Add build-arch and build-indep targets 
 
- -- Joachim Breitner <nomeata@debian.org>  Fri, 24 May 2013 09:22:52 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Fri, 24 May 2013 11:16:32 +0200
 
 haskell-devscripts (0.8.15) experimental; urgency=low
 
