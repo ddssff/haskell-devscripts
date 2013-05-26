@@ -31,6 +31,7 @@ CABAL_PACKAGE=$(DEB_CABAL_PACKAGE)
 CABAL_VERSION=$(shell cat *.cabal | egrep -i '^\s*version:' | head -n1 | sed -r 's,^\s*version:\s*,,i'| sed -r 's,\s*$$,,i')
 
 DEB_ENABLE_TESTS ?= no
+DEB_ENABLE_HOOGLE ?= yes
 
 DEB_DH_GENCONTROL_ARGS_libghc-$(CABAL_PACKAGE)-dev += -- '-DGHC-Package=$${haskell:ghc-package}'
 
@@ -180,9 +181,11 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debia
 	[ 0 = `ls debian/tmp-inst-ghc/$(DEB_HADDOCK_DIR)/ 2>/dev/null | wc -l` ] || \
 		cp -r debian/tmp-inst-ghc/$(DEB_HADDOCK_DIR)/*.haddock \
 		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
+ifeq ($(DEB_ENABLE_HOOGLE),yes)
 	find debian/$(notdir $@)/$(DEB_HADDOCK_HTML_DIR) -name "*.txt" \
 		-printf "%p $(DEB_HOOGLE_TXT_DIR)/%f\n" >> debian/libghc-$(CABAL_PACKAGE)-doc.links
 	sed -i s,^debian/libghc-$(CABAL_PACKAGE)-doc,, debian/libghc-$(CABAL_PACKAGE)-doc.links
+endif
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_blurbs -p$(notdir $@)
 
