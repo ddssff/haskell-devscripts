@@ -1,9 +1,9 @@
-haskell-devscripts (0.8.17) UNRELEASED; urgency=low
+haskell-devscripts (0.8.17) unstable; urgency=low
 
   * Allow a package to disable the installation of the hoogle file (prepares
     the fix for #709771)
 
- -- Joachim Breitner <nomeata@debian.org>  Sun, 26 May 2013 10:32:05 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 26 May 2013 10:37:57 +0200
 
 haskell-devscripts (0.8.16) unstable; urgency=low
 
