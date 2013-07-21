@@ -1,3 +1,9 @@
+haskell-devscripts (0.8.18) UNRELEASED; urgency=low
+
+  * Ensure that debian/rules binary works. (Closes: #717442)
+
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 21 Jul 2013 19:24:34 +0200
+
 haskell-devscripts (0.8.17) unstable; urgency=low
 
   * Allow a package to disable the installation of the hoogle file (prepares

@@ -140,7 +140,7 @@ dist-hugs: $(DEB_SETUP_BIN_NAME)
 build/libhugs-$(CABAL_PACKAGE):: dist-hugs
 	$(DEB_SETUP_BIN_NAME) build --builddir=dist-hugs
 
-debian/tmp-inst-ghc: $(DEB_SETUP_BIN_NAME) dist-ghc
+debian/tmp-inst-ghc: $(DEB_SETUP_BIN_NAME) build-ghc-stamp
 	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-ghc --destdir=debian/tmp-inst-ghc
 
 debian/extra-depends: debian/tmp-inst-ghc
@@ -172,7 +172,7 @@ install/libghc-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc install/libghc-$(CABA
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_blurbs -p$(notdir $@)
 
-install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc debian/extra-depends
+install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc build-haddock-stamp debian/extra-depends
 	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_HTML_DIR)
 	cd debian/tmp-inst-ghc/ ; find ./$(DEB_HADDOCK_HTML_DIR)/ \
 		! -name "*.haddock" -exec install -Dm 644 '{}' \
