@@ -1,7 +1,6 @@
 haskell-devscripts (0.8.19) unstable; urgency=low
 
   * Fix /usr/share/ subdirectory
-  * Releasing version 0.8.19
 
  -- Louis Bettens <louis@bettens.info>  Tue, 30 Jul 2013 08:48:41 +0200
 
