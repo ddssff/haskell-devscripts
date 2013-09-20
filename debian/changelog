@@ -1,3 +1,9 @@
+haskell-devscripts (0.8.20) unstable; urgency=low
+
+  * add an encoding declaration in dh_haskell_shlibdeps.pod (Closes: #723882)
+
+ -- Louis Bettens <louis@bettens.info>  Fri, 20 Sep 2013 22:33:19 +0200
+
 haskell-devscripts (0.8.19) unstable; urgency=low
 
   * Fix /usr/share/ subdirectory
