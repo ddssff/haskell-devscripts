@@ -1,3 +1,4 @@
+=encoding utf8
 =head1 NAME
 
 dh_haskell_shlibdeps - calculates Haskell external dependencies on Cabalized
