@@ -1,4 +1,4 @@
-haskell-devscripts (0.8.20) unstable; urgency=low
+haskell-devscripts (0.8.19.1) unstable; urgency=low
 
   * add an encoding declaration in dh_haskell_shlibdeps.pod (Closes: #723882)
 
