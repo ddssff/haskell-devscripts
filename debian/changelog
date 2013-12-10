@@ -1,3 +1,10 @@
+haskell-devscripts (0.8.19.2) UNRELEASED; urgency=medium
+
+  * Remove the final newline from haskell:LongDescription, now that
+    http://bugs.debian.org/680871 is fixed.
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 10 Dec 2013 22:53:03 +0000
+
 haskell-devscripts (0.8.19.1) unstable; urgency=low
 
   * add an encoding declaration in dh_haskell_shlibdeps.pod (Closes: #723882)

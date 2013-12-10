@@ -59,9 +59,8 @@ __END__
 	grep-dctrl -F Source '' -s X-Description -n|
 	sed 's/^[\t ]//;s/^\.$//'|	 # remove initial space
 	tail -n +2|			 # skip short description
-	perl -pe 's/\n$/\${Newline}/'    # prepare for dpkg-gencontrol
-	# perl -pe 's/\${Newline}$//'    # but not final lineline
-	# Remove when http://bugs.debian.org/680871 is fixed
+	perl -pe 's/\n$/\${Newline}/'|   # prepare for dpkg-gencontrol
+	perl -pe 's/\${Newline}$//'      # but not final lineline
 	)"
 
     cat >> $sfile.tmp <<__END__
