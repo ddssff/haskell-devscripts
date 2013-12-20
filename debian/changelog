@@ -1,9 +1,9 @@
-haskell-devscripts (0.8.19.2) UNRELEASED; urgency=medium
+haskell-devscripts (0.8.19.2) unstable; urgency=medium
 
   * Remove the final newline from haskell:LongDescription, now that
     http://bugs.debian.org/680871 is fixed.
 
- -- Joachim Breitner <nomeata@debian.org>  Tue, 10 Dec 2013 22:53:03 +0000
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 10 Dec 2013 22:56:06 +0000
 
 haskell-devscripts (0.8.19.1) unstable; urgency=low
 
