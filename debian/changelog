@@ -1,3 +1,9 @@
+haskell-devscripts (0.8.19.3) UNRELEASED; urgency=medium
+
+  * Run dh_haskell_blurbs on all packages (Closes: #721461)
+
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 09 Feb 2014 12:39:16 +0000
+
 haskell-devscripts (0.8.19.2) unstable; urgency=medium
 
   * Remove the final newline from haskell:LongDescription, now that

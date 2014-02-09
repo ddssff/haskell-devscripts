@@ -7,19 +7,6 @@
 set -e 
 
 for pkg in `dh_listpackages $args`; do
-    case "$pkg" in
-	libghc-*-dev)
-	    what=Dev
-	    ;;
-	libghc-*-prof)
-	    what=Prof
-	    ;;
-	libghc-*-doc)
-	    what=Doc
-	    ;;
-    esac 
-    if [ -z "$what" ]; then continue; fi
-
     sfile=debian/$pkg.substvars
     touch $sfile
 
