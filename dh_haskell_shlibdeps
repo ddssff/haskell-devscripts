@@ -2,6 +2,8 @@
 # arch-tag: Debhelper script for Haskell
 #
 # Copyright (C) 2009 Marco Túlio Gontijo e Silva <marcot@debian.org>
+# Copyright (C) 2014 Joachim Breitner <nomeata@debian.org>
+#
 # Based on mk-haskell-depends by Martin Sjögren <sjogren@debian.org>
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -46,53 +48,24 @@ fi
 
 T_DIR=debian/dh_haskell_shlibdeps
 mkdir $T_DIR 2> /dev/null || true
-echo '[]' > $T_DIR/package.conf
+
+args=""
 for file in $files
 do
-    pkg=`echo $file | cut -d/ -f2 | cut -d- -f2- | sed -e 's/-[^-]\+$//'`
-    pkgconflocal=$T_DIR/$pkg.package.conf
-    cat $file | sed -e \
-        "/^\(import\|library\|include\)-dirs: / { \
-        s#/usr/lib/haskell-packages#$PWD/debian/libghc-$pkg-dev/usr/lib/haskell-packages#g }" \
-        > $pkgconflocal
-    ghc-pkg -f $T_DIR/package.conf register $pkgconflocal --force \
-        2>&1 > /dev/null || true
+    for lib in $(grep-dctrl -s extra-libraries -n . < $file)
+    do
+	args="$args -l$lib"
+    done
 done
+
+echo 'main () {}' > $T_DIR/probe.c
+gcc $args $T_DIR/probe.c -o $T_DIR/probe
+
 for pkg in $pkgs
 do
     case "$pkg" in
         libghc-*-dev)
-            sfile=debian/$pkg.substvars
-            pkgname=`basename debian/$pkg/usr/lib/haskell-packages/ghc/lib/* | sed -e 's/-[^-]\+$//'`
-            touch $sfile
-            echo "{-# LANGUAGE NoImplicitPrelude #-}" >$T_DIR/a.hs
-            echo "{-# LANGUAGE PackageImports #-}" >>$T_DIR/a.hs
-            echo "module Main where" >> $T_DIR/a.hs
-            echo "import \"base\" Prelude" >> $T_DIR/a.hs
-            echo "main = return ()" >> $T_DIR/a.hs
-		
-	    # We do not want this package to depend on libffi* and libgmp*, as this dependency
-	    # most likely comes from the RTS, see http://bugs.debian.org/639015
-            ghc --make $T_DIR/a.hs -o $T_DIR/a.out
-	    plain_depends=$(dpkg-shlibdeps -Tdebian/$pkg.substvars $T_DIR/a.out -O)
-	    libffi=$(echo $plain_depends | sed -n '/^shlibs:Depends/s/.*\(libffi[0-9][0-9]*\).*/\1/p')
-	    rm -f a.out
-
-	    if [ -z "$libffi" ]
-	    then
-	    	echo "libffi not used any more?"
-		exit 1
-	    fi
-	    libgmp=$(echo $plain_depends | sed -n '/^shlibs:Depends/s/.*\(libgmp[0-9][0-9]*\).*/\1/p')
-	    if [ -z "$libgmp" ]
-	    then
-	    	echo "libgmp not used any more?"
-		exit 1
-	    fi
-
-            ghc --make $T_DIR/a.hs -o $T_DIR/a.out\
-	    	-package-db $T_DIR/package.conf -package $pkgname
-            dpkg-shlibdeps -x$libffi -x$libgmp -Tdebian/$pkg.substvars $T_DIR/a.out
+            dpkg-shlibdeps --warnings=1 -Tdebian/$pkg.substvars $T_DIR/probe
             ;;
     esac
 done

@@ -1,3 +1,17 @@
+haskell-devscripts (0.8.19.4) UNRELEASED; urgency=medium
+
+  * Simplify dh_haskell_shlibdeps
+    Instead of building a haskell program and running dpkg-shlibdeps (which
+    picks up shared library dependencies of dependencies of this module)
+    instead parse the ghc-pkg information of this package and use the
+    information from the "extra-libraries" field. Then build a probe
+    C program linking against these libraries and run dpkg-shlibdeps on them.
+    (This also removes special handling of libffi and libgmp, and makes it
+    compatible with ghc-7.8.)
+  * Prevent dh_shlibdeps to look at libHS* libraries. 
+
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 09 Feb 2014 20:27:45 +0000
+
 haskell-devscripts (0.8.19.3) unstable; urgency=medium
 
   * Run dh_haskell_blurbs on all packages (Closes: #721461)
