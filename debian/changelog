@@ -1,4 +1,4 @@
-haskell-devscripts (0.8.19.4) UNRELEASED; urgency=medium
+haskell-devscripts (0.8.19.4) unstable; urgency=medium
 
   * Simplify dh_haskell_shlibdeps
     Instead of building a haskell program and running dpkg-shlibdeps (which
@@ -10,7 +10,7 @@ haskell-devscripts (0.8.19.4) UNRELEASED; urgency=medium
     compatible with ghc-7.8.)
   * Prevent dh_shlibdeps to look at libHS* libraries. 
 
- -- Joachim Breitner <nomeata@debian.org>  Sun, 09 Feb 2014 20:27:45 +0000
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 09 Feb 2014 20:45:53 +0000
 
 haskell-devscripts (0.8.19.3) unstable; urgency=medium
 
