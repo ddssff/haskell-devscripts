@@ -1,8 +1,8 @@
-haskell-devscripts (0.8.19.5) UNRELEASED; urgency=medium
+haskell-devscripts (0.8.19.5) unstable; urgency=medium
 
   * dh_haskell_shlibdeps: Get -L flags from the library-dirs field. 
 
- -- Joachim Breitner <nomeata@debian.org>  Sun, 16 Mar 2014 15:08:32 +0100
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 16 Mar 2014 15:19:40 +0100
 
 haskell-devscripts (0.8.19.4) unstable; urgency=medium
 
