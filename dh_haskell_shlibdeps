@@ -52,6 +52,10 @@ mkdir $T_DIR 2> /dev/null || true
 args=""
 for file in $files
 do
+    for dir in $(grep-dctrl -s library-dirs -n . < $file)
+    do
+	args="$args -L$dir"
+    done
     for lib in $(grep-dctrl -s extra-libraries -n . < $file)
     do
 	args="$args -l$lib"
