@@ -96,7 +96,7 @@ DEB_BUILD_DEPENDENCIES = build-arch
 clean::
 	[ ! -x "$(DEB_SETUP_BIN_NAME)" ] || $(DEB_SETUP_BIN_NAME) clean
 	rm -rf dist dist-ghc dist-hugs $(DEB_SETUP_BIN_NAME) Setup.hi Setup.ho Setup.o .*config*
-	rm -f build-ghc-stamp build-hugs-stamp build-haddock-stamp
+	rm -f configure-ghc-stamp build-ghc-stamp build-hugs-stamp build-haddock-stamp
 	rm -rf debian/tmp-inst-ghc
 	rm -f debian/extra-depends
 	rm -f debian/libghc-$(CABAL_PACKAGE)-doc.links
@@ -107,15 +107,16 @@ $(DEB_SETUP_BIN_NAME):
 	if test ! -e Setup.lhs -a ! -e Setup.hs; then echo "No setup script found!"; exit 1; fi
 	for setup in Setup.lhs Setup.hs; do if test -e $$setup; then ghc --make $$setup -o $(DEB_SETUP_BIN_NAME); exit 0; fi; done
 
-dist-ghc: $(DEB_SETUP_BIN_NAME)
+configure-ghc-stamp: $(DEB_SETUP_BIN_NAME)
 	$(DEB_SETUP_BIN_NAME) configure --ghc -v2 \
 		--prefix=/usr --libdir=/usr/lib/haskell-packages/ghc/lib \
 		--builddir=dist-ghc \
 		--haddockdir=$(DEB_HADDOCK_DIR) --datasubdir=$(CABAL_PACKAGE)\
 		--htmldir=$(DEB_HADDOCK_HTML_DIR) $(ENABLE_PROFILING) $(NO_GHCI_FLAG) \
 		$(DEB_SETUP_GHC6_CONFIGURE_ARGS) $(DEB_SETUP_GHC_CONFIGURE_ARGS) $(OPTIMIZATION) $(TESTS)
+	touch $@
 
-build-ghc-stamp: dist-ghc
+build-ghc-stamp: configure-ghc-stamp
 	$(DEB_SETUP_BIN_NAME) build --builddir=dist-ghc
 	touch $@
 
@@ -141,7 +142,7 @@ build-haddock-stamp:
 	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock --builddir=dist-ghc $(DEB_HADDOCK_OPTS)
 	touch build-haddock-stamp
 
-build/haskell-$(CABAL_PACKAGE)-doc build/libghc-$(CABAL_PACKAGE)-doc:: dist-ghc build-haddock-stamp
+build/haskell-$(CABAL_PACKAGE)-doc build/libghc-$(CABAL_PACKAGE)-doc:: configure-ghc-stamp build-haddock-stamp
 
 dist-hugs: $(DEB_SETUP_BIN_NAME)
 	$(DEB_SETUP_BIN_NAME) configure --hugs --prefix=/usr -v2 --builddir=dist-hugs $(DEB_SETUP_HUGS_CONFIGURE_ARGS)

@@ -1,3 +1,9 @@
+haskell-devscripts (0.8.19.6) UNRELEASED; urgency=medium
+
+  * Use a configure-ghc-stamp (Closes: #747924)
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 13 May 2014 23:29:09 +0200
+
 haskell-devscripts (0.8.19.5) unstable; urgency=medium
 
   * dh_haskell_shlibdeps: Get -L flags from the library-dirs field. 
