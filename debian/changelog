@@ -1,8 +1,8 @@
-haskell-devscripts (0.8.19.6) UNRELEASED; urgency=medium
+haskell-devscripts (0.8.19.6) unstable; urgency=medium
 
   * Use a configure-ghc-stamp (Closes: #747924)
 
- -- Joachim Breitner <nomeata@debian.org>  Tue, 13 May 2014 23:29:09 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 13 May 2014 23:37:06 +0200
 
 haskell-devscripts (0.8.19.5) unstable; urgency=medium
 
