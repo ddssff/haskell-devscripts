@@ -123,7 +123,7 @@ build-ghc-stamp: configure-ghc-stamp
 ifeq ($(DEB_ENABLE_TESTS),yes)
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 check-ghc-stamp: build-ghc-stamp
-	$(DEB_SETUP_BIN_NAME) test --builddir=dist-ghc
+	$(DEB_SETUP_BIN_NAME) test --builddir=dist-ghc --show-details=always
 	touch $@
 else
 check-ghc-stamp: build-ghc-stamp
