@@ -1,8 +1,8 @@
-haskell-devscripts (0.8.19.7) UNRELEASED; urgency=medium
+haskell-devscripts (0.8.19.7) unstable; urgency=medium
 
   * Pass --show-details=always to test suite 
 
- -- Joachim Breitner <nomeata@debian.org>  Wed, 14 May 2014 09:33:45 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Wed, 14 May 2014 09:34:49 +0200
 
 haskell-devscripts (0.8.19.6) unstable; urgency=medium
 
