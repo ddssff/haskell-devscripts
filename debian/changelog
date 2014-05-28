@@ -1,3 +1,10 @@
+haskell-devscripts (0.8.19.8) UNRELEASED; urgency=low
+
+  * Added ghc-version substvar
+  * Bump standards version, no change
+
+ -- Sven Bartscher <sven.bartscher@weltraumschlangen.de>  Wed, 28 May 2014 23:23:49 +0200
+
 haskell-devscripts (0.8.19.7) unstable; urgency=medium
 
   * Pass --show-details=always to test suite 

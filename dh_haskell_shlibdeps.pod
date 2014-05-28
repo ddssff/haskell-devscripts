@@ -1,9 +1,9 @@
-=encoding utf8
 =head1 NAME
 
 dh_haskell_shlibdeps - calculates Haskell external dependencies on Cabalized
 libraries
 
+=encoding utf8
 =head1 SYNOPSIS
 
 B<dh_haskell_depends> [S<I<debhelper options>>]
