@@ -55,5 +55,7 @@ haskell:ShortDescription=$shortDescription
 haskell:LongDescription=$longDescription
 __END__
 
+    echo "haskell:ghc-version=`ghc --numeric-version`" >> $sfile.tmp
+
     mv $sfile.tmp $sfile
 done
