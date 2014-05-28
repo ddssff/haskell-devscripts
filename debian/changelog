@@ -1,4 +1,4 @@
-haskell-devscripts (0.8.19.8) UNRELEASED; urgency=low
+haskell-devscripts (0.8.20.0) unstable; urgency=medium
 
   * Added ghc-version substvar
   * Bump standards version, no change
