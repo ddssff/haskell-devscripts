@@ -191,7 +191,7 @@ install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debia
 		debian/$(notdir $@)/$(DEB_HADDOCK_DIR)
 ifeq ($(DEB_ENABLE_HOOGLE),yes)
 	find debian/$(notdir $@)/$(DEB_HADDOCK_HTML_DIR) -name "*.txt" \
-		-printf "%p $(DEB_HOOGLE_TXT_DIR)/%f\n" >> debian/libghc-$(CABAL_PACKAGE)-doc.links
+		-printf "%p $(DEB_HOOGLE_TXT_DIR)/$(notdir $@).txt\n" >> debian/libghc-$(CABAL_PACKAGE)-doc.links
 	sed -i s,^debian/libghc-$(CABAL_PACKAGE)-doc,, debian/libghc-$(CABAL_PACKAGE)-doc.links
 endif
 	dh_haskell_depends -p$(notdir $@)
