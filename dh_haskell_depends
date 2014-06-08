@@ -128,6 +128,7 @@ for pkg in `dh_listpackages $args`; do
             echo "haskell:Depends=$depends" >> $sfile.tmp
             recommends=` \
                 find debian/$pkg -name \*.html -exec hxwls -r \{\} \; \
+                | sed -e 's,^file:/,,' \
                 | grep ^/ \
                 | cut -d# -f1 \
                 | sort -u \
