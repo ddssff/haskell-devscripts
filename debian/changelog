@@ -1,4 +1,4 @@
-haskell-devscripts (0.8.21) UNRELEASED; urgency=medium
+haskell-devscripts (0.8.21) unstable; urgency=medium
 
   * Install hoogle .txt files to DEB_HOOGLE_TXT_DIR with a filename derived
     from the Debian package name, and not the Cabal name. This avoid problems
@@ -6,7 +6,7 @@ haskell-devscripts (0.8.21) UNRELEASED; urgency=medium
   * When calculating Recommends from links in documentation, handle file://
     links as well. 
 
- -- Joachim Breitner <nomeata@debian.org>  Sun, 08 Jun 2014 17:36:52 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Mon, 09 Jun 2014 11:59:03 +0200
 
 haskell-devscripts (0.8.20.0) unstable; urgency=medium
 
