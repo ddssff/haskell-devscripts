@@ -9,7 +9,6 @@ Build-Depends-Indep: perl
 Standards-Version: 3.9.5
 Vcs-Darcs: http://darcs.debian.org/pkg-haskell/haskell-devscripts
 Vcs-Browser: http://darcs.debian.org/cgi-bin/darcsweb.cgi?r=pkg-haskell/haskell-devscripts
-Multi-Arch: foreign
 
 Package: haskell-devscripts
 Architecture: all
