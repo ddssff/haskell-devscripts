@@ -1,3 +1,12 @@
+haskell-devscripts (0.9) experimental; urgency=medium
+
+  * Pass -XlibHS to dh_shlibdeps
+  * Depend on ghc 7.8, so that depending on haskell-devscripts (>= 0.9)
+    ensures a package is built against the GHC packages in experimental
+  * Add a binary-or-shlib-defines-rpath lintial override to libghc-*-dev 
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 22 Nov 2014 14:13:01 +0100
+
 haskell-devscripts (0.8.21) unstable; urgency=medium
 
   * Install hoogle .txt files to DEB_HOOGLE_TXT_DIR with a filename derived
