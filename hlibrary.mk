@@ -51,6 +51,7 @@ DEB_COMPRESS_EXCLUDE += .haddock .hs .txt
 # DEB_DH_SHLIBDEPS_ARGS_ALL += -- --ignore-missing-info
 # (because we do not (yet) have shlibs files for libHS libraries)
 DEB_DH_SHLIBDEPS_ARGS_ALL += -XlibHS
+DEB_DH_MAKESHLIBS_ARGS_ALL += -XlibHS
 
 # TODO:
 # - some of this would probably be useful for generic Haskell programs,

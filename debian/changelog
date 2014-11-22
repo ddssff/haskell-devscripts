@@ -1,3 +1,9 @@
+haskell-devscripts (0.8.22) UNRELEASED; urgency=medium
+
+  * Pass -XlibHS to dh_shlibdeps
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 22 Nov 2014 13:48:15 +0100
+
 haskell-devscripts (0.8.21) unstable; urgency=medium
 
   * Install hoogle .txt files to DEB_HOOGLE_TXT_DIR with a filename derived
