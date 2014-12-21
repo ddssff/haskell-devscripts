@@ -171,6 +171,7 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
 	if [ 'z$(DEB_GHC_EXTRA_PACKAGES)' != 'z' ] ; then \
 		echo '$(DEB_GHC_EXTRA_PACKAGES)' > debian/$(notdir $@)/usr/lib/haskell-packages/ghc/lib/$(CABAL_PACKAGE)-$(CABAL_VERSION)/extra-packages ; \
 	fi
+	echo binary-or-shlib-defines-rpath > debian/libghc-$(CABAL_PACKAGE)-dev.lintian-overrides
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_shlibdeps -p$(notdir $@)
@@ -196,7 +197,6 @@ ifeq ($(DEB_ENABLE_HOOGLE),yes)
 		-printf "%p $(DEB_HOOGLE_TXT_DIR)/$(notdir $@).txt\n" >> debian/libghc-$(CABAL_PACKAGE)-doc.links
 	sed -i s,^debian/libghc-$(CABAL_PACKAGE)-doc,, debian/libghc-$(CABAL_PACKAGE)-doc.links
 endif
-	echo binary-or-shlib-defines-rpath > debian/libghc-$(CABAL_PACKAGE)-dev.lintian-overrides
 	dh_haskell_depends -p$(notdir $@)
 
 install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs debian/extra-depends
