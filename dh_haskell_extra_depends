@@ -59,7 +59,7 @@ set -e
 extradeps=''
 for dep in `cabal_depends $files` ; do
     dep_package_ver=`echo $dep | grep '^.\+-[0-9\.]\+-................................$' | sed 's|^\(.\+\)-\([0-9.]\+\)-[0-9a-f]\+$|\1-\2|'`
-    extra_packages_file=/usr/lib/haskell-packages/ghc/lib/$dep_package_ver/extra-packages
+    extra_packages_file=/usr/lib/haskell-packages/extra-packages/$dep_package_ver
     if [ -f $extra_packages_file ] ; then
         extradeps="$extradeps, `cat $extra_packages_file`"
     fi

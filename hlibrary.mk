@@ -169,7 +169,8 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
 		install -Dm 644 $$pkg_config debian/$(notdir $@)/var/lib/ghc/package.conf.d/$$pkg_config; \
 		rm -f $$pkg_config
 	if [ 'z$(DEB_GHC_EXTRA_PACKAGES)' != 'z' ] ; then \
-		echo '$(DEB_GHC_EXTRA_PACKAGES)' > debian/$(notdir $@)/usr/lib/haskell-packages/ghc/lib/$(CABAL_PACKAGE)-$(CABAL_VERSION)/extra-packages ; \
+		mkdir -p debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages; \
+		echo '$(DEB_GHC_EXTRA_PACKAGES)' > debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages/$(CABAL_PACKAGE)-$(CABAL_VERSION) ; \
 	fi
 	echo binary-or-shlib-defines-rpath > debian/libghc-$(CABAL_PACKAGE)-dev.lintian-overrides
 	dh_haskell_provides -p$(notdir $@)
