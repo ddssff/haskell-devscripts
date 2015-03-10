@@ -16,7 +16,7 @@ haskell-devscripts (0.9) experimental; urgency=medium
   * Pass -XlibHS to dh_shlibdeps
   * Depend on ghc 7.8, so that depending on haskell-devscripts (>= 0.9)
     ensures a package is built against the GHC packages in experimental
-  * Add a binary-or-shlib-defines-rpath lintial override to libghc-*-dev 
+  * Add a binary-or-shlib-defines-rpath lintial override to libghc-*-dev
 
  -- Joachim Breitner <nomeata@debian.org>  Sat, 22 Nov 2014 14:13:01 +0100
 
@@ -26,7 +26,7 @@ haskell-devscripts (0.8.21) unstable; urgency=medium
     from the Debian package name, and not the Cabal name. This avoid problems
     when packaging a library also shipped by GHC (such as Cabal).
   * When calculating Recommends from links in documentation, handle file://
-    links as well. 
+    links as well.
 
  -- Joachim Breitner <nomeata@debian.org>  Mon, 09 Jun 2014 11:59:03 +0200
 
@@ -39,7 +39,7 @@ haskell-devscripts (0.8.20.0) unstable; urgency=medium
 
 haskell-devscripts (0.8.19.7) unstable; urgency=medium
 
-  * Pass --show-details=always to test suite 
+  * Pass --show-details=always to test suite
 
  -- Joachim Breitner <nomeata@debian.org>  Wed, 14 May 2014 09:34:49 +0200
 
@@ -51,7 +51,7 @@ haskell-devscripts (0.8.19.6) unstable; urgency=medium
 
 haskell-devscripts (0.8.19.5) unstable; urgency=medium
 
-  * dh_haskell_shlibdeps: Get -L flags from the library-dirs field. 
+  * dh_haskell_shlibdeps: Get -L flags from the library-dirs field.
 
  -- Joachim Breitner <nomeata@debian.org>  Sun, 16 Mar 2014 15:19:40 +0100
 
@@ -65,7 +65,7 @@ haskell-devscripts (0.8.19.4) unstable; urgency=medium
     C program linking against these libraries and run dpkg-shlibdeps on them.
     (This also removes special handling of libffi and libgmp, and makes it
     compatible with ghc-7.8.)
-  * Prevent dh_shlibdeps to look at libHS* libraries. 
+  * Prevent dh_shlibdeps to look at libHS* libraries.
 
  -- Joachim Breitner <nomeata@debian.org>  Sun, 09 Feb 2014 20:45:53 +0000
 
@@ -109,11 +109,11 @@ haskell-devscripts (0.8.17) unstable; urgency=low
 
 haskell-devscripts (0.8.16) unstable; urgency=low
 
-  * Remove some unnecssary build-depends version constraints (found by cme) 
+  * Remove some unnecssary build-depends version constraints (found by cme)
   * Avoid adding dependencies on libffi and libgmp to libghc-*-foo (Closes:
-    639015) 
+    639015)
   * Bump compat level
-  * Add build-arch and build-indep targets 
+  * Add build-arch and build-indep targets
 
  -- Joachim Breitner <nomeata@debian.org>  Fri, 24 May 2013 11:16:32 +0200
 
@@ -135,7 +135,7 @@ haskell-devscripts (0.8.14) experimental; urgency=low
     profiling is desired.
   * Support installing Cabal-built binaries: Put the name of the binary in
     debian/pkg.haskell-binaries to ship the binary in that package
-  * Add GHC-Package field to the Packages file 
+  * Add GHC-Package field to the Packages file
 
  -- Joachim Breitner <nomeata@debian.org>  Sat, 11 May 2013 14:24:37 +0200
 
@@ -144,7 +144,7 @@ haskell-devscripts (0.8.13) experimental; urgency=low
   [ Joachim Breitner ]
   * Improve parsing of "Setup register" output, patch by David Fox
   * Enable creation of hoogle files, thanks to Kiwamu Okabe for the
-    suggestion. 
+    suggestion.
 
   [ Kiwamu Okabe ]
   * Need --html option to fix bug that --hoogle option don't output html file.
@@ -152,15 +152,15 @@ haskell-devscripts (0.8.13) experimental; urgency=low
 
   [ Joachim Breitner ]
   * Symlink hoogle’s txt files to /usr/lib/ghc-doc/hoogle/
-  * Bump ghc dependency to 7.6 
-  * Bump standards version 
+  * Bump ghc dependency to 7.6
+  * Bump standards version
 
  -- Joachim Breitner <nomeata@debian.org>  Mon, 08 Oct 2012 21:14:50 +0200
 
 haskell-devscripts (0.8.12) unstable; urgency=low
 
   * Depend on ghc >= 7.4, adjusting to its haddock --interface-version
-    behaviour. 
+    behaviour.
 
  -- Joachim Breitner <nomeata@debian.org>  Sat, 04 Feb 2012 10:50:33 +0100
 
@@ -208,7 +208,7 @@ haskell-devscripts (0.8.8) unstable; urgency=low
 
 haskell-devscripts (0.8.7) unstable; urgency=low
 
-  * Also install package.conf in version-agnostic path 
+  * Also install package.conf in version-agnostic path
 
  -- Joachim Breitner <nomeata@debian.org>  Mon, 11 Jul 2011 13:13:31 +0200
 
@@ -231,7 +231,7 @@ haskell-devscripts (0.8.4) unstable; urgency=low
   * hlibrary.mk: Include .hs in DEB_COMPRESS_EXCLUDE
 
   [ Joachim Breitner ]
-  * Call ghc-pkg, not ghc-pkg6 (patch by David Fox) 
+  * Call ghc-pkg, not ghc-pkg6 (patch by David Fox)
 
  -- Joachim Breitner <nomeata@debian.org>  Tue, 19 Apr 2011 10:24:32 +0530
 
@@ -281,7 +281,7 @@ haskell-devscripts (0.7.12) unstable; urgency=low
 haskell-devscripts (0.7.11) unstable; urgency=low
 
   * Better error checking when figuring out providing package, should help
-    debug or even fix bug #588001. 
+    debug or even fix bug #588001.
 
  -- Joachim Breitner <nomeata@debian.org>  Tue, 06 Jul 2010 11:18:09 +0200
 
@@ -306,7 +306,7 @@ haskell-devscripts (0.7.9) unstable; urgency=low
 
 haskell-devscripts (0.7.8) unstable; urgency=low
 
-  * Parse cabal files more liberaly in hlibrary.mk 
+  * Parse cabal files more liberaly in hlibrary.mk
   * Wrong see also in dh_haskell_provides (Closes: #576504)
 
  -- Joachim Breitner <nomeata@debian.org>  Mon, 12 Apr 2010 10:15:04 +0200
@@ -343,16 +343,16 @@ haskell-devscripts (0.7.5) unstable; urgency=low
 
 haskell-devscripts (0.7.4) unstable; urgency=low
 
-  * Prevent building of packages with ghc6 << 6.12.1-10 
+  * Prevent building of packages with ghc6 << 6.12.1-10
 
  -- Joachim Breitner <nomeata@debian.org>  Sat, 20 Feb 2010 00:05:19 +0100
 
 haskell-devscripts (0.7.3) unstable; urgency=low
 
-  * Priority extra 
-  * Fix dh_haskell_provides with packages with a dash in the cabal name 
+  * Priority extra
+  * Fix dh_haskell_provides with packages with a dash in the cabal name
   * dh_haskell_* looks at files given  on the command line _or_ at the
-    expected place 
+    expected place
 
  -- Joachim Breitner <nomeata@debian.org>  Wed, 17 Feb 2010 16:27:45 +0100
 
@@ -368,7 +368,7 @@ haskell-devscripts (0.7.2) unstable; urgency=low
 
 haskell-devscripts (0.7.1) unstable; urgency=low
 
-  * Remove package config from source tree root 
+  * Remove package config from source tree root
   * Bump standards version
 
  -- Joachim Breitner <nomeata@debian.org>  Fri, 12 Feb 2010 11:47:53 +0100
@@ -438,7 +438,7 @@ haskell-devscripts (0.6.15+nmu13) unstable; urgency=low
     as a prerequisite for build/*-dev target.
   * hlibrary.mk: copy relevant data from Cabal database from -dev to -doc
     package, for ghc6-doc's trigger.
-  
+
  -- Kari Pahula <kaol@debian.org>  Wed, 22 Jul 2009 15:50:29 +0300
 
 haskell-devscripts (0.6.15+nmu12) unstable; urgency=low
@@ -549,7 +549,7 @@ haskell-devscripts (0.6.15+nmu3) unstable; urgency=low
   * Update hlibrary.mk to latest version from kaol
     + Install .haddock to /usr/lib/ghc-$(GHC6_VERSION)/haddock/ instead of
       /usr/lib/ghc6-$(GHC6_VERSION)/haddock/
-    + Add calls to dh_haskell_depends in the right places 
+    + Add calls to dh_haskell_depends in the right places
 
  -- Joachim Breitner <nomeata@debian.org>  Mon, 23 Feb 2009 17:23:48 +0100
 
@@ -603,19 +603,19 @@ haskell-devscripts (0.6.15) unstable; urgency=high
 
   * Set urgengy to high as it fixes a grave bug.
   * Use the --print-libdir instead of the version number of the Debian package
-    to determine the GHC library directory  (Closes: #512063) 
+    to determine the GHC library directory  (Closes: #512063)
 
  -- Arjan Oosting <arjan@debian.org>  Sat, 17 Jan 2009 14:20:00 +0100
 
 haskell-devscripts (0.6.14) unstable; urgency=low
 
-  * Handle multiple older versions in postinst-ghc template. 
+  * Handle multiple older versions in postinst-ghc template.
     (Closes: #496651).
   * Don't forget package description files given on the command line
-    when dh_haskell_depends can not find one itself. 
+    when dh_haskell_depends can not find one itself.
     Thanks Marco Túlio Gontijo e Silva (Closes: #501697)
-  * Fix man-page to mention packages which actually use haskell-devscripts 
-    (Closes: 497059) 
+  * Fix man-page to mention packages which actually use haskell-devscripts
+    (Closes: 497059)
 
  -- Arjan Oosting <arjan@debian.org>  Tue, 26 Aug 2008 17:52:27 +0200
 
@@ -631,23 +631,23 @@ haskell-devscripts (0.6.13) unstable; urgency=medium
 
 haskell-devscripts (0.6.12) unstable; urgency=low
 
-  * dh_haskell_configure: 
-    - Pass all enable-* en disable-* arguments as options through to 
-      ./setup configure. 
-      This can be used to disable optimization on certain architectures 
-      (dh_haskell_configure disable-optimization) or to always build a 
+  * dh_haskell_configure:
+    - Pass all enable-* en disable-* arguments as options through to
+      ./setup configure.
+      This can be used to disable optimization on certain architectures
+      (dh_haskell_configure disable-optimization) or to always build a
       vanilla library (dh_haskell_configure enable-library-vanilla)
       (Closes: #478700)
 
  -- Arjan Oosting <arjan@debian.org>  Thu, 01 May 2008 14:22:19 +0200
 
-haskell-devscripts (0.6.11) unstable; urgency=low 
-  
+haskell-devscripts (0.6.11) unstable; urgency=low
+
   * dh_haskell_depends:
     - Change the way the next upstream version of a native debian package
       is determined. (Closes: #473549)
     - Fix the generation of the ${haskell:Depends} substvar for profiling
-      packages. (Closes: #474921) 
+      packages. (Closes: #474921)
 
  -- Arjan Oosting <arjan@debian.org>  Tue, 08 Apr 2008 06:49:14 +0200
 
@@ -655,9 +655,9 @@ haskell-devscripts (0.6.10) unstable; urgency=low
 
   * dh_install:
     - Make sure where are in the right directory when dh_install is
-      called. 
+      called.
     - Remove all non profiling files from the generated profiling
-      packages, (Closes: #472654) 
+      packages, (Closes: #472654)
 
  -- Arjan Oosting <arjan@debian.org>  Tue, 25 Mar 2008 23:26:17 +0100
 
@@ -672,7 +672,7 @@ haskell-devscripts (0.6.9) unstable; urgency=low
  -- Arjan Oosting <arjan@debian.org>  Sat, 22 Mar 2008 21:06:46 +0100
 
 haskell-devscripts (0.6.8) unstable; urgency=low
-  
+
   * debian/control:
     - Let the Vcs-* fields point to the trunk branch.
   * dh_haskell_install: Do not prune all non-existant directories from the
@@ -680,7 +680,7 @@ haskell-devscripts (0.6.8) unstable; urgency=low
     directories in /usr/lib/haskell-packages/ghc6/ (which should have been
     shipped with the generated packages otherwise) and give a warning for
     other non-existing directories.
-  
+
  -- Arjan Oosting <arjan@debian.org>  Sat, 22 Mar 2008 20:39:46 +0100
 
 haskell-devscripts (0.6.7) unstable; urgency=low
@@ -696,15 +696,15 @@ haskell-devscripts (0.6.6) unstable; urgency=low
   * dh_haskell_install:
     - Write the correct path to the generated documentation in the package
       description file.
-  
+
  -- Arjan Oosting <arjan@debian.org>  Sun, 13 Jan 2008 23:29:00 +0100
 
 haskell-devscripts (0.6.5) unstable; urgency=low
-  
+
   * debian/control:
     - Bump Standards-Version to 3.7.3. No changes needed.
     - Add Vcs-Svn adn Vcs-Browser fields.
-  * dh_haskell_prep: 
+  * dh_haskell_prep:
     - Don't add ghc6-prof-prof to the ${haskell:Depends} generated for
       profiling libraries. Thanks Kari Pahula (Closes: #460558)
 
@@ -737,8 +737,8 @@ haskell-devscripts (0.6.3) unstable; urgency=low
 
   * dh_haskell_install:
     - The new Cabal version 1.2 generates the .installed-pkg-config as
-      dist/installed-pkg-config so try this location as well. 
-      (Closes: #460138) 
+      dist/installed-pkg-config so try this location as well.
+      (Closes: #460138)
 
  -- Arjan Oosting <arjan@debian.org>  Fri, 11 Jan 2008 00:30:47 +0100
 
@@ -752,20 +752,20 @@ haskell-devscripts (0.6.2) unstable; urgency=low
 
 haskell-devscripts (0.6.1) unstable; urgency=low
 
-  * dh_haskell_*: 
+  * dh_haskell_*:
     - Use doit subroutine from Debian::Debhelper instead of safesystem
       from Dh_Haskell. This also fixes a bug where dh_haskell_build does
       not pass it's arguments to a call to dh_haskell_configure.
   * dh_haskell_builds:
     - Now accepts command line argument "hoogle" which is passed through
-      to ./setup haddock as "./setup haddock --hoogle". 
+      to ./setup haddock as "./setup haddock --hoogle".
   * dh_haskell_configure:
     - Now accepts various with-...= and arg-...= command line arguments
       which are passed through to ./setup configure as options.
     - Add a little pod2man documentation.
   * Dh_Haskell.pm:
     - Remove safesystem subroutine.
-  
+
  -- Arjan Oosting <arjan@debian.org>  Wed, 02 Jan 2008 06:50:02 +0100
 
 haskell-devscripts (0.6.0) unstable; urgency=low
@@ -781,16 +781,16 @@ haskell-devscripts (0.6.0) unstable; urgency=low
       install in that package.
     - Adds a new dh_haskell_depends command which generates the
       ${haskell:Depends} substitution variable for each library package.
-      + For GHC6 libraries and GHC6 profiling libraries package this 
+      + For GHC6 libraries and GHC6 profiling libraries package this
         substitution variable contains a dependency on respectively ghc6
         or ghc6-prof AND the (profiling) libraries the library depends on.
-      + For Hugs libraries it only contains a dependency on hugs. 
+      + For Hugs libraries it only contains a dependency on hugs.
   * Changes to generate haddock API documentation:
     - Change Dh_haskell.pm to recognize packages which match
       "haskell|libghc6)-.+-doc" as 'handled' packages.
     - dh_haskell_build generates haddock API documentation.
     - dh_haskell_install installs haddock API documentation.
-  * Stop shipping empty directories in generated libghc6-* packages: 
+  * Stop shipping empty directories in generated libghc6-* packages:
     - dh_haskell_install removes directories which are empty after the
       installation step.
   * Add dh_haskell_depends script to package.
@@ -805,7 +805,7 @@ haskell-devscripts (0.6.0) unstable; urgency=low
     - Make myself the official maintainer and add John to the uploaders.
   * {postinst-ghc, prerm-ghc}:
     - Suppress confusing message from ghc-pkg when removing or upgrading
-      package. Thanks Chris Lamb (Closes: #457686) 
+      package. Thanks Chris Lamb (Closes: #457686)
 
  -- Arjan Oosting <arjan@debian.org>  Sun, 30 Dec 2007 18:07:23 +0100
 
@@ -814,7 +814,7 @@ haskell-devscripts (0.5.19) unstable; urgency=low
   * Make some cosmetic changes to the POD source of the man page(s) and
     remove the unused and duplicate POD sources from dh_haskell_prep and
     dh_haskell_install.
-  * Only build the setup file if no executable setup file exists. 
+  * Only build the setup file if no executable setup file exists.
     (Closes: #441100)
 
  -- Arjan Oosting <arjan@debian.org>  Sun, 23 Sep 2007 19:16:24 +0200
@@ -842,7 +842,7 @@ haskell-devscripts (0.5.17) unstable; urgency=low
 haskell-devscripts (0.5.16) unstable; urgency=low
 
   * Install hugs packages into /usr/lib/hugs/packages which is wat the
-    Hugs release of September 2006 expects. 
+    Hugs release of September 2006 expects.
 
  -- Arjan Oosting <arjan@debian.org>  Sun, 15 Apr 2007 17:24:00 +0200
 
@@ -855,9 +855,9 @@ haskell-devscripts (0.5.15) unstable; urgency=high
  -- Arjan Oosting <arjan@debian.org>  Sat, 18 Nov 2006 10:19:04 +0100
 
 haskell-devscripts (0.5.14) unstable; urgency=medium
-  
+
   * Set urgency to medium to get fixed version into etch.
-  * debian/control: 
+  * debian/control:
     - Add myself to Uploaders.
     - Bbump Standards-Version. No changes needed.
   * dh_haskell_buildinst: fix building of profiling packages.
@@ -871,7 +871,7 @@ haskell-devscripts (0.5.13) unstable; urgency=low
   * Change she-bang for dh_haskell to /bin/sh as does not use any
     bashims.
   * Replace dh_haskell_buildinst with simple shell script to decrease code
-    duplicity. 
+    duplicity.
   * Introduce separate Perl module which contains the code shared between
     the different dh_haskell tools.
 
@@ -961,4 +961,3 @@ haskell-devscripts (0.5.0) unstable; urgency=low
   * Initial Release.  Closes: #275218.
 
  -- John Goerzen <jgoerzen@complete.org>  Wed,  6 Oct 2004 09:46:14 -0500
-
