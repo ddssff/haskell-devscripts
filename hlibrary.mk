@@ -113,6 +113,7 @@ configure-ghc-stamp: $(DEB_SETUP_BIN_NAME)
 	$(DEB_SETUP_BIN_NAME) configure --ghc -v2 \
 		--prefix=/usr --libdir=/usr/lib/haskell-packages/ghc/lib \
 		--builddir=dist-ghc \
+		--ghc-options="-optl$$(dpkg-buildflags --get LDFLAGS)" \
 		--haddockdir=$(DEB_HADDOCK_DIR) --datasubdir=$(CABAL_PACKAGE)\
 		--htmldir=$(DEB_HADDOCK_HTML_DIR) $(ENABLE_PROFILING) $(NO_GHCI_FLAG) \
 		$(DEB_SETUP_GHC6_CONFIGURE_ARGS) $(DEB_SETUP_GHC_CONFIGURE_ARGS) $(OPTIMIZATION) $(TESTS)
