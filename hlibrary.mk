@@ -101,7 +101,11 @@ clean::
 	rm -rf debian/tmp-inst-ghc
 	rm -f debian/extra-depends
 	rm -f debian/libghc-$(CABAL_PACKAGE)-doc.links
-	rm -f debian/libghc-$(CABAL_PACKAGE)-dev.lintian-overrides
+	if [ -f $(DEB_LINTIAN_OVERRIDES_FILE) ] ; then					\
+	    sed -i '/binary-or-shlib-defines-rpath/ d' $(DEB_LINTIAN_OVERRIDES_FILE) ;	\
+	    find $(DEB_LINTIAN_OVERRIDES_FILE) -empty -delete;				\
+	fi
+
 	rm -f $(MAKEFILE)
 	rm -rf debian/dh_haskell_shlibdeps
 
@@ -161,6 +165,8 @@ debian/extra-depends: debian/tmp-inst-ghc
 		dh_haskell_extra_depends $$pkg_config ; \
 		rm $$pkg_config
 
+DEB_LINTIAN_OVERRIDES_FILE = debian/libghc-$(CABAL_PACKAGE)-dev.lintian-overrides
+
 install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
 	cd debian/tmp-inst-ghc ; find usr/lib/haskell-packages/ghc/lib/ \
 		\( ! -name "*_p.a" ! -name "*.p_hi" \) \
@@ -173,7 +179,9 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
 		mkdir -p debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages; \
 		echo '$(DEB_GHC_EXTRA_PACKAGES)' > debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages/$(CABAL_PACKAGE)-$(CABAL_VERSION) ; \
 	fi
-	echo binary-or-shlib-defines-rpath > debian/libghc-$(CABAL_PACKAGE)-dev.lintian-overrides
+
+	grep -s binary-or-shlib-defines-rpath $(DEB_LINTIAN_OVERRIDES_FILE) \
+	     || echo binary-or-shlib-defines-rpath >> $(DEB_LINTIAN_OVERRIDES_FILE)
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 	dh_haskell_shlibdeps -p$(notdir $@)

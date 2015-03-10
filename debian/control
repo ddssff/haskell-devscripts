@@ -4,6 +4,7 @@ Priority: extra
 Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
 Uploaders: Marco Silva <marcot@debian.org>, Joachim Breitner <nomeata@debian.org>
          , Louis Bettens <louis@bettens.info>
+	 , Dmitry Bogatov <KAction@gnu.org>
 Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: perl
 Standards-Version: 3.9.5
@@ -19,7 +20,7 @@ Depends: dctrl-tools
   , cdbs
   , ${misc:Depends}
   , html-xml-utils
-  , hscolour 
+  , hscolour
   , ghc-haddock
 Description: Tools to help Debian developers build Haskell packages
  This package provides a collection of scripts to help build Haskell

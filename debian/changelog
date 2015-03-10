@@ -1,6 +1,7 @@
 haskell-devscripts (0.9.3) UNRELEASED; urgency=medium
 
-  *  Fix hardening-no-relro lintian warning
+  * Fix hardening-no-relro lintian warning
+  * Do not truncate existing lintian overrides file
 
  -- Dmitry Bogatov <KAction@gnu.org>  Tue, 10 Mar 2015 15:27:10 +0300
 
