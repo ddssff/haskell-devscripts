@@ -60,8 +60,11 @@ for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars
     touch $sfile
 
-    case "$pkg" in
-	libghc-*-dev|libghc-*-prof)
+    hc=`package_hc ${pkg}`
+    ext=`package_ext ${pkg}`
+
+    case "$hc,$ext" in
+	ghc,dev|ghc,prof|ghcjs,dev|ghcjs,prof)
 	    if [ -z "$files" ] ; then
 		cfiles=`find_config_for_ghc $pkg`
 	    else
@@ -71,14 +74,14 @@ for pkg in `dh_listpackages $args`; do
 	      echo "dh_haskell_depends - no installed package description files found" >&2
 	      exit 1
 	    fi
-	    case "$pkg" in
-		libghc-*-dev)
+	    case "$ext" in
+		dev)
 	            grep -v \
                         -e ^haskell:Depends \
                         -e ^haskell:Recommends \
                         -e ^haskell:Suggests \
                         $sfile > $sfile.tmp || true
-		    echo "haskell:Depends=`depends_for_ghc $cfiles`" >> $sfile.tmp
+		    echo "haskell:Depends=`depends_for_ghc ${hc} $cfiles`" >> $sfile.tmp
                     echo "haskell:Recommends=" >> $sfile.tmp
                     doc=`echo $pkg | sed -e 's/-dev$/-doc/'`
                     prof=`echo $pkg | sed -e 's/-dev$/-prof/'`
@@ -93,7 +96,7 @@ for pkg in `dh_listpackages $args`; do
                     fi
                     echo "haskell:Suggests=$suggests" >> $sfile.tmp
 		    ;;
-		libghc-*-prof)
+		prof)
 	            grep -v \
                         -e ^haskell:Depends \
                         -e ^haskell:Recommends \
@@ -101,14 +104,14 @@ for pkg in `dh_listpackages $args`; do
                         $sfile > $sfile.tmp || true
                     dev=`echo $pkg | sed -e 's/-prof$/-dev/'`
                     version='(=${binary:Version})'
-                    depends="$dev ${version}, `depends_for_ghc_prof $cfiles`"
+                    depends="$dev ${version}, `depends_for_ghc_prof ${hc} $cfiles`"
 		    echo "haskell:Depends=$depends" >> $sfile.tmp
                     echo "haskell:Recommends=" >> $sfile.tmp
                     echo "haskell:Suggests=" >> $sfile.tmp
 		    ;;
 	    esac
 	    ;;
-	libhugs-*)
+	hugs,*)
 	    grep -v \
                 -e ^haskell:Depends \
                 -e ^haskell:Recommends \
@@ -118,7 +121,7 @@ for pkg in `dh_listpackages $args`; do
             echo "haskell:Recommends=" >> $sfile.tmp
             echo "haskell:Suggests=" >> $sfile.tmp
 	    ;;
-        libghc-*-doc)
+        ghc,doc|ghcjs,doc)
 	    grep -v \
                 -e ^haskell:Depends \
                 -e ^haskell:Recommends \
@@ -136,7 +139,7 @@ for pkg in `dh_listpackages $args`; do
                 | cut -d: -f1 \
                 | sort -u \
                 | sed -e :a -e '$!N; s/\n/, /; ta'`
-            dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/libghc-\1-dev/'`
+            dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/lib${hc}-\1-dev/'`
             grep -v '^#' debian/control | grep $dev > /dev/null \
                 && recommends="$recommends, $dev" \
                 || recommends="$recommends"
@@ -148,7 +151,7 @@ for pkg in `dh_listpackages $args`; do
 	    ;;
     esac
 
-    echo "haskell:Extra-Depends=`cat debian/extra-depends`" >> $sfile.tmp
+    echo "haskell:Extra-Depends=`cat debian/extra-depends-${hc}`" >> $sfile.tmp
 
     mv $sfile.tmp $sfile
 done

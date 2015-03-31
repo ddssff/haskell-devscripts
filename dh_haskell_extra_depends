@@ -54,6 +54,9 @@
 
 set -e 
 
+hc=$1
+shift
+
 . /usr/share/haskell-devscripts/Dh_Haskell.sh
 
 extradeps=''
@@ -64,5 +67,5 @@ for dep in `cabal_depends $files` ; do
         extradeps="$extradeps, `cat $extra_packages_file`"
     fi
 done
-echo $extradeps | sed -e 's/^,[ ]*//' > debian/extra-depends
+echo $extradeps | sed -e 's/^,[ ]*//' > debian/extra-depends-${hc}
 

@@ -6,6 +6,11 @@
 
 set -e 
 
+. /usr/share/haskell-devscripts/Dh_Haskell.sh
+
+packages=`dh_listpackages`
+hc=`packages_hc ${packages}`
+
 for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars
     touch $sfile
@@ -17,18 +22,19 @@ for pkg in `dh_listpackages $args`; do
 	-e ^haskell:ShortDescription \
 	$sfile > $sfile.tmp || true
 
-    case "$pkg" in
-	libghc-*-dev) cat >> $sfile.tmp <<'__END__' ;;
+    ext=`package_ext ${pkg}`
+    case "$ext" in
+	dev) cat >> $sfile.tmp <<'__END__' ;;
 haskell:ShortBlurb=
 haskell:Blurb=This package provides a library for the Haskell programming language.${Newline}See http://www.haskell.org/ for more information on Haskell.
 __END__
 
-	libghc-*-prof) cat >> $sfile.tmp <<'__END__' ;;
+	prof) cat >> $sfile.tmp <<'__END__' ;;
 haskell:ShortBlurb=; profiling libraries
 haskell:Blurb=This package provides a library for the Haskell programming language, compiled${Newline}for profiling.  See http://www.haskell.org/ for more information on Haskell.
 __END__
 
-	libghc-*-doc) cat >> $sfile.tmp <<'__END__' ;;
+	doc) cat >> $sfile.tmp <<'__END__' ;;
 haskell:ShortBlurb=; documentation
 haskell:Blurb=This package provides the documentation for a library for the Haskell${Newline}programming language.${Newline}See http://www.haskell.org/ for more information on Haskell.
 __END__
@@ -55,9 +61,9 @@ haskell:ShortDescription=$shortDescription
 haskell:LongDescription=$longDescription
 __END__
 
-    version=$(dpkg-query --showformat='${version}' --show ghc | egrep -o ".*-" \
+    version=$(dpkg-query --showformat='${version}' --show ${hc} | egrep -o ".*-" \
 	| egrep -o "[^-]*")
-    echo "haskell:ghc-version=ghc (>= ${version}), ghc (<< ${version}+)" >> $sfile.tmp
+    echo "haskell:${hc}-version=${hc} (>= ${version}), ${hc} (<< ${version}+)" >> $sfile.tmp
 
     mv $sfile.tmp $sfile
 done

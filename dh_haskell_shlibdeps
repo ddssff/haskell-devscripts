@@ -31,8 +31,9 @@ pkgs=`dh_listpackages $args`
 
 for pkg in $pkgs
 do
-    case "$pkg" in
-        libghc-*-dev)
+    ext=`package_ext ${pkg}`
+    case "$ext" in
+        dev)
 	    if [ -z "$files" ] ; then
 		files=`find_config_for_ghc $pkg`
 	    fi
@@ -67,8 +68,9 @@ gcc $args $T_DIR/probe.c -o $T_DIR/probe
 
 for pkg in $pkgs
 do
-    case "$pkg" in
-        libghc-*-dev)
+    ext=`package_ext ${pkg}`
+    case "$ext" in
+        dev)
             dpkg-shlibdeps --warnings=1 -Tdebian/$pkg.substvars $T_DIR/probe
             ;;
     esac

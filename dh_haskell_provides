@@ -66,8 +66,11 @@ for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars
     touch $sfile
 
-    case "$pkg" in
-	libghc-*-dev|libghc-*-prof|ghc|ghc-prof)
+    hc=`package_hc ${pkg}`
+    ext=`package_ext ${pkg}`
+
+    case "$ext" in
+	dev|prof)
 	    if [ -z "$files" ] ; then
 		cfiles=`find_config_for_ghc $pkg`
 	    else
@@ -77,24 +80,24 @@ for pkg in `dh_listpackages $args`; do
 	      echo "dh_haskell_provides - no installed package description files found" >&2
 	      exit 1
 	    fi
-	    case "$pkg" in
-		libghc-*-dev|ghc)
+	    case "$ext" in
+		dev)
 	            grep -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
-	            echo "haskell:Provides=`provides_for_ghc $cfiles`" >> $sfile.tmp
+	            echo "haskell:Provides=`provides_for_ghc $hc $cfiles`" >> $sfile.tmp
 		    mv $sfile.tmp $sfile
 	            grep -v \
-                        -e ^haskell:ghc-package \
+                        -e ^haskell:${hc}-package \
                         $sfile > $sfile.tmp || true
-	            echo "haskell:ghc-package=`cabal_package_ids $cfiles`" >> $sfile.tmp
+	            echo "haskell:${hc}-package=`cabal_package_ids $cfiles`" >> $sfile.tmp
 		    mv $sfile.tmp $sfile
 		    ;;
-		libghc-*-prof|ghc-prof)
+		prof)
 	            grep -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
-	            echo "haskell:Provides=`provides_for_ghc_prof $cfiles`" >> $sfile.tmp
+	            echo "haskell:Provides=`provides_for_ghc_prof $hc $cfiles`" >> $sfile.tmp
 		    mv $sfile.tmp $sfile
 		    ;;
 	    esac
