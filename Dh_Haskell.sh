@@ -283,6 +283,143 @@ find_config_for_ghc(){
     done
 }
 
+clean_recipe(){
+    DEB_SETUP_BIN_NAME=$1
+    CABAL_PACKAGE=$2
+    MAKEFILE=$3
+    DEB_LINTIAN_OVERRIDES_FILE=$4
+    [ ! -x "${DEB_SETUP_BIN_NAME}" ] || ${DEB_SETUP_BIN_NAME} clean
+    rm -rf dist dist-ghc dist-hugs ${DEB_SETUP_BIN_NAME} Setup.hi Setup.ho Setup.o .*config*
+    rm -f configure-ghc-stamp build-ghc-stamp build-hugs-stamp build-haddock-stamp
+    rm -rf debian/tmp-inst-ghc
+    rm -f debian/extra-depends
+    rm -f debian/libghc-${CABAL_PACKAGE}-doc.links
+    if [ -f ${DEB_LINTIAN_OVERRIDES_FILE} ] ; then					\
+      sed -i '/binary-or-shlib-defines-rpath/ d' ${DEB_LINTIAN_OVERRIDES_FILE} ;	\
+      find ${DEB_LINTIAN_OVERRIDES_FILE} -empty -delete;				\
+    fi
+
+    rm -f ${MAKEFILE}
+    rm -rf debian/dh_haskell_shlibdeps
+}
+
+make_setup_recipe(){
+    DEB_SETUP_BIN_NAME=$1
+    for setup in Setup.lhs Setup.hs; do if test -e $setup; then ghc --make $setup -o ${DEB_SETUP_BIN_NAME}; exit 0; fi; done
+}
+
+configure_recipe(){
+    DEB_SETUP_BIN_NAME=$1
+    CABAL_PACKAGE=$2
+    DEB_HADDOCK_DIR=$3
+    DEB_HADDOCK_HTML_DIR=$4
+    ENABLE_PROFILING=$5
+    NO_GHCI_FLAG=$6
+    DEB_SETUP_GHC6_CONFIGURE_ARGS=$7
+    DEB_SETUP_GHC_CONFIGURE_ARGS=$8
+    OPTIMIZATION=$9
+    TESTS=$10
+    COMPILERS=$11
+
+    local GHC_OPTIONS
+    for i in `dpkg-buildflags --get LDFLAGS`; do GHC_OPTIONS="$GHC_OPTIONS -optl$i"; done
+
+    ${DEB_SETUP_BIN_NAME} configure ${COMPILERS} -v2 --package-db=/var/lib/ghc/package.conf.d \
+        --prefix=/usr --libdir=/usr/lib/haskell-packages/ghc/lib \
+	--builddir=dist-ghc \
+       --ghc-options="${GHC_OPTIONS}" \
+	--haddockdir=${DEB_HADDOCK_DIR} --datasubdir=${CABAL_PACKAGE}\
+	--htmldir=${DEB_HADDOCK_HTML_DIR} ${ENABLE_PROFILING} ${NO_GHCI_FLAG} \
+	${DEB_SETUP_GHC6_CONFIGURE_ARGS} ${DEB_SETUP_GHC_CONFIGURE_ARGS} ${OPTIMIZATION} ${TESTS}
+}
+
+build_recipe(){
+    DEB_SETUP_BIN_NAME=$1
+    COMPILER=$2
+    ${DEB_SETUP_BIN_NAME} build --builddir=dist-${COMPILER}
+}
+
+check_recipe(){
+    DEB_SETUP_BIN_NAME=$1
+    DEB_DEFAULT_COMPILER=$2
+    DEB_PACKAGES=$3
+    hc=`packages_hc "${DEB_DEFAULT_COMPILER}" "${DEB_PACKAGES}"`
+    ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=always
+}
+
+haddock_recipe(){
+    DEB_SETUP_BIN_NAME=$1
+    DEB_HADDOCK_OPTS=$2
+    COMPILER=$3
+    [ ! -x /usr/bin/haddock ] || ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${COMPILER} --with-haddock=/usr/bin/haddock --with-ghc=${COMPILER} ${DEB_HADDOCK_OPTS} || \
+	  echo "Haddock failed (no modules?), creating empty documentation package."
+}
+
+extra_depends_recipe(){
+    DEB_SETUP_BIN_NAME=$1
+    pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-ghc --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
+    dh_haskell_extra_depends $pkg_config
+    rm $pkg_config
+}
+
+install_dev_recipe(){
+    DEB_SETUP_BIN_NAME=$1
+    CABAL_PACKAGE=$2
+    CABAL_VERSION=$3
+    HASKELL_HIDE_PACKAGES=$4
+    DEB_GHC_EXTRA_PACKAGES=$5
+    DEB_LINTIAN_OVERRIDES_FILE=$6
+    PKG=$7
+    ( cd debian/tmp-inst-ghc ; mkdir -p usr/lib/haskell-packages/ghc/lib ; find usr/lib/haskell-packages/ghc/lib/ \
+    	\( ! -name "*_p.a" ! -name "*.p_hi" ! -type d \) \
+    	-exec install -Dm 644 '{}' ../${PKG}/'{}' ';' )
+    pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-ghc --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
+    if [ "${HASKELL_HIDE_PACKAGES}" ]; then sed -i 's/^exposed: True$/exposed: False/' $pkg_config; fi
+    install -Dm 644 $pkg_config debian/${PKG}/var/lib/ghc/package.conf.d/$pkg_config
+    rm -f $pkg_config
+    if [ "z${DEB_GHC_EXTRA_PACKAGES}" != "z" ] ; then
+       mkdir -p debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages; \
+    	echo '${DEB_GHC_EXTRA_PACKAGES}' > debian/${PKG}/usr/lib/haskell-packages/extra-packages/${CABAL_PACKAGE}-${CABAL_VERSION}
+    fi
+
+    grep -s binary-or-shlib-defines-rpath ${DEB_LINTIAN_OVERRIDES_FILE} \
+       || echo binary-or-shlib-defines-rpath >> ${DEB_LINTIAN_OVERRIDES_FILE}
+    dh_haskell_provides -p${PKG}
+    dh_haskell_depends -p${PKG}
+    dh_haskell_shlibdeps -p${PKG}
+}
+
+install_prof_recipe(){
+    PKG=$1
+    ( cd debian/tmp-inst-ghc ; mkdir -p usr/lib/haskell-packages/ghc/lib ; find usr/lib/haskell-packages/ghc/lib/ \
+        ! \( ! -name "*_p.a" ! -name "*.p_hi" \) \
+        -exec install -Dm 644 '{}' ../${PKG}/'{}' ';' )
+    dh_haskell_provides -p${PKG}
+    dh_haskell_depends -p${PKG}
+}
+
+install_doc_recipe(){
+    CABAL_PACKAGE=$1
+    DEB_HADDOCK_DIR=$2
+    DEB_HADDOCK_HTML_DIR=$3
+    DEB_ENABLE_HOOGLE=$4
+    DEB_HOOGLE_TXT_DIR=$5
+    PKG=$6
+    mkdir -p debian/${PKG}/${DEB_HADDOCK_HTML_DIR}
+    ( cd debian/tmp-inst-ghc/ ; find ./${DEB_HADDOCK_HTML_DIR} \
+    	! -name "*.haddock" ! -type d -exec install -Dm 644 '{}' \
+    	../${PKG}/'{}' ';' )
+    mkdir -p debian/${PKG}/${DEB_HADDOCK_DIR}
+    [ 0 = `ls debian/tmp-inst-ghc/${DEB_HADDOCK_DIR}/ 2>/dev/null | wc -l` ] ||
+    	cp -r debian/tmp-inst-ghc/${DEB_HADDOCK_DIR}/*.haddock \
+    	    debian/${PKG}/${DEB_HADDOCK_DIR}
+    if [ "${DEB_ENABLE_HOOGLE}" = "yes" ]; then
+        find debian/${PKG}/${DEB_HADDOCK_HTML_DIR} -name "*.txt" \
+            -printf "%p ${DEB_HOOGLE_TXT_DIR}/${PKG}.txt\n" >> debian/libghc-${CABAL_PACKAGE}-doc.links
+        sed -i s,^debian/libghc-${CABAL_PACKAGE}-doc,, debian/libghc-${CABAL_PACKAGE}-doc.links
+    fi
+    dh_haskell_depends -p${PKG}
+}
 
 if ! [ `which grep-dctrl` > /dev/null ] ; then
     echo "grep-dctrl is missing" >&2
