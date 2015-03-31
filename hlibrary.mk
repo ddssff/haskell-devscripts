@@ -188,7 +188,7 @@ install/libhugs-$(CABAL_PACKAGE):: $(DEB_SETUP_BIN_NAME) dist-hugs debian/extra-
 
 # Run dh_haskell_blurbs on all packags, useful e.g. for binary packages
 $(patsubst %,install/%,$(DEB_PACKAGES)) :: install/%:
-	dh_haskell_blurbs -p$(cdbs_curpkg)
+	dh_haskell_blurbs "$(DEB_DEFAULT_COMPILER)" -p$(cdbs_curpkg)
 
 
 # Support for installing executables

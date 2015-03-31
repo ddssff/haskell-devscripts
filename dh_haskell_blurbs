@@ -6,10 +6,13 @@
 
 set -e 
 
+DEB_DEFAULT_COMPILER=$1
+shift
+
 . /usr/share/haskell-devscripts/Dh_Haskell.sh
 
 packages=`dh_listpackages`
-hc=`packages_hc ${packages}`
+hc=`packages_hc ${DEB_DEFAULT_COMPILER} ${packages}`
 
 for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars
