@@ -27,6 +27,9 @@ set -e
 
 . /usr/share/haskell-devscripts/Dh_Haskell.sh
 
+# PS4=" + dh_haskell_shlibdeps> "
+# set -x
+
 pkgs=`dh_listpackages $args`
 
 for pkg in $pkgs

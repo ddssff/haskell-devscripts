@@ -56,6 +56,9 @@ set -e
 
 . /usr/share/haskell-devscripts/Dh_Haskell.sh
 
+# PS4=" + dh_haskell_depends> "
+# set -x
+
 for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars
     touch $sfile

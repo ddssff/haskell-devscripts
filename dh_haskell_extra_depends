@@ -59,6 +59,9 @@ shift
 
 . /usr/share/haskell-devscripts/Dh_Haskell.sh
 
+# PS4=" + dh_haskell_extra_depends> "
+# set -x
+
 extradeps=''
 for dep in `cabal_depends $files` ; do
     dep_package_ver=`echo $dep | grep '^.\+-[0-9\.]\+-................................$' | sed 's|^\(.\+\)-\([0-9.]\+\)-[0-9a-f]\+$|\1-\2|'`

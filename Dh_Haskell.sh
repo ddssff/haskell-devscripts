@@ -340,6 +340,7 @@ find_config_for_ghc(){
 }
 
 clean_recipe(){
+    # local PS5=$PS4; PS4=" + clean_recipe> "; set -x
     DEB_SETUP_BIN_NAME=$1
     CABAL_PACKAGE=$2
     MAKEFILE=$3
@@ -357,14 +358,18 @@ clean_recipe(){
 
     rm -f ${MAKEFILE}
     rm -rf debian/dh_haskell_shlibdeps
+    # PS4=$PS5
 }
 
 make_setup_recipe(){
+    # local PS5=$PS4; PS4=" + make_setup_recipe> "; set -x
     DEB_SETUP_BIN_NAME=$1
     for setup in Setup.lhs Setup.hs; do if test -e $setup; then ghc --make $setup -o ${DEB_SETUP_BIN_NAME}; exit 0; fi; done
+    # PS4=$PS5
 }
 
 configure_recipe(){
+    # local PS5=$PS4; PS4=" + configure_recipe> "; set -x
     DEB_SETUP_BIN_NAME=$1
     CABAL_PACKAGE=$2
     CABAL_VERSION=$3
@@ -390,25 +395,31 @@ configure_recipe(){
 	--haddockdir=/`hc_docdir ${hc} ${CABAL_PACKAGE}-${CABAL_VERSION}` --datasubdir=${CABAL_PACKAGE}\
 	--htmldir=/`hc_htmldir ${hc} ${CABAL_PACKAGE}` ${ENABLE_PROFILING} ${NO_GHCI_FLAG} \
 	${DEB_SETUP_GHC6_CONFIGURE_ARGS} ${DEB_SETUP_GHC_CONFIGURE_ARGS} ${OPTIMIZATION} ${TESTS}
+    # PS4=$PS5
 }
 
 build_recipe(){
+    # local PS5=$PS4; PS4=" + build_recipe> "; set -x
     DEB_SETUP_BIN_NAME=$1
     DEB_DEFAULT_COMPILER=$2
     DEB_PACKAGES=$3
     hc=`packages_hc "${DEB_DEFAULT_COMPILER}" "${DEB_PACKAGES}"`
     ${DEB_SETUP_BIN_NAME} build --builddir=dist-${hc}
+    # PS4=$PS5
 }
 
 check_recipe(){
+    # local PS5=$PS4; PS4=" + check_recipe> "; set -x
     DEB_SETUP_BIN_NAME=$1
     DEB_DEFAULT_COMPILER=$2
     DEB_PACKAGES=$3
     hc=`packages_hc "${DEB_DEFAULT_COMPILER}" "${DEB_PACKAGES}"`
     ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=always
+    # PS4=$PS5
 }
 
 haddock_recipe(){
+    # local PS5=$PS4; PS4=" + haddock_recipe> "; set -x
     DEB_SETUP_BIN_NAME=$1
     DEB_HADDOCK_OPTS=$2
     DEB_DEFAULT_COMPILER=$3
@@ -417,17 +428,21 @@ haddock_recipe(){
     haddock=`hc_haddock ${hc}`
     [ ! -x /usr/bin/${haddock} ] || ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hc} --with-haddock=/usr/bin/${haddock} --with-ghc=${hc} ${DEB_HADDOCK_OPTS} || \
 	  echo "Haddock failed (no modules?), creating empty documentation package."
+    # PS4=$PS5
 }
 
 extra_depends_recipe(){
+    # local PS5=$PS4; PS4=" + extra_depends_recipe> "; set -x
     DEB_SETUP_BIN_NAME=$1
     hc=$2
     pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hc} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
     dh_haskell_extra_depends ${hc} $pkg_config
     rm $pkg_config
+    # PS4=$PS5
 }
 
 install_dev_recipe(){
+    # local PS5=$PS4; PS4=" + install_dev_recipe> "; set -x
     DEB_SETUP_BIN_NAME=$1
     CABAL_PACKAGE=$2
     CABAL_VERSION=$3
@@ -457,9 +472,11 @@ install_dev_recipe(){
     dh_haskell_provides -p${PKG}
     dh_haskell_depends -p${PKG}
     dh_haskell_shlibdeps -p${PKG}
+    # PS4=$PS5
 }
 
 install_prof_recipe(){
+    # local PS5=$PS4; PS4=" + install_prof_recipe> "; set -x
     PKG=$1
     libdir=`package_libdir ${PKG}`
     ( cd debian/tmp-inst-`package_hc ${PKG}` ; mkdir -p ${libdir} ; find ${libdir}/ \
@@ -467,9 +484,11 @@ install_prof_recipe(){
         -exec install -Dm 644 '{}' ../${PKG}/'{}' ';' )
     dh_haskell_provides -p${PKG}
     dh_haskell_depends -p${PKG}
+    # PS4=$PS5
 }
 
 install_doc_recipe(){
+    # local PS5=$PS4; PS4=" + install_doc_recipe> "; set -x
     CABAL_PACKAGE=$1
     CABAL_VERSION=$2
     DEB_ENABLE_HOOGLE=$3
@@ -493,6 +512,7 @@ install_doc_recipe(){
         sed -i s,^debian/lib${hc}-${CABAL_PACKAGE}-doc,, debian/lib${hc}-${CABAL_PACKAGE}-doc.links
     fi
     dh_haskell_depends -p${PKG}
+    # PS4=$PS5
 }
 
 if ! [ `which grep-dctrl` > /dev/null ] ; then

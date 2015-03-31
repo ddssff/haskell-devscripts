@@ -11,6 +11,9 @@ shift
 
 . /usr/share/haskell-devscripts/Dh_Haskell.sh
 
+# PS4=" + dh_haskell_blurbs> "
+# set -x
+
 packages=`dh_listpackages`
 hc=`packages_hc ${DEB_DEFAULT_COMPILER} ${packages}`
 
