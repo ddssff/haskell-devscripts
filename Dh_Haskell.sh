@@ -1,3 +1,73 @@
+cpu(){
+  ghc -e 'putStr System.Info.arch'
+}
+
+os(){
+  ghc -e 'putStr System.Info.os'
+}
+
+package_prefix(){
+    echo $1 | sed -n -e 's|^\([^-]*\)-.*-[^-]*$|\1|p'
+}
+
+package_hc(){
+    echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p'
+}
+
+package_ext(){
+    case $1 in
+	# I'm told the ghc build uses these scripts, hence these special cases
+	ghc) echo "dev";;
+	ghc-prof) echo "prof";;
+	*) echo $1 | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
+    esac
+}
+
+packages_hc(){
+    DEB_DEFAULT_COMPILER=$1
+    DEB_PACKAGES=$2
+    hcs=`{ for i in ${DEB_PACKAGES}; do package_hc $i; done; } | sort -u`
+    if [ `echo ${hcs} | wc -w` = 0 ]; then hcs=${DEB_DEFAULT_COMPILER}; fi
+    if [ `echo ${hcs} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hc}"; exit 1; fi
+    echo ${hcs}
+}
+
+hc_libdir(){
+    case $1 in
+      ghc) echo "usr/lib/haskell-packages/ghc/lib";;
+      *) echo "Don't know package_libdir for $1" >&2; exit 1;;
+    esac
+}
+
+package_libdir(){
+    hc_libdir `package_hc $1`
+}
+
+hc_pkgdir(){
+    case $1 in
+	ghc) echo "var/lib/ghc/package.conf.d";;
+        *) echo "Don't know pkgdir for $1" >&2; exit 1;;
+    esac
+}
+
+package_pkgdir(){
+    hc_pkgdir `package_hc $1`
+}
+
+hc_prefix(){
+    case $1 in
+      ghc) echo "usr";;
+      *) echo "Don't know prefix for compiler $1" >&2; exit 1;;
+    esac
+}
+
+hc_haddock(){
+    case $1 in
+	ghc) echo "haddock";;
+	*) echo "Don't know pkgdir for $1" >&2; exit 1;;
+    esac
+}
+
 strip_hash(){
 	echo "$1" | sed 's/-................................$//'
 }
