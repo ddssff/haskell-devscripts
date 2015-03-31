@@ -150,7 +150,7 @@ build-haddock-stamp:
 	  echo "Haddock failed (no modules?), creating empty documentation package."
 	touch build-haddock-stamp
 
-build/haskell-$(CABAL_PACKAGE)-doc build/libghc-$(CABAL_PACKAGE)-doc:: configure-ghc-stamp build-haddock-stamp
+build/libghc-$(CABAL_PACKAGE)-doc:: configure-ghc-stamp build-haddock-stamp
 
 dist-hugs: $(DEB_SETUP_BIN_NAME)
 	$(DEB_SETUP_BIN_NAME) configure --hugs --prefix=/usr -v2 --builddir=dist-hugs $(DEB_SETUP_HUGS_CONFIGURE_ARGS)
@@ -194,7 +194,7 @@ install/libghc-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc install/libghc-$(CABA
 	dh_haskell_provides -p$(notdir $@)
 	dh_haskell_depends -p$(notdir $@)
 
-install/haskell-$(CABAL_PACKAGE)-doc install/libghc-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc build-haddock-stamp debian/extra-depends
+install/libghc-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc build-haddock-stamp debian/extra-depends
 	mkdir -p debian/$(notdir $@)/$(DEB_HADDOCK_HTML_DIR)
 	cd debian/tmp-inst-ghc/ ; find ./$(DEB_HADDOCK_HTML_DIR)/ \
 		! -name "*.haddock" -exec install -Dm 644 '{}' \

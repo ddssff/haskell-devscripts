@@ -118,7 +118,7 @@ for pkg in `dh_listpackages $args`; do
             echo "haskell:Recommends=" >> $sfile.tmp
             echo "haskell:Suggests=" >> $sfile.tmp
 	    ;;
-        libghc-*-doc|haskell-*-doc)
+        libghc-*-doc)
 	    grep -v \
                 -e ^haskell:Depends \
                 -e ^haskell:Recommends \
