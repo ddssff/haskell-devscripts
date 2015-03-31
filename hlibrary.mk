@@ -114,7 +114,7 @@ $(DEB_SETUP_BIN_NAME):
 	for setup in Setup.lhs Setup.hs; do if test -e $$setup; then ghc --make $$setup -o $(DEB_SETUP_BIN_NAME); exit 0; fi; done
 
 configure-ghc-stamp: $(DEB_SETUP_BIN_NAME)
-	$(DEB_SETUP_BIN_NAME) configure --ghc -v2 \
+	$(DEB_SETUP_BIN_NAME) configure --ghc -v2 --package-db=/var/lib/ghc/package.conf.d \
 		--prefix=/usr --libdir=/usr/lib/haskell-packages/ghc/lib \
 		--builddir=dist-ghc \
 		--ghc-options="-optl$$(dpkg-buildflags --get LDFLAGS)" \
@@ -146,7 +146,7 @@ endif
 build/libghc-$(CABAL_PACKAGE)-prof build/libghc-$(CABAL_PACKAGE)-dev:: build-ghc-stamp check-ghc-stamp
 
 build-haddock-stamp:
-	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock --builddir=dist-ghc $(DEB_HADDOCK_OPTS) || \
+	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock --builddir=dist-ghc --with-haddock=/usr/bin/haddock --with-ghc=ghc $(DEB_HADDOCK_OPTS) || \
 	  echo "Haddock failed (no modules?), creating empty documentation package."
 	touch build-haddock-stamp
 
