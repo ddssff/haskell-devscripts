@@ -146,7 +146,8 @@ endif
 build/libghc-$(CABAL_PACKAGE)-prof build/libghc-$(CABAL_PACKAGE)-dev:: build-ghc-stamp check-ghc-stamp
 
 build-haddock-stamp:
-	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock --builddir=dist-ghc $(DEB_HADDOCK_OPTS)
+	[ ! -x /usr/bin/haddock ] || $(DEB_SETUP_BIN_NAME) haddock --builddir=dist-ghc $(DEB_HADDOCK_OPTS) || \
+	  echo "Haddock failed (no modules?), creating empty documentation package."
 	touch build-haddock-stamp
 
 build/haskell-$(CABAL_PACKAGE)-doc build/libghc-$(CABAL_PACKAGE)-doc:: configure-ghc-stamp build-haddock-stamp
@@ -168,7 +169,7 @@ debian/extra-depends: debian/tmp-inst-ghc
 DEB_LINTIAN_OVERRIDES_FILE = debian/libghc-$(CABAL_PACKAGE)-dev.lintian-overrides
 
 install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
-	cd debian/tmp-inst-ghc ; find usr/lib/haskell-packages/ghc/lib/ \
+	cd debian/tmp-inst-ghc ; mkdir -p usr/lib/haskell-packages/ghc/lib ; find usr/lib/haskell-packages/ghc/lib/ \
 		\( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
 	pkg_config=`$(DEB_SETUP_BIN_NAME) register --builddir=dist-ghc --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`; \
@@ -187,7 +188,7 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
 	dh_haskell_shlibdeps -p$(notdir $@)
 
 install/libghc-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc install/libghc-$(CABAL_PACKAGE)-dev debian/extra-depends
-	cd debian/tmp-inst-ghc ; find usr/lib/haskell-packages/ghc/lib/ \
+	cd debian/tmp-inst-ghc ; mkdir -p usr/lib/haskell-packages/ghc/lib ; find usr/lib/haskell-packages/ghc/lib/ \
 		! \( ! -name "*_p.a" ! -name "*.p_hi" \) \
 		-exec install -Dm 644 '{}' ../$(notdir $@)/'{}' ';'
 	dh_haskell_provides -p$(notdir $@)
