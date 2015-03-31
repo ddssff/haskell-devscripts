@@ -42,7 +42,7 @@ done
 
 if [ -z "$files" ]
 then
-	echo "No installed package description files can not be found" >&2
+	echo "dh_haskell_shlibdeps - no installed package description files found" >&2
 	exit 1
 fi
 

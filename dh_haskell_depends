@@ -68,7 +68,7 @@ for pkg in `dh_listpackages $args`; do
 		cfiles="$files"
 	    fi
 	    if [ -z "$cfiles" ] ; then
-	      echo "No installed package description files can not be found" >&2
+	      echo "dh_haskell_depends - no installed package description files found" >&2
 	      exit 1
 	    fi
 	    case "$pkg" in
