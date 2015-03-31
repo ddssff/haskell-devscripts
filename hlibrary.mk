@@ -176,7 +176,7 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends
 		$(if $(HASKELL_HIDE_PACKAGES),sed -i 's/^exposed: True$$/exposed: False/' $$pkg_config;) \
 		install -Dm 644 $$pkg_config debian/$(notdir $@)/var/lib/ghc/package.conf.d/$$pkg_config; \
 		rm -f $$pkg_config
-	if [ 'z$(DEB_GHC_EXTRA_PACKAGES)' != 'z' ] ; then \
+	if [ "z$(DEB_GHC_EXTRA_PACKAGES)" != "z" ] ; then \
 		mkdir -p debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages; \
 		echo '$(DEB_GHC_EXTRA_PACKAGES)' > debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages/$(CABAL_PACKAGE)-$(CABAL_VERSION) ; \
 	fi
