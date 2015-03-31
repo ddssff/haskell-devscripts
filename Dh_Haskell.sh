@@ -6,6 +6,14 @@ os(){
   ghc -e 'putStr System.Info.os'
 }
 
+ghcjs_version(){
+  ghcjs --numeric-ghcjs-version
+}
+
+ghcjs_ghc_version(){
+  ghcjs --numeric-ghc-version
+}
+
 package_prefix(){
     echo $1 | sed -n -e 's|^\([^-]*\)-.*-[^-]*$|\1|p'
 }
@@ -35,6 +43,7 @@ packages_hc(){
 hc_libdir(){
     case $1 in
       ghc) echo "usr/lib/haskell-packages/ghc/lib";;
+      ghcjs) echo "usr/lib/ghcjs/.cabal/lib";;
       *) echo "Don't know package_libdir for $1" >&2; exit 1;;
     esac
 }
@@ -46,6 +55,7 @@ package_libdir(){
 hc_pkgdir(){
     case $1 in
 	ghc) echo "var/lib/ghc/package.conf.d";;
+        ghcjs) echo "usr/lib/ghcjs/.ghcjs/`cpu`-`os`-`ghcjs_version`-`ghcjs_ghc_version`/ghcjs/package.conf.d";;
         *) echo "Don't know pkgdir for $1" >&2; exit 1;;
     esac
 }
@@ -57,6 +67,7 @@ package_pkgdir(){
 hc_prefix(){
     case $1 in
       ghc) echo "usr";;
+      ghcjs) echo "usr/lib/ghcjs";;
       *) echo "Don't know prefix for compiler $1" >&2; exit 1;;
     esac
 }
@@ -64,6 +75,7 @@ hc_prefix(){
 hc_haddock(){
     case $1 in
 	ghc) echo "haddock";;
+	ghcjs) echo "haddock-ghcjs";;
 	*) echo "Don't know pkgdir for $1" >&2; exit 1;;
     esac
 }
@@ -333,11 +345,11 @@ clean_recipe(){
     MAKEFILE=$3
     DEB_LINTIAN_OVERRIDES_FILE=$4
     [ ! -x "${DEB_SETUP_BIN_NAME}" ] || ${DEB_SETUP_BIN_NAME} clean
-    rm -rf dist dist-ghc dist-hugs ${DEB_SETUP_BIN_NAME} Setup.hi Setup.ho Setup.o .*config*
-    rm -f configure-ghc-stamp build-ghc-stamp build-hugs-stamp build-haddock-stamp
-    rm -rf debian/tmp-inst-ghc
-    rm -f debian/extra-depends-ghc
-    rm -f debian/libghc-${CABAL_PACKAGE}-doc.links
+    rm -rf dist dist-ghc dist-ghcjs dist-hugs ${DEB_SETUP_BIN_NAME} Setup.hi Setup.ho Setup.o .*config*
+    rm -f configure-ghc-stamp configure-ghcjs-stamp build-ghc-stamp build-ghcjs-stamp build-hugs-stamp build-haddock-stamp
+    rm -rf debian/tmp-inst-ghc debian/tmp-inst-ghcjs
+    rm -f debian/extra-depends-ghc debian/extra-depends-ghcjs
+    rm -f debian/libghc-${CABAL_PACKAGE}-doc.links debian/libghcjs-${CABAL_PACKAGE}-doc.links
     if [ -f ${DEB_LINTIAN_OVERRIDES_FILE} ] ; then					\
       sed -i '/binary-or-shlib-defines-rpath/ d' ${DEB_LINTIAN_OVERRIDES_FILE} ;	\
       find ${DEB_LINTIAN_OVERRIDES_FILE} -empty -delete;				\

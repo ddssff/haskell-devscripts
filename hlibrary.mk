@@ -129,11 +129,15 @@ endif
 
 build/libghc-$(CABAL_PACKAGE)-prof build/libghc-$(CABAL_PACKAGE)-dev:: build-ghc-stamp check-ghc-stamp
 
+build/libghcjs-$(CABAL_PACKAGE)-prof build/libghcjs-$(CABAL_PACKAGE)-dev:: build-ghc-stamp check-ghc-stamp
+
 build-haddock-stamp:
 	. /usr/share/haskell-devscripts/Dh_Haskell.sh && haddock_recipe "$(DEB_SETUP_BIN_NAME)" "$(DEB_HADDOCK_OPTS)" "$(DEB_DEFAULT_COMPILER)" "$(DEB_PACKAGES)"
 	touch build-haddock-stamp
 
 build/libghc-$(CABAL_PACKAGE)-doc:: configure-ghc-stamp build-haddock-stamp
+
+build/libghcjs-$(CABAL_PACKAGE)-doc:: configure-ghc-stamp build-haddock-stamp
 
 dist-hugs: $(DEB_SETUP_BIN_NAME)
 	$(DEB_SETUP_BIN_NAME) configure --hugs --prefix=/usr -v2 --builddir=dist-hugs $(DEB_SETUP_HUGS_CONFIGURE_ARGS)
@@ -144,8 +148,14 @@ build/libhugs-$(CABAL_PACKAGE):: dist-hugs
 debian/tmp-inst-ghc: $(DEB_SETUP_BIN_NAME) build-ghc-stamp
 	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-ghc --destdir=debian/tmp-inst-ghc
 
+debian/tmp-inst-ghcjs: $(DEB_SETUP_BIN_NAME) build-ghc-stamp
+	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-ghcjs --destdir=debian/tmp-inst-ghcjs
+
 debian/extra-depends-ghc: debian/tmp-inst-ghc
 	. /usr/share/haskell-devscripts/Dh_Haskell.sh && extra_depends_recipe "$(DEB_SETUP_BIN_NAME)" ghc
+
+debian/extra-depends-ghcjs: debian/tmp-inst-ghcjs
+	. /usr/share/haskell-devscripts/Dh_Haskell.sh && extra_depends_recipe "$(DEB_SETUP_BIN_NAME)" ghcjs
 
 DEB_LINTIAN_OVERRIDES_FILE = debian/libghc-$(CABAL_PACKAGE)-dev.lintian-overrides
 
@@ -153,10 +163,21 @@ install/libghc-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghc debian/extra-depends-g
 	. /usr/share/haskell-devscripts/Dh_Haskell.sh && \
 	  install_dev_recipe "$(DEB_SETUP_BIN_NAME)" "$(CABAL_PACKAGE)" "$(CABAL_VERSION)" "$(HASKELL_HIDE_PACKAGES)" "$(DEB_GHC_EXTRA_PACKAGES)" $(DEB_LINTIAN_OVERRIDES_FILE) "$(notdir $@)"
 
+install/libghcjs-$(CABAL_PACKAGE)-dev:: debian/tmp-inst-ghcjs debian/extra-depends-ghcjs
+	. /usr/share/haskell-devscripts/Dh_Haskell.sh && \
+	  install_dev_recipe "$(DEB_SETUP_BIN_NAME)" "$(CABAL_PACKAGE)" "$(CABAL_VERSION)" "$(HASKELL_HIDE_PACKAGES)" "$(DEB_GHC_EXTRA_PACKAGES)" "$(DEB_LINTIAN_OVERRIDES_FILE)" "$(notdir $@)"
+
 install/libghc-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghc install/libghc-$(CABAL_PACKAGE)-dev debian/extra-depends-ghc
 	. /usr/share/haskell-devscripts/Dh_Haskell.sh && install_prof_recipe "$(notdir $@)"
 
+install/libghcjs-$(CABAL_PACKAGE)-prof:: debian/tmp-inst-ghcjs install/libghcjs-$(CABAL_PACKAGE)-dev debian/extra-depends-ghcjs
+	. /usr/share/haskell-devscripts/Dh_Haskell.sh && install_prof_recipe "$(notdir $@)"
+
 install/libghc-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghc build-haddock-stamp debian/extra-depends-ghc
+	. /usr/share/haskell-devscripts/Dh_Haskell.sh && \
+	  install_doc_recipe "$(CABAL_PACKAGE)" "$(CABAL_VERSION)" "$(DEB_ENABLE_HOOGLE)" "$(notdir $@)"
+
+install/libghcjs-$(CABAL_PACKAGE)-doc:: debian/tmp-inst-ghcjs build-haddock-stamp debian/extra-depends-ghcjs
 	. /usr/share/haskell-devscripts/Dh_Haskell.sh && \
 	  install_doc_recipe "$(CABAL_PACKAGE)" "$(CABAL_VERSION)" "$(DEB_ENABLE_HOOGLE)" "$(notdir $@)"
 
