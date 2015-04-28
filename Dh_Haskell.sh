@@ -374,12 +374,21 @@ configure_recipe(){
 
     ENABLE_PROFILING=`{ for i in ${DEB_PACKAGES}; do package_ext $i | grep prof; done; } | sort -u | sed 's/prof/--enable-library-profiling/'`
     local GHC_OPTIONS
-    for i in `dpkg-buildflags --get LDFLAGS`; do GHC_OPTIONS="$GHC_OPTIONS -optl$i"; done
+    for i in `dpkg-buildflags --get LDFLAGS`
+    do
+        GHC_OPTIONS="$GHC_OPTIONS --ghc-option=-optl$i"
+    done
 
-    ${DEB_SETUP_BIN_NAME} configure "--${hc}" -v2 --package-db=/`hc_pkgdir ${hc}` \
-        --prefix=/`hc_prefix ${hc}` --libdir=/`hc_libdir ${hc}` \
+    # DEB_SETUP_GHC_CONFIGURE_ARGS can contain multiple arguments with their own quoting,
+    # so run this through eval
+    eval run ${DEB_SETUP_BIN_NAME} \
+        configure "--${hc}" \
+	-v2 \
+	--package-db=/`hc_pkgdir ${hc}` \
+        --prefix=/`hc_prefix ${hc}` \
+	--libdir=/`hc_libdir ${hc}` \
 	--builddir=dist-${hc} \
-	--ghc-options="${GHC_OPTIONS}" \
+	${GHC_OPTIONS} \
 	--haddockdir=/`hc_docdir ${hc} ${CABAL_PACKAGE}-${CABAL_VERSION}` \
 	--datasubdir=${CABAL_PACKAGE}\
 	--htmldir=/`hc_htmldir ${hc} ${CABAL_PACKAGE}` \
@@ -395,7 +404,7 @@ configure_recipe(){
 build_recipe(){
     # local PS5=$PS4; PS4=" + build_recipe> "; set -x
     hc=`packages_hc`
-    ${DEB_SETUP_BIN_NAME} build --builddir=dist-${hc}
+    run ${DEB_SETUP_BIN_NAME} build --builddir=dist-${hc}
     # PS4=$PS5
 }
 
