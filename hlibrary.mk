@@ -19,6 +19,9 @@
 
 export GREP_OPTIONS :=
 
+# DH_haskell.sh uses shell features
+export SHELL = /bin/bash
+
 # Set a dummy HOME variable upon build. Some build daemons do not set HOME, but
 # cabal expects it to be available.
 export HOME = /homedoesnotexistatbuildtime

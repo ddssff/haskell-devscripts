@@ -1,3 +1,10 @@
+run () {
+  echo -n "Running"
+  printf " %q" "$@"
+  echo
+  "$@"
+}
+
 cpu(){
   ghc -e 'putStr System.Info.arch'
 }
