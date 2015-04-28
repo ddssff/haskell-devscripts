@@ -1,4 +1,4 @@
-haskell-devscripts (0.9.4) UNRELEASED; urgency=medium
+haskell-devscripts (0.9.4) unstable; urgency=medium
 
   * Pass variables from the Makefile to the Dh_Haskell in environment
     variables; safer when they contain spaces or quotes.
@@ -6,7 +6,7 @@ haskell-devscripts (0.9.4) UNRELEASED; urgency=medium
   * Print commands as they are executed in Dh_Haskell, with correct quoting.
     this requires everything to be run by bash, and no /bin/sh.
 
- -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 09:43:32 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 09:44:00 +0200
 
 haskell-devscripts (0.9.3) unstable; urgency=medium
 
