@@ -1,3 +1,10 @@
+haskell-devscripts (0.9.4) UNRELEASED; urgency=medium
+
+  * Pass variables from the Makefile to the Dh_Haskell in environment
+    variables; safer when they contain spaces or quotes.
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 09:43:32 +0200
+
 haskell-devscripts (0.9.3) unstable; urgency=medium
 
   [ Dmitry Bogatov ]
