@@ -2,6 +2,9 @@ haskell-devscripts (0.9.4) UNRELEASED; urgency=medium
 
   * Pass variables from the Makefile to the Dh_Haskell in environment
     variables; safer when they contain spaces or quotes.
+  * Ensure quotes in variables are correctly handled in Dh_Haskell
+  * Print commands as they are executed in Dh_Haskell, with correct quoting.
+    this requires everything to be run by bash, and no /bin/sh.
 
  -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 09:43:32 +0200
 
