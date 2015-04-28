@@ -1,8 +1,8 @@
-haskell-devscripts (0.9.5) UNRELEASED; urgency=medium
+haskell-devscripts (0.9.5) unstable; urgency=medium
 
   * Typo in Dh_Haskell, breaks building pandoc 
 
- -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 16:26:58 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 16:27:14 +0200
 
 haskell-devscripts (0.9.4) unstable; urgency=medium
 
