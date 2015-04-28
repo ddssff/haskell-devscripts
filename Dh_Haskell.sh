@@ -1,7 +1,7 @@
 run () {
-  echo -n "Running"
-  printf " %q" "$@"
-  echo
+  echo -n "Running" >&2
+  printf " %q" "$@" >&2
+  echo              >&2
   "$@"
 }
 
