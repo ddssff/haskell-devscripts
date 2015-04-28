@@ -477,7 +477,7 @@ install_prof_recipe(){
 
 install_doc_recipe(){
     # local PS5=$PS4; PS4=" + install_doc_recipe> "; set -x
-    PKG=$4
+    PKG=$1
     hc=`package_hc ${PKG}`
     pkgid=${CABAL_PACKAGE}-${CABAL_VERSION}
     docdir=`hc_docdir ${hc} ${pkgid}`

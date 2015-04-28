@@ -1,3 +1,9 @@
+haskell-devscripts (0.9.5) UNRELEASED; urgency=medium
+
+  * Typo in Dh_Haskell, breaks building pandoc 
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 16:26:58 +0200
+
 haskell-devscripts (0.9.4) unstable; urgency=medium
 
   * Pass variables from the Makefile to the Dh_Haskell in environment
