@@ -346,25 +346,25 @@ find_config_for_ghc(){
 
 clean_recipe(){
     # local PS5=$PS4; PS4=" + clean_recipe> "; set -x
-    [ ! -x "${DEB_SETUP_BIN_NAME}" ] || ${DEB_SETUP_BIN_NAME} clean
-    rm -rf dist dist-ghc dist-ghcjs dist-hugs ${DEB_SETUP_BIN_NAME} Setup.hi Setup.ho Setup.o .*config*
-    rm -f configure-ghc-stamp configure-ghcjs-stamp build-ghc-stamp build-ghcjs-stamp build-hugs-stamp build-haddock-stamp
-    rm -rf debian/tmp-inst-ghc debian/tmp-inst-ghcjs
-    rm -f debian/extra-depends-ghc debian/extra-depends-ghcjs
-    rm -f debian/libghc-${CABAL_PACKAGE}-doc.links debian/libghcjs-${CABAL_PACKAGE}-doc.links
+    [ ! -x "${DEB_SETUP_BIN_NAME}" ] || run ${DEB_SETUP_BIN_NAME} clean
+    run rm -rf dist dist-ghc dist-ghcjs dist-hugs ${DEB_SETUP_BIN_NAME} Setup.hi Setup.ho Setup.o .*config*
+    run rm -f configure-ghc-stamp configure-ghcjs-stamp build-ghc-stamp build-ghcjs-stamp build-hugs-stamp build-haddock-stamp
+    run rm -rf debian/tmp-inst-ghc debian/tmp-inst-ghcjs
+    run rm -f debian/extra-depends-ghc debian/extra-depends-ghcjs
+    run rm -f debian/libghc-${CABAL_PACKAGE}-doc.links debian/libghcjs-${CABAL_PACKAGE}-doc.links
     if [ -f ${DEB_LINTIAN_OVERRIDES_FILE} ] ; then					\
-      sed -i '/binary-or-shlib-defines-rpath/ d' ${DEB_LINTIAN_OVERRIDES_FILE} ;	\
-      find ${DEB_LINTIAN_OVERRIDES_FILE} -empty -delete;				\
+      run sed -i '/binary-or-shlib-defines-rpath/ d' ${DEB_LINTIAN_OVERRIDES_FILE} ;	\
+      run find ${DEB_LINTIAN_OVERRIDES_FILE} -empty -delete;				\
     fi
 
-    rm -f ${MAKEFILE}
-    rm -rf debian/dh_haskell_shlibdeps
+    run rm -f ${MAKEFILE}
+    run rm -rf debian/dh_haskell_shlibdeps
     # PS4=$PS5
 }
 
 make_setup_recipe(){
     # local PS5=$PS4; PS4=" + make_setup_recipe> "; set -x
-    for setup in Setup.lhs Setup.hs; do if test -e $setup; then ghc --make $setup -o ${DEB_SETUP_BIN_NAME}; exit 0; fi; done
+    for setup in Setup.lhs Setup.hs; do if test -e $setup; then run ghc --make $setup -o ${DEB_SETUP_BIN_NAME}; exit 0; fi; done
     # PS4=$PS5
 }
 
@@ -402,7 +402,7 @@ build_recipe(){
 check_recipe(){
     # local PS5=$PS4; PS4=" + check_recipe> "; set -x
     hc=`packages_hc`
-    ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=always
+    run ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=always
     # PS4=$PS5
 }
 
@@ -410,7 +410,7 @@ haddock_recipe(){
     # local PS5=$PS4; PS4=" + haddock_recipe> "; set -x
     hc=`packages_hc`
     haddock=`hc_haddock ${hc}`
-    [ ! -x /usr/bin/${haddock} ] || ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hc} --with-haddock=/usr/bin/${haddock} --with-ghc=${hc} ${DEB_HADDOCK_OPTS} || \
+    [ ! -x /usr/bin/${haddock} ] || run ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hc} --with-haddock=/usr/bin/${haddock} --with-ghc=${hc} ${DEB_HADDOCK_OPTS} || \
 	  echo "Haddock failed (no modules?), creating empty documentation package."
     # PS4=$PS5
 }
@@ -419,7 +419,7 @@ extra_depends_recipe(){
     # local PS5=$PS4; PS4=" + extra_depends_recipe> "; set -x
     hc=$1
     pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hc} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
-    dh_haskell_extra_depends ${hc} $pkg_config
+    run dh_haskell_extra_depends ${hc} $pkg_config
     rm $pkg_config
     # PS4=$PS5
 }
@@ -432,23 +432,23 @@ install_dev_recipe(){
     libdir=`package_libdir ${PKG}`
     pkgdir=`package_pkgdir ${PKG}`
 
-    ( cd debian/tmp-inst-${hc} ; mkdir -p ${libdir} ; find ${libdir}/ \
+    ( run cd debian/tmp-inst-${hc} ; run mkdir -p ${libdir} ; run find ${libdir}/ \
     	\( ! -name "*_p.a" ! -name "*.p_hi" ! -type d \) \
     	-exec install -Dm 644 '{}' ../${PKG}/'{}' ';' )
     pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hc} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
     if [ "${HASKELL_HIDE_PACKAGES}" ]; then sed -i 's/^exposed: True$/exposed: False/' $pkg_config; fi
-    install -Dm 644 $pkg_config debian/${PKG}/${pkgdir}/$pkg_config
-    rm -f $pkg_config
+    run install -Dm 644 $pkg_config debian/${PKG}/${pkgdir}/$pkg_config
+    run rm -f $pkg_config
     if [ "z${DEB_GHC_EXTRA_PACKAGES}" != "z" ] ; then
-       mkdir -p debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages; \
-    	echo '${DEB_GHC_EXTRA_PACKAGES}' > debian/${PKG}/usr/lib/haskell-packages/extra-packages/${CABAL_PACKAGE}-${CABAL_VERSION}
+       run mkdir -p debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages
+       echo '${DEB_GHC_EXTRA_PACKAGES}' > debian/${PKG}/usr/lib/haskell-packages/extra-packages/${CABAL_PACKAGE}-${CABAL_VERSION}
     fi
 
     grep -s binary-or-shlib-defines-rpath ${DEB_LINTIAN_OVERRIDES_FILE} \
        || echo binary-or-shlib-defines-rpath >> ${DEB_LINTIAN_OVERRIDES_FILE}
-    dh_haskell_provides -p${PKG}
-    dh_haskell_depends -p${PKG}
-    dh_haskell_shlibdeps -p${PKG}
+    run dh_haskell_provides -p${PKG}
+    run dh_haskell_depends -p${PKG}
+    run dh_haskell_shlibdeps -p${PKG}
     # PS4=$PS5
 }
 
@@ -456,11 +456,13 @@ install_prof_recipe(){
     # local PS5=$PS4; PS4=" + install_prof_recipe> "; set -x
     PKG=$1
     libdir=`package_libdir ${PKG}`
-    ( cd debian/tmp-inst-`package_hc ${PKG}` ; mkdir -p ${libdir} ; find ${libdir}/ \
+    ( run cd debian/tmp-inst-`package_hc ${PKG}`
+      run mkdir -p ${libdir}
+      run find ${libdir}/ \
         ! \( ! -name "*_p.a" ! -name "*.p_hi" \) \
         -exec install -Dm 644 '{}' ../${PKG}/'{}' ';' )
-    dh_haskell_provides -p${PKG}
-    dh_haskell_depends -p${PKG}
+    run dh_haskell_provides -p${PKG}
+    run dh_haskell_depends -p${PKG}
     # PS4=$PS5
 }
 
@@ -472,20 +474,21 @@ install_doc_recipe(){
     docdir=`hc_docdir ${hc} ${pkgid}`
     htmldir=`hc_htmldir ${hc} ${CABAL_PACKAGE}`
     hoogle=`hc_hoogle ${hc}`
-    mkdir -p debian/${PKG}/${htmldir}
-    ( cd debian/tmp-inst-${hc}/ ; find ./${htmldir} \
-    	! -name "*.haddock" ! -type d -exec install -Dm 644 '{}' \
-    	../${PKG}/'{}' ';' )
-    mkdir -p debian/${PKG}/${docdir}
+    run mkdir -p debian/${PKG}/${htmldir}
+    ( run cd debian/tmp-inst-${hc}/ ;
+      run find ./${htmldir} \
+	! -name "*.haddock" ! -type d -exec install -Dm 644 '{}' \
+	../${PKG}/'{}' ';' )
+    run mkdir -p debian/${PKG}/${docdir}
     [ 0 = `ls debian/tmp-inst-${hc}/${docdir}/ 2>/dev/null | wc -l` ] ||
-    	cp -r debian/tmp-inst-${hc}/${docdir}/*.haddock \
-    	    debian/${PKG}/${docdir}
-    if [ "${DEB_ENABLE_HOOGLE}" = "yes" ]; then
-        find debian/${PKG}/${htmldir} -name "*.txt" \
+	run cp -r debian/tmp-inst-${hc}/${docdir}/*.haddock debian/${PKG}/${docdir}
+    if [ "${DEB_ENABLE_HOOGLE}" = "yes" ]
+    then
+        run find debian/${PKG}/${htmldir} -name "*.txt" \
             -printf "%p ${hoogle}/${PKG}.txt\n" >> debian/lib${hc}-${CABAL_PACKAGE}-doc.links
-        sed -i s,^debian/lib${hc}-${CABAL_PACKAGE}-doc,, debian/lib${hc}-${CABAL_PACKAGE}-doc.links
+        run sed -i s,^debian/lib${hc}-${CABAL_PACKAGE}-doc,, debian/lib${hc}-${CABAL_PACKAGE}-doc.links
     fi
-    dh_haskell_depends -p${PKG}
+    run dh_haskell_depends -p${PKG}
     # PS4=$PS5
 }
 
