@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # arch-tag: Debhelper script for Haskell
 #
 # Copyright (C) 2009 Marco Túlio Gontijo e Silva <marcot@debian.org>

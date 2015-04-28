@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 #
 # Determine package extra dependencies from package metadata
 #

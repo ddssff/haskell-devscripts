@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 #
 # Determine package dependencies from installed-pkg-config file
 #
