@@ -8,8 +8,9 @@ Uploaders: Marco Silva <marcot@debian.org>, Joachim Breitner <nomeata@debian.org
 Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: perl
 Standards-Version: 3.9.5
-Vcs-Darcs: http://darcs.debian.org/pkg-haskell/haskell-devscripts
-Vcs-Browser: http://darcs.debian.org/cgi-bin/darcsweb.cgi?r=pkg-haskell/haskell-devscripts
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-haskell/haskell-devscripts.git
+Vcs-Git: git://git.debian.org/git/pkg-haskell/haskell-devscripts.git
+
 
 Package: haskell-devscripts
 Architecture: all
