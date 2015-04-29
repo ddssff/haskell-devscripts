@@ -1,8 +1,8 @@
-haskell-devscripts (0.9.6) UNRELEASED; urgency=medium
+haskell-devscripts (0.9.6) unstable; urgency=medium
 
   * Do not send diagnostic output to stdout; use stderr 
 
- -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 23:34:06 +0200
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 23:34:15 +0200
 
 haskell-devscripts (0.9.5) unstable; urgency=medium
 
