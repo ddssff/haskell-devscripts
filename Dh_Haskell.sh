@@ -31,10 +31,10 @@ package_hc(){
 
 package_ext(){
     case $1 in
-	# I'm told the ghc build uses these scripts, hence these special cases
-	ghc) echo "dev";;
-	ghc-prof) echo "prof";;
-	*) echo $1 | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
+        # I'm told the ghc build uses these scripts, hence these special cases
+        ghc) echo "dev";;
+        ghc-prof) echo "prof";;
+        *) echo $1 | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
     esac
 }
 
@@ -59,7 +59,7 @@ package_libdir(){
 
 hc_pkgdir(){
     case $1 in
-	ghc) echo "var/lib/ghc/package.conf.d";;
+        ghc) echo "var/lib/ghc/package.conf.d";;
         ghcjs) echo "usr/lib/ghcjs/.ghcjs/`cpu`-`os`-`ghcjs_version`-`ghcjs_ghc_version`/ghcjs/package.conf.d";;
         *) echo "Don't know pkgdir for $1" >&2; exit 1;;
     esac
@@ -79,9 +79,9 @@ hc_prefix(){
 
 hc_haddock(){
     case $1 in
-	ghc) echo "haddock";;
-	ghcjs) echo "haddock-ghcjs";;
-	*) echo "Don't know pkgdir for $1" >&2; exit 1;;
+        ghc) echo "haddock";;
+        ghcjs) echo "haddock-ghcjs";;
+        *) echo "Don't know pkgdir for $1" >&2; exit 1;;
     esac
 }
 
@@ -104,14 +104,14 @@ hc_hoogle(){
 }
 
 strip_hash(){
-	echo "$1" | sed 's/-................................$//'
+    echo "$1" | sed 's/-................................$//'
 }
 
 sort_uniq(){
     {
-	for i in "$@" ; do
-	    echo $i
-	done
+        for i in "$@" ; do
+            echo $i
+        done
     } | sort -u | tr "\n" " "
 }
 
@@ -144,10 +144,10 @@ providing_package_for_ghc(){
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
-	if [ -e "${dir}/lib${lib}.a" ] ; then
-	    package=`dpkg-query -S ${dir}/lib${lib}.a | cut -d':' -f 1` || exit $?
-	    continue
-	fi
+        if [ -e "${dir}/lib${lib}.a" ] ; then
+            package=`dpkg-query -S ${dir}/lib${lib}.a | cut -d':' -f 1` || exit $?
+            continue
+        fi
     done
     echo $package
 }
@@ -164,10 +164,10 @@ providing_package_for_ghc_prof(){
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
-	if [ -e "${dir}/lib${lib}_p.a" ] ; then
-	    package=`dpkg-query -S ${dir}/lib${lib}_p.a | cut -d':' -f 1` || exit $?
-	    continue
-	fi
+        if [ -e "${dir}/lib${lib}_p.a" ] ; then
+            package=`dpkg-query -S ${dir}/lib${lib}_p.a | cut -d':' -f 1` || exit $?
+            continue
+        fi
     done
     echo $package
 }
@@ -196,13 +196,13 @@ cabal_depends(){
       shift
     done
     for dep in `sort_uniq $depends` ; do
-	# The package is not mentioned in the ignored package list with the same version
-	# or mentioned without any version in the ignored package list?
-	if  echo " $ignores " | grep -qv " $dep " &&
-	    echo " $ignores " | grep -qv " `echo $dep | sed s%-[0-9][.0-9a-zA-Z]*$%%` " ;
-	then
-	    final_depends="$final_depends $dep"
-	fi
+        # The package is not mentioned in the ignored package list with the same version
+        # or mentioned without any version in the ignored package list?
+        if  echo " $ignores " | grep -qv " $dep " &&
+            echo " $ignores " | grep -qv " `echo $dep | sed s%-[0-9][.0-9a-zA-Z]*$%%` " ;
+        then
+            final_depends="$final_depends $dep"
+        fi
     done
     echo $final_depends
 }
@@ -219,7 +219,7 @@ hashed_dependency(){
     # As a transition measure, check if dpkg knows about this virtual package
     if dpkg-query -W $virtual_pkg >/dev/null 2>/dev/null;
     then
-   	 echo $virtual_pkg
+         echo $virtual_pkg
     fi
 }
 
@@ -231,20 +231,20 @@ depends_for_ghc(){
     hc=$1
     shift
     for pkgid in `cabal_depends $@` ; do
-	dep=`hashed_dependency ${hc} dev $pkgid`
-	if [ -z "$dep" ]
-	then
-	  pkg=`providing_package_for_ghc $hc $pkgid`
+        dep=`hashed_dependency ${hc} dev $pkgid`
+        if [ -z "$dep" ]
+        then
+          pkg=`providing_package_for_ghc $hc $pkgid`
           if [ -n "$pkg" ]
           then
-	      dep=`dependency $pkg`
-	      packages="$packages, $dep"
-	  else
-	      echo "WARNING: No Debian package provides haskell package $pkgid." >&2
+              dep=`dependency $pkg`
+              packages="$packages, $dep"
+          else
+              echo "WARNING: No Debian package provides haskell package $pkgid." >&2
           fi
         else
-	    packages="$packages, $dep"
-	fi
+            packages="$packages, $dep"
+        fi
     done
 
     echo $packages | sed -e 's/^,[ ]*//'
@@ -258,20 +258,20 @@ depends_for_ghc_prof(){
     hc=$1
     shift
     for pkgid in `cabal_depends $@` ; do
-	dep=`hashed_dependency ${hc} prof $pkgid`
-	if [ -z "$dep" ]
-	then
-	  pkg=`providing_package_for_ghc_prof $hc $pkgid`
+        dep=`hashed_dependency ${hc} prof $pkgid`
+        if [ -z "$dep" ]
+        then
+          pkg=`providing_package_for_ghc_prof $hc $pkgid`
           if [ -n "$pkg" ]
           then
-	      dep=`dependency $pkg`
-	      packages="$packages, $dep"
-	  else
-	      echo "WARNING: No Debian package provides haskell package $pkgid." >&2
+              dep=`dependency $pkg`
+              packages="$packages, $dep"
+          else
+              echo "WARNING: No Debian package provides haskell package $pkgid." >&2
           fi
         else
-	    packages="$packages, $dep"
-	fi
+            packages="$packages, $dep"
+        fi
     done
 
     echo $packages | sed -e 's/^,[ ]*//'
@@ -284,7 +284,7 @@ provides_for_ghc(){
     hc=$1
     shift
     for package_id in `cabal_package_ids $@` ; do
-	packages="$packages, `package_id_to_virtual_package "${hc}" dev $package_id`"
+        packages="$packages, `package_id_to_virtual_package "${hc}" dev $package_id`"
     done
     echo $packages | sed -e 's/^,[ ]*//'
 }
@@ -296,21 +296,21 @@ provides_for_ghc_prof(){
     hc=$1
     shift
     for package_id in `cabal_package_ids $@` ; do
-	packages="$packages, `package_id_to_virtual_package "${hc}" prof $package_id`"
+        packages="$packages, `package_id_to_virtual_package "${hc}" prof $package_id`"
     done
     echo $packages | sed -e 's/^,[ ]*//'
 }
 
 package_id_to_virtual_package(){
-	local hc
-	local type
-	local pkgid
-	hc="$1"
-	type="$2"
-	pkgid="$3"
-	echo ${pkgid} | tr A-Z a-z | \
+        local hc
+        local type
+        local pkgid
+        hc="$1"
+        type="$2"
+        pkgid="$3"
+        echo ${pkgid} | tr A-Z a-z | \
             grep '[a-z0-9]\+-[0-9\.]\+-................................' | \
-		perl -pe 's/([a-z0-9-]+)-([0-9\.]+)-(.....).........................../lib'${hc}'-\1-'$type'-\2-\3/'
+                perl -pe 's/([a-z0-9-]+)-([0-9\.]+)-(.....).........................../lib'${hc}'-\1-'$type'-\2-\3/'
 }
 
 depends_for_hugs(){
@@ -327,20 +327,20 @@ find_config_for_ghc(){
     pkg=$1
     pkgdir=`package_pkgdir ${pkg}`
     case "$pkg" in
-	ghc-prof)
-	    pkg=ghc
-	    ;;
-	*-prof)
-	    pkg=`echo $pkg | sed -e 's/-prof$/-dev/'`
-	    ;;
-	*)
-	    ;;
+        ghc-prof)
+            pkg=ghc
+            ;;
+        *-prof)
+            pkg=`echo $pkg | sed -e 's/-prof$/-dev/'`
+            ;;
+        *)
+            ;;
     esac
     for f in debian/$pkg/${pkgdir}/*.conf ; do
-	if [ -f "$f" ] ; then
-	    echo $f
-	    echo " "
-	fi
+        if [ -f "$f" ] ; then
+            echo $f
+            echo " "
+        fi
     done
 }
 
@@ -352,9 +352,9 @@ clean_recipe(){
     run rm -rf debian/tmp-inst-ghc debian/tmp-inst-ghcjs
     run rm -f debian/extra-depends-ghc debian/extra-depends-ghcjs
     run rm -f debian/libghc-${CABAL_PACKAGE}-doc.links debian/libghcjs-${CABAL_PACKAGE}-doc.links
-    if [ -f ${DEB_LINTIAN_OVERRIDES_FILE} ] ; then					\
-      run sed -i '/binary-or-shlib-defines-rpath/ d' ${DEB_LINTIAN_OVERRIDES_FILE} ;	\
-      run find ${DEB_LINTIAN_OVERRIDES_FILE} -empty -delete;				\
+    if [ -f ${DEB_LINTIAN_OVERRIDES_FILE} ] ; then
+      run sed -i '/binary-or-shlib-defines-rpath/ d' ${DEB_LINTIAN_OVERRIDES_FILE}
+      run find ${DEB_LINTIAN_OVERRIDES_FILE} -empty -delete;
     fi
 
     run rm -f ${MAKEFILE}
@@ -383,21 +383,21 @@ configure_recipe(){
     # so run this through eval
     eval run ${DEB_SETUP_BIN_NAME} \
         configure "--${hc}" \
-	-v2 \
-	--package-db=/`hc_pkgdir ${hc}` \
+        -v2 \
+        --package-db=/`hc_pkgdir ${hc}` \
         --prefix=/`hc_prefix ${hc}` \
-	--libdir=/`hc_libdir ${hc}` \
-	--builddir=dist-${hc} \
-	${GHC_OPTIONS} \
-	--haddockdir=/`hc_docdir ${hc} ${CABAL_PACKAGE}-${CABAL_VERSION}` \
-	--datasubdir=${CABAL_PACKAGE}\
-	--htmldir=/`hc_htmldir ${hc} ${CABAL_PACKAGE}` \
-	${ENABLE_PROFILING} \
-	${NO_GHCI_FLAG} \
-	${DEB_SETUP_GHC6_CONFIGURE_ARGS} \
-	${DEB_SETUP_GHC_CONFIGURE_ARGS} \
-	${OPTIMIZATION} \
-	${TESTS}
+        --libdir=/`hc_libdir ${hc}` \
+        --builddir=dist-${hc} \
+        ${GHC_OPTIONS} \
+        --haddockdir=/`hc_docdir ${hc} ${CABAL_PACKAGE}-${CABAL_VERSION}` \
+        --datasubdir=${CABAL_PACKAGE}\
+        --htmldir=/`hc_htmldir ${hc} ${CABAL_PACKAGE}` \
+        ${ENABLE_PROFILING} \
+        ${NO_GHCI_FLAG} \
+        ${DEB_SETUP_GHC6_CONFIGURE_ARGS} \
+        ${DEB_SETUP_GHC_CONFIGURE_ARGS} \
+        ${OPTIMIZATION} \
+        ${TESTS}
     # PS4=$PS5
 }
 
@@ -420,7 +420,7 @@ haddock_recipe(){
     hc=`packages_hc`
     haddock=`hc_haddock ${hc}`
     [ ! -x /usr/bin/${haddock} ] || run ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hc} --with-haddock=/usr/bin/${haddock} --with-ghc=${hc} ${DEB_HADDOCK_OPTS} || \
-	  echo "Haddock failed (no modules?), creating empty documentation package."
+          echo "Haddock failed (no modules?), creating empty documentation package."
     # PS4=$PS5
 }
 
@@ -442,8 +442,8 @@ install_dev_recipe(){
     pkgdir=`package_pkgdir ${PKG}`
 
     ( run cd debian/tmp-inst-${hc} ; run mkdir -p ${libdir} ; run find ${libdir}/ \
-    	\( ! -name "*_p.a" ! -name "*.p_hi" ! -type d \) \
-    	-exec install -Dm 644 '{}' ../${PKG}/'{}' ';' )
+        \( ! -name "*_p.a" ! -name "*.p_hi" ! -type d \) \
+        -exec install -Dm 644 '{}' ../${PKG}/'{}' ';' )
     pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hc} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
     if [ "${HASKELL_HIDE_PACKAGES}" ]; then sed -i 's/^exposed: True$/exposed: False/' $pkg_config; fi
     run install -Dm 644 $pkg_config debian/${PKG}/${pkgdir}/$pkg_config
@@ -487,11 +487,11 @@ install_doc_recipe(){
     run mkdir -p debian/${PKG}/${htmldir}
     ( run cd debian/tmp-inst-${hc}/ ;
       run find ./${htmldir} \
-	! -name "*.haddock" ! -type d -exec install -Dm 644 '{}' \
-	../${PKG}/'{}' ';' )
+        ! -name "*.haddock" ! -type d -exec install -Dm 644 '{}' \
+        ../${PKG}/'{}' ';' )
     run mkdir -p debian/${PKG}/${docdir}
     [ 0 = `ls debian/tmp-inst-${hc}/${docdir}/ 2>/dev/null | wc -l` ] ||
-	run cp -r debian/tmp-inst-${hc}/${docdir}/*.haddock debian/${PKG}/${docdir}
+        run cp -r debian/tmp-inst-${hc}/${docdir}/*.haddock debian/${PKG}/${docdir}
     if [ "${DEB_ENABLE_HOOGLE}" = "yes" ]
     then
         run find debian/${PKG}/${htmldir} -name "*.txt" \
@@ -515,26 +515,25 @@ do
   case "$1" in
       -X*)
           pkg=${1##-X}
-	  ignores="$ignores $pkg"
-	  ;;
+          ignores="$ignores $pkg"
+          ;;
 
       --exclude=*)
-	  pkg=${1##--exclude=}
-	  ignores="$ignores $pkg"
-	  ;;
+          pkg=${1##--exclude=}
+          ignores="$ignores $pkg"
+          ;;
 
       -*)
-	  args="$args $1"
-	  ;;
+          args="$args $1"
+          ;;
       *)
-	  if [ -f $1 ] ; then
-	      files="$files $1"
-	  else
-	      echo "Installed package description file $1 can not be found" >&2
-	      exit 1
-	  fi
-	  ;;
+          if [ -f $1 ] ; then
+              files="$files $1"
+          else
+              echo "Installed package description file $1 can not be found" >&2
+              exit 1
+          fi
+          ;;
   esac
   shift
 done
-
