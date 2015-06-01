@@ -449,8 +449,9 @@ install_dev_recipe(){
     run install -Dm 644 $pkg_config debian/${PKG}/${pkgdir}/$pkg_config
     run rm -f $pkg_config
     if [ "z${DEB_GHC_EXTRA_PACKAGES}" != "z" ] ; then
-       run mkdir -p debian/$(notdir $@)/usr/lib/haskell-packages/extra-packages
-       echo '${DEB_GHC_EXTRA_PACKAGES}' > debian/${PKG}/usr/lib/haskell-packages/extra-packages/${CABAL_PACKAGE}-${CABAL_VERSION}
+       EP_DIR=debian/${PKG}/usr/lib/haskell-packages/extra-packages
+       run mkdir -p $EP_DIR
+       echo "${DEB_GHC_EXTRA_PACKAGES}" > ${EP_DIR}/${CABAL_PACKAGE}-${CABAL_VERSION}
     fi
 
     grep -s binary-or-shlib-defines-rpath ${DEB_LINTIAN_OVERRIDES_FILE} \
