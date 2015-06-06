@@ -46,6 +46,19 @@ ifneq (,$(filter libghc-$(CABAL_PACKAGE)-prof,$(DEB_PACKAGES)))
 ENABLE_PROFILING = --enable-library-profiling
 endif
 
+ifeq (0,$(shell ghc --info | grep -q 'Have interpreter.*NO' ; echo $$?))
+GHC_HAS_INTERPRETER = yes
+else
+GHC_HAS_INTERPRETER = no
+endif
+
+ifeq (0,$(shell ghc --info | grep -q 'Support SMP.*NO' ; echo $$?))
+GHC_HAS_SMP = yes
+else
+GHC_HAS_SMP = no
+endif
+
+
 NO_GHCI_FLAG = $(shell test -e /usr/bin/ghci || echo --ghc-option=-DDEBIAN_NO_GHCI; exit 0)
 
 DEB_COMPRESS_EXCLUDE += .haddock .hs .txt

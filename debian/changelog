@@ -1,6 +1,7 @@
 haskell-devscripts (0.9.7) UNRELEASED; urgency=medium
 
-  * Move the VCS for this package to git 
+  * Move the VCS for this package to git
+  * Provide GHC_HAS_INTERPRETER and GHC_HAS_SMP make variables.
 
  -- Joachim Breitner <nomeata@debian.org>  Wed, 29 Apr 2015 11:11:40 +0200
 
