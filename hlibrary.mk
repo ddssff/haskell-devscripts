@@ -46,13 +46,13 @@ ifneq (,$(filter libghc-$(CABAL_PACKAGE)-prof,$(DEB_PACKAGES)))
 ENABLE_PROFILING = --enable-library-profiling
 endif
 
-ifeq (0,$(shell ghc --info | grep -q 'Have interpreter.*NO' ; echo $$?))
+ifeq (0,$(shell ghc --info | grep -q 'Have interpreter.*YES' ; echo $$?))
 GHC_HAS_INTERPRETER = yes
 else
 GHC_HAS_INTERPRETER = no
 endif
 
-ifeq (0,$(shell ghc --info | grep -q 'Support SMP.*NO' ; echo $$?))
+ifeq (0,$(shell ghc --info | grep -q 'Support SMP.*YES' ; echo $$?))
 GHC_HAS_SMP = yes
 else
 GHC_HAS_SMP = no
