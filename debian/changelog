@@ -1,3 +1,9 @@
+haskell-devscripts (0.9.8) UNRELEASED; urgency=medium
+
+  * Fix bug in extra-packages handling
+
+ -- Iustin Pop <iustin@debian.org>  Mon, 01 Jun 2015 22:23:42 +0200
+
 haskell-devscripts (0.9.7) unstable; urgency=medium
 
   * Move the VCS for this package to git
