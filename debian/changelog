@@ -1,3 +1,10 @@
+haskell-devscripts (0.9.10) UNRELEASED; urgency=medium
+
+  * Dh_Haskell.sh: Always run sort in LC_ALL=C, to make sure it builds
+    reproducible in different envionments.
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 20 Jun 2015 19:38:59 +0200
+
 haskell-devscripts (0.9.9) unstable; urgency=medium
 
   * Dh_Haskell.sh: Alwasy run sort in LANG=C, to make sure it builds
