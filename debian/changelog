@@ -1,3 +1,10 @@
+haskell-devscripts (0.9.9) UNRELEASED; urgency=medium
+
+  * Dh_Haskell.sh: Alwasy run sort in LANG=C, to make sure it builds
+    reproducible in different envionments.
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 20 Jun 2015 19:15:16 +0200
+
 haskell-devscripts (0.9.8) unstable; urgency=medium
 
   [ Iustin Pop ]

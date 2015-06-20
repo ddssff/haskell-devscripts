@@ -39,7 +39,7 @@ package_ext(){
 }
 
 packages_hc(){
-    hcs=`{ for i in ${DEB_PACKAGES}; do package_hc $i; done; } | sort -u`
+    hcs=`{ for i in ${DEB_PACKAGES}; do package_hc $i; done; } | LANG=C sort -u`
     if [ `echo ${hcs} | wc -w` = 0 ]; then hcs=${DEB_DEFAULT_COMPILER}; fi
     if [ `echo ${hcs} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hc}"; exit 1; fi
     echo ${hcs}
@@ -112,7 +112,7 @@ sort_uniq(){
         for i in "$@" ; do
             echo $i
         done
-    } | sort -u | tr "\n" " "
+    } | LANG=C sort -u | tr "\n" " "
 }
 
 dependency(){
@@ -372,7 +372,7 @@ configure_recipe(){
     # local PS5=$PS4; PS4=" + configure_recipe> "; set -x
     hc=`packages_hc`
 
-    ENABLE_PROFILING=`{ for i in ${DEB_PACKAGES}; do package_ext $i | grep prof; done; } | sort -u | sed 's/prof/--enable-library-profiling/'`
+    ENABLE_PROFILING=`{ for i in ${DEB_PACKAGES}; do package_ext $i | grep prof; done; } | LANG=C sort -u | sed 's/prof/--enable-library-profiling/'`
     local GHC_OPTIONS
     for i in `dpkg-buildflags --get LDFLAGS`
     do
