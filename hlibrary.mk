@@ -128,6 +128,7 @@ export DEB_GHC_EXTRA_PACKAGES
 export DEB_LINTIAN_OVERRIDES_FILE
 export DEB_ENABLE_HOOGLE
 export MAKEFILE
+export GHC_HAS_SMP 
 
 clean::
 	. /usr/share/haskell-devscripts/Dh_Haskell.sh && \

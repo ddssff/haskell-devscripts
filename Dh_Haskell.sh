@@ -364,7 +364,19 @@ clean_recipe(){
 
 make_setup_recipe(){
     # local PS5=$PS4; PS4=" + make_setup_recipe> "; set -x
-    for setup in Setup.lhs Setup.hs; do if test -e $setup; then run ghc --make $setup -o ${DEB_SETUP_BIN_NAME}; exit 0; fi; done
+    # https://github.com/haskell/cabal/issues/2398
+    if [ "$GHC_HAS_SMP" = "yes" ]
+    then
+       threaded="-threaded"
+    fi
+    for setup in Setup.lhs Setup.hs
+    do
+      if test -e $setup
+      then
+        run ghc --make $setup $threaded -o ${DEB_SETUP_BIN_NAME}
+	exit 0
+      fi
+    done
     # PS4=$PS5
 }
 
