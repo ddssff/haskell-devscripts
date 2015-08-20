@@ -1,3 +1,9 @@
+haskell-devscripts (0.10) experimental; urgency=medium
+
+  * Depend on ghc (>= 7.10), in preparation for the Stackage 3.0 transition.
+
+ -- Joachim Breitner <nomeata@debian.org>  Thu, 20 Aug 2015 09:51:12 +0200
+
 haskell-devscripts (0.9.12) experimental; urgency=medium
 
   * Compile Setup.hs with -threaded, to unbreak testsuites on GHC 7.10
