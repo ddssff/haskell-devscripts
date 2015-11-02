@@ -1,4 +1,4 @@
-haskell-devscripts (0.11) UNRELEASED; urgency=medium
+haskell-devscripts (0.10.1) experimental; urgency=medium
 
   * Don't print a warning if there are no -doc package Recommends
     (Closes: #803684), thanks to Chris Lamb for the patch.
@@ -7,7 +7,7 @@ haskell-devscripts (0.11) UNRELEASED; urgency=medium
   * Abort if haddock fails. Closes: #803687. Thanks to – you guessed it –
     Chris Lamb for the patch. 
 
- -- Joachim Breitner <nomeata@debian.org>  Mon, 02 Nov 2015 19:11:37 +0100
+ -- Joachim Breitner <nomeata@debian.org>  Mon, 02 Nov 2015 19:16:14 +0100
 
 haskell-devscripts (0.10) experimental; urgency=medium
 
