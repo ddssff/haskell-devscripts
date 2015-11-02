@@ -66,7 +66,7 @@ do
     done
 done
 
-echo 'main () {}' > $T_DIR/probe.c
+echo 'int main (void) {}' > $T_DIR/probe.c
 gcc $args $T_DIR/probe.c -o $T_DIR/probe
 
 for pkg in $pkgs

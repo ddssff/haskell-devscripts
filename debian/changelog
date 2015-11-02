@@ -5,7 +5,8 @@ haskell-devscripts (0.10.1) experimental; urgency=medium
   * Run haddock more verbosely. Closes: #803685. Thanks to Chris Lamb for the
     patch.
   * Abort if haddock fails. Closes: #803687. Thanks to – you guessed it –
-    Chris Lamb for the patch. 
+    Chris Lamb for the patch.
+  * Create a more valid C file as probe.c
 
  -- Joachim Breitner <nomeata@debian.org>  Mon, 02 Nov 2015 19:16:14 +0100
 
