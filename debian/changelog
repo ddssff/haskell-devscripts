@@ -1,3 +1,10 @@
+haskell-devscripts (0.11) UNRELEASED; urgency=medium
+
+  * Don't print a warning if there are no -doc package Recommends
+    (Closes: #803684), thanks to Chris Lamb for the patch.
+
+ -- Joachim Breitner <nomeata@debian.org>  Mon, 02 Nov 2015 19:11:37 +0100
+
 haskell-devscripts (0.10) experimental; urgency=medium
 
   * Depend on ghc (>= 7.10), in preparation for the Stackage 3.0 transition.
