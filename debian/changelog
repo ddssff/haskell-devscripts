@@ -2,6 +2,8 @@ haskell-devscripts (0.11) UNRELEASED; urgency=medium
 
   * Don't print a warning if there are no -doc package Recommends
     (Closes: #803684), thanks to Chris Lamb for the patch.
+  * Run haddock more verbosely. Closes: #803685. Thanks to Chris Lamb for the
+    patch.
 
  -- Joachim Breitner <nomeata@debian.org>  Mon, 02 Nov 2015 19:11:37 +0100
 
