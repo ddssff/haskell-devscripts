@@ -1,3 +1,9 @@
+haskell-devscripts (0.10.2.1) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Clint Adams <clint@debian.org>  Thu, 03 Dec 2015 17:54:35 -0500
+
 haskell-devscripts (0.10.2) experimental; urgency=medium
 
   * Use ./Setup test --show-details=direct,
