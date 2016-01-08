@@ -394,6 +394,7 @@ configure_recipe(){
         --package-db=/`hc_pkgdir ${hc}` \
         --prefix=/`hc_prefix ${hc}` \
         --libdir=/`hc_libdir ${hc}` \
+        --libexecdir=/usr/lib \
         --builddir=dist-${hc} \
         ${GHC_OPTIONS} \
         --haddockdir=/`hc_docdir ${hc} ${CABAL_PACKAGE}-${CABAL_VERSION}` \
