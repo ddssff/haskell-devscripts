@@ -79,7 +79,8 @@ for pkg in `dh_listpackages $args`; do
 	    fi
 	    case "$ext" in
 		dev)
-	            grep -v \
+	            grep -v -a \
+			-e ^haskell:Extra-Depends \
                         -e ^haskell:Depends \
                         -e ^haskell:Recommends \
                         -e ^haskell:Suggests \
@@ -100,7 +101,8 @@ for pkg in `dh_listpackages $args`; do
                     echo "haskell:Suggests=$suggests" >> $sfile.tmp
 		    ;;
 		prof)
-	            grep -v \
+	            grep -a -v \
+			-e ^haskell:Extra-Depends \
                         -e ^haskell:Depends \
                         -e ^haskell:Recommends \
                         -e ^haskell:Suggests \
@@ -115,7 +117,8 @@ for pkg in `dh_listpackages $args`; do
 	    esac
 	    ;;
 	hugs,*)
-	    grep -v \
+	    grep -a -v \
+                -e ^haskell:Extra-Depends \
                 -e ^haskell:Depends \
                 -e ^haskell:Recommends \
                 -e ^haskell:Suggests \
@@ -125,7 +128,8 @@ for pkg in `dh_listpackages $args`; do
             echo "haskell:Suggests=" >> $sfile.tmp
 	    ;;
         ghc,doc|ghcjs,doc)
-	    grep -v \
+	    grep -a -v \
+                -e ^haskell:Extra-Depends \
                 -e ^haskell:Depends \
                 -e ^haskell:Recommends \
                 -e ^haskell:Suggests \

@@ -85,19 +85,19 @@ for pkg in `dh_listpackages $args`; do
 	    fi
 	    case "$ext" in
 		dev)
-	            grep -v \
+	            grep -a -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
 	            echo "haskell:Provides=`provides_for_ghc $hc $cfiles`" >> $sfile.tmp
 		    mv $sfile.tmp $sfile
-	            grep -v \
+	            grep -a -v \
                         -e ^haskell:${hc}-package \
                         $sfile > $sfile.tmp || true
 	            echo "haskell:${hc}-package=`cabal_package_ids $cfiles`" >> $sfile.tmp
 		    mv $sfile.tmp $sfile
 		    ;;
 		prof)
-	            grep -v \
+	            grep -a -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
 	            echo "haskell:Provides=`provides_for_ghc_prof $hc $cfiles`" >> $sfile.tmp

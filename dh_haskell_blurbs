@@ -21,7 +21,7 @@ for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars
     touch $sfile
 
-    grep -v \
+    grep -v -a \
 	-e ^haskell:Blurb \
 	-e ^haskell:ShortBlurb \
 	-e ^haskell:LongDescription \

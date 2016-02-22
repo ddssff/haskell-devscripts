@@ -1,3 +1,9 @@
+haskell-devscripts (0.10.2.3) unstable; urgency=medium
+
+  * Pass -a to more invocations of grep
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 23 Feb 2016 00:16:33 +0100
+
 haskell-devscripts (0.10.2.2) unstable; urgency=medium
 
   * Set libexecdir to /usr/lib by default for FHS compliance
