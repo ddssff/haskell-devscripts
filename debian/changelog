@@ -1,3 +1,9 @@
+haskell-devscripts (0.10.2.4) UNRELEASED; urgency=medium
+
+  * Fix “Unescaped left brace in regex” warnings in dh_haskell_blurbs.
+
+ -- James McCoy <jamessan@debian.org>  Sun, 01 May 2016 11:01:02 -0400
+
 haskell-devscripts (0.10.2.3) unstable; urgency=medium
 
   * Pass -a to more invocations of grep
