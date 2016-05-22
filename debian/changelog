@@ -1,6 +1,12 @@
-haskell-devscripts (0.10.2.4) UNRELEASED; urgency=medium
+haskell-devscripts (0.10.3) UNRELEASED; urgency=medium
 
+  [ James McCoy ]
   * Fix “Unescaped left brace in regex” warnings in dh_haskell_blurbs.
+
+  [ Sean Whitton ]
+  * Respect user's debian/libghc-*-doc.links.  (Closes: #823689)
+    Create the link ourselves rather than just overwriting
+    debian/libghc-*-doc.links.
 
  -- James McCoy <jamessan@debian.org>  Sun, 01 May 2016 11:01:02 -0400
 

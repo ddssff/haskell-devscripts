@@ -351,7 +351,6 @@ clean_recipe(){
     run rm -f configure-ghc-stamp configure-ghcjs-stamp build-ghc-stamp build-ghcjs-stamp build-hugs-stamp build-haddock-stamp
     run rm -rf debian/tmp-inst-ghc debian/tmp-inst-ghcjs
     run rm -f debian/extra-depends-ghc debian/extra-depends-ghcjs
-    run rm -f debian/libghc-${CABAL_PACKAGE}-doc.links debian/libghcjs-${CABAL_PACKAGE}-doc.links
     if [ -f ${DEB_LINTIAN_OVERRIDES_FILE} ] ; then
       run sed -i '/binary-or-shlib-defines-rpath/ d' ${DEB_LINTIAN_OVERRIDES_FILE}
       run find ${DEB_LINTIAN_OVERRIDES_FILE} -empty -delete;
@@ -505,9 +504,14 @@ install_doc_recipe(){
         run cp -r debian/tmp-inst-${hc}/${docdir}/*.haddock debian/${PKG}/${docdir}
     if [ "${DEB_ENABLE_HOOGLE}" = "yes" ]
     then
-        run find debian/${PKG}/${htmldir} -name "*.txt" \
-            -printf "%p ${hoogle}/${PKG}.txt\n" >> debian/lib${hc}-${CABAL_PACKAGE}-doc.links
-        run sed -i s,^debian/lib${hc}-${CABAL_PACKAGE}-doc,, debian/lib${hc}-${CABAL_PACKAGE}-doc.links
+        # We cannot just invoke dh_link here because that acts on
+        # either libghc-*-dev or all the binary packages, neither of
+        # which is desirable (see dh_link (1)).  So we just create a
+        # (policy-compliant) symlink ourselves
+        source=`find debian/${PKG}/${htmldir} -name "*.txt"`
+        dest=debian/${PKG}${hoogle}${PKG}.txt
+        run mkdir -p `dirname $dest`
+        run ln -rs -T $source $dest
     fi
     run dh_haskell_depends -p${PKG}
     # PS4=$PS5
