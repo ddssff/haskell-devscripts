@@ -12,7 +12,7 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-haskell/haskell-devscripts.
 Vcs-Git: git://git.debian.org/git/pkg-haskell/haskell-devscripts.git
 
 
-Package: haskell-devscripts
+Package: haskell-devscripts-nocolour
 Architecture: all
 Depends: dctrl-tools
   , debhelper
@@ -21,8 +21,31 @@ Depends: dctrl-tools
   , cdbs
   , ${misc:Depends}
   , html-xml-utils
-  , hscolour
   , ghc-haddock
+Breaks: haskell-devscripts (<= 0.10.2.3)
+Replaces: haskell-devscripts (<= 0.10.2.3)
+Suggests: haskell-devscripts
+Description: Tools to help Debian developers build Haskell packages
+ This package provides a collection of scripts to help build Haskell
+ packages for Debian.  Unlike haskell-utils, this package is not
+ expected to be installed on the machines of end users.
+ .
+ This package is designed to support Cabalized Haskell libraries.  It
+ is designed to build a library for each supported Debian compiler or
+ interpreter, generate appropriate postinst/prerm files for each one,
+ generate appropriate substvars entries for each one, and install the
+ package in the Debian temporary area as part of the build process.
+ .
+ This package doesn't provide functionality for generating coloured
+ documentation and is mostly intended for bootstrapping a new
+ architecture. If you want coloured documentation, use
+ haskell-devscripts.
+
+Package: haskell-devscripts
+Architecture: all
+Depends: ${misc:Depends}
+  , haskell-devscripts-nocolour
+  , hscolour
 Description: Tools to help Debian developers build Haskell packages
  This package provides a collection of scripts to help build Haskell
  packages for Debian.  Unlike haskell-utils, this package is not
