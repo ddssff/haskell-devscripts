@@ -26,7 +26,10 @@ package_prefix(){
 }
 
 package_hc(){
-    echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p'
+    case $1 in
+        ghc|ghc-prof) echo "ghc";;
+        *) echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p';;
+    esac
 }
 
 package_ext(){
@@ -215,7 +218,7 @@ hashed_dependency(){
     hc=$1
     type=$2
     pkgid=$3
-    virtual_pkg=`package_id_to_virtual_package "${hc}" "$type" $pkgid`
+    virtual_pkg=`package_id_to_virtual_package "${hc}" "$type" $pkgid ghc-pkg`
     # As a transition measure, check if dpkg knows about this virtual package
     if dpkg-query -W $virtual_pkg >/dev/null 2>/dev/null;
     then
@@ -277,14 +280,32 @@ depends_for_ghc_prof(){
     echo $packages | sed -e 's/^,[ ]*//'
 }
 
+tmp_package_db() {
+    if [ -x inplace/bin/ghc-pkg ]
+    then
+        # We are building ghc and need to use the new ghc-pkg
+        ghcpkg="inplace/bin/ghc-pkg --package-db debian/tmp-db/"
+    else
+        ghcpkg="ghc-pkg --package-db debian/tmp-db/"
+    fi
+    if [ ! -f debian/tmp-db/package.cache ]
+    then
+        mkdir debian/tmp-db
+        cp $@ debian/tmp-db/
+        $ghcpkg --package-db debian/tmp-db/ recache
+    fi
+    echo "$ghcpkg"
+}
+
 provides_for_ghc(){
     local hc
     local dep
     local packages
     hc=$1
     shift
+    ghcpkg="`tmp_package_db $@`"
     for package_id in `cabal_package_ids $@` ; do
-        packages="$packages, `package_id_to_virtual_package "${hc}" dev $package_id`"
+        packages="$packages, `package_id_to_virtual_package "${hc}" dev $package_id "${ghcpkg}"`"
     done
     echo $packages | sed -e 's/^,[ ]*//'
 }
@@ -295,8 +316,9 @@ provides_for_ghc_prof(){
     local packages
     hc=$1
     shift
+    ghcpkg="`tmp_package_db $@`"
     for package_id in `cabal_package_ids $@` ; do
-        packages="$packages, `package_id_to_virtual_package "${hc}" prof $package_id`"
+        packages="$packages, `package_id_to_virtual_package "${hc}" prof $package_id "${ghcpkg}"`"
     done
     echo $packages | sed -e 's/^,[ ]*//'
 }
@@ -305,12 +327,15 @@ package_id_to_virtual_package(){
         local hc
         local type
         local pkgid
+        local ghcpkg
         hc="$1"
         type="$2"
         pkgid="$3"
-        echo ${pkgid} | tr A-Z a-z | \
-            grep '[a-z0-9]\+-[0-9\.]\+-[^-]\+$' | \
-                perl -pe 's/([a-z0-9-]+)-([0-9\.]+)-([^-]{1,5})[^-]*$/lib'${hc}'-\1-'$type'-\2-\3/'
+        ghcpkg="$4"
+        name=`${ghcpkg} --simple-output field "${pkgid}" name`
+        version=`${ghcpkg} --simple-output field "${pkgid}" version`
+        abi=`${ghcpkg} --simple-output field "${pkgid}" abi | cut -c1-5`
+        echo "lib${hc}-${name}-${version}-${type}-${abi}" | tr A-Z a-z
 }
 
 depends_for_hugs(){
@@ -368,7 +393,7 @@ make_setup_recipe(){
       if test -e $setup
       then
         run ghc --make $setup -o ${DEB_SETUP_BIN_NAME}
-	exit 0
+    exit 0
       fi
     done
     # PS4=$PS5
