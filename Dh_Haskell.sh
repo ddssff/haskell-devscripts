@@ -106,10 +106,6 @@ hc_hoogle(){
     echo "/usr/lib/${hc}-doc/hoogle/"
 }
 
-strip_hash(){
-    echo "$1" | sed 's/-[^-]\+$//'
-}
-
 sort_uniq(){
     {
         for i in "$@" ; do
@@ -143,7 +139,7 @@ providing_package_for_ghc(){
     local lib
     local hc
     hc=$1
-    dep=`strip_hash $2`
+    dep=$2
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
@@ -163,7 +159,7 @@ providing_package_for_ghc_prof(){
     local lib
     local hc
     hc=$1
-    dep=`strip_hash $2`
+    dep=$2
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
