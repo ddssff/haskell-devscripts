@@ -379,6 +379,7 @@ clean_recipe(){
 
     run rm -f ${MAKEFILE}
     run rm -rf debian/dh_haskell_shlibdeps
+    run rm -rf debian/tmp-db
     # PS4=$PS5
 }
 
