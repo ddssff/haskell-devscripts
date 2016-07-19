@@ -1,4 +1,4 @@
-haskell-devscripts (0.10.3) UNRELEASED; urgency=medium
+haskell-devscripts (0.11.0) experimental; urgency=medium
 
   [ James McCoy ]
   * Fix “Unescaped left brace in regex” warnings in dh_haskell_blurbs.
@@ -10,13 +10,13 @@ haskell-devscripts (0.10.3) UNRELEASED; urgency=medium
     debian/libghc-*-doc.links.
 
   [ Sven Bartscher ]
-  * Be more deliberate about the format of id hashes to be compatible with
-    GHC 8.
-  * Split into haskell-devscripts and haskell-devscripts-nocolour. The
+  * Use ghc-pkg to determine tha package ABI instead of parsing package
+    IDs, but still fall back to parsing if GHC is older than version 8.
+  * Split into haskell-devscripts and haskell-devscripts-minimal. The
     latter is more convenient for bootstrapping a new architecture as it
     doesn't depend on hscolour.
 
- -- Sven Bartscher <kritzefitz@debian.org>  Thu, 07 Jul 2016 11:04:39 +0200
+ -- Sven Bartscher <kritzefitz@debian.org>  Tue, 19 Jul 2016 18:50:06 +0200
 
 haskell-devscripts (0.10.2.3) unstable; urgency=medium
 
