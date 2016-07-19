@@ -26,7 +26,10 @@ package_prefix(){
 }
 
 package_hc(){
-    echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p'
+    case $1 in
+        ghc|ghc-prof) echo "ghc";;
+        *) echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p';;
+    esac
 }
 
 package_ext(){
@@ -139,8 +142,14 @@ providing_package_for_ghc(){
     local dirs
     local lib
     local hc
+    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
     hc=$1
-    dep=`strip_hash $2`
+    if dpkg --compare-versions "${ghcversion}" '>=' 8
+    then
+        dep=$2
+    else
+        dep=`strip-hash $2`
+    fi
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
@@ -159,8 +168,14 @@ providing_package_for_ghc_prof(){
     local dirs
     local lib
     local hc
+    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
     hc=$1
-    dep=`strip_hash $2`
+    if dpkg --compare-versions "${ghcversion}" '>=' 8
+    then
+        dep=$2
+    else
+        dep=`strip-hash $2`
+    fi
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
@@ -212,10 +227,12 @@ hashed_dependency(){
     local type
     local pkgid
     local virpkg
+    local ghcpkg
     hc=$1
     type=$2
     pkgid=$3
-    virtual_pkg=`package_id_to_virtual_package "${hc}" "$type" $pkgid`
+    ghcpkg="`usable_ghc_pkg`"
+    virtual_pkg=`package_id_to_virtual_package "${hc}" "$type" $pkgid "${ghcpkg}"`
     # As a transition measure, check if dpkg knows about this virtual package
     if dpkg-query -W $virtual_pkg >/dev/null 2>/dev/null;
     then
@@ -277,14 +294,49 @@ depends_for_ghc_prof(){
     echo $packages | sed -e 's/^,[ ]*//'
 }
 
+usable_ghc_pkg() {
+    local ghcpkg
+    local version
+    if [ -x inplace/bin/ghc-pkg ]
+    then
+        # We are building ghc and need to use the new ghc-pkg
+        ghcpkg="inplace/bin/ghc-pkg"
+        version="`dpkg-parsechangelog -S Version`"
+    else
+        ghcpkg="ghc-pkg"
+        version="`dpkg-query --showformat '${Version}' --show ghc`"
+    fi
+    # ghc-pkg prior to version 8 is unusable for our purposes.
+    if dpkg --compare-versions "$version" '>=' 8
+    then
+        echo "${ghcpkg}"
+    fi
+}
+
+tmp_package_db() {
+    local ghcpkg
+    ghcpkg="`usable_ghc_pkg`"
+    if [ -n "${ghcpkg}" ]
+    then
+        if [ ! -f debian/tmp-db/package.cache ]
+        then
+            mkdir debian/tmp-db
+            cp $@ debian/tmp-db/
+            $ghcpkg --package-db debian/tmp-db/ recache
+        fi
+        echo "${ghcpkg} --package-db debian/tmp-db"
+    fi
+}
+
 provides_for_ghc(){
     local hc
     local dep
     local packages
     hc=$1
     shift
+    ghcpkg="`tmp_package_db $@`"
     for package_id in `cabal_package_ids $@` ; do
-        packages="$packages, `package_id_to_virtual_package "${hc}" dev $package_id`"
+        packages="$packages, `package_id_to_virtual_package "${hc}" dev $package_id "${ghcpkg}"`"
     done
     echo $packages | sed -e 's/^,[ ]*//'
 }
@@ -295,8 +347,9 @@ provides_for_ghc_prof(){
     local packages
     hc=$1
     shift
+    ghcpkg="`tmp_package_db $@`"
     for package_id in `cabal_package_ids $@` ; do
-        packages="$packages, `package_id_to_virtual_package "${hc}" prof $package_id`"
+        packages="$packages, `package_id_to_virtual_package "${hc}" prof $package_id "${ghcpkg}"`"
     done
     echo $packages | sed -e 's/^,[ ]*//'
 }
@@ -305,12 +358,23 @@ package_id_to_virtual_package(){
         local hc
         local type
         local pkgid
+        local ghcpkg
         hc="$1"
         type="$2"
         pkgid="$3"
-        echo ${pkgid} | tr A-Z a-z | \
-            grep '[a-z0-9]\+-[0-9\.]\+-................................' | \
+        ghcpkg="$4"
+        if [ -n "$ghcpkg" ]
+        then
+            name=`${ghcpkg} --simple-output field "${pkgid}" name`
+            version=`${ghcpkg} --simple-output field "${pkgid}" version`
+            abi=`${ghcpkg} --simple-output field "${pkgid}" abi | cut -c1-5`
+            echo "lib${hc}-${name}-${version}-${type}-${abi}" | tr A-Z a-z
+        else
+            # We don't have a usable ghc-pkg, so we fall back to parsing the package id.
+            echo ${pkgid} | tr A-Z a-z | \
+                grep '[a-z0-9]\+-[0-9\.]\+-................................' | \
                 perl -pe 's/([a-z0-9-]+)-([0-9\.]+)-(.....).........................../lib'${hc}'-\1-'$type'-\2-\3/'
+        fi
 }
 
 depends_for_hugs(){
@@ -358,6 +422,7 @@ clean_recipe(){
 
     run rm -f ${MAKEFILE}
     run rm -rf debian/dh_haskell_shlibdeps
+    run rm -rf debian/tmp-db
     # PS4=$PS5
 }
 
@@ -368,7 +433,7 @@ make_setup_recipe(){
       if test -e $setup
       then
         run ghc --make $setup -o ${DEB_SETUP_BIN_NAME}
-	exit 0
+    exit 0
       fi
     done
     # PS4=$PS5
