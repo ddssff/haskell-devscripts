@@ -7,9 +7,9 @@ Uploaders: Marco Silva <marcot@debian.org>, Joachim Breitner <nomeata@debian.org
          , Dmitry Bogatov <KAction@gnu.org>
 Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: perl
-Standards-Version: 3.9.5
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-haskell/haskell-devscripts.git
-Vcs-Git: git://git.debian.org/git/pkg-haskell/haskell-devscripts.git
+Standards-Version: 3.9.8
+Vcs-Browser: https://anonscm.debian.org/gitweb/?p=pkg-haskell/haskell-devscripts.git
+Vcs-Git: https://anonscm.debian.org/cgit/pkg-haskell/haskell-devscripts.git
 
 
 Package: haskell-devscripts-minimal
@@ -56,3 +56,6 @@ Description: Tools to help Debian developers build Haskell packages
  interpreter, generate appropriate postinst/prerm files for each one,
  generate appropriate substvars entries for each one, and install the
  package in the Debian temporary area as part of the build process.
+ .
+ This package is actually an empty package and is only useful for its
+ dependency on hscolour.
