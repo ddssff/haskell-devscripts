@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
 Uploaders: Marco Silva <marcot@debian.org>, Joachim Breitner <nomeata@debian.org>
          , Louis Bettens <louis@bettens.info>
-	 , Dmitry Bogatov <KAction@gnu.org>
+         , Dmitry Bogatov <KAction@gnu.org>
 Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: perl
 Standards-Version: 3.9.5
@@ -12,12 +12,12 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-haskell/haskell-devscripts.
 Vcs-Git: git://git.debian.org/git/pkg-haskell/haskell-devscripts.git
 
 
-Package: haskell-devscripts-nocolour
+Package: haskell-devscripts-minimal
 Architecture: all
 Depends: dctrl-tools
   , debhelper
   , dh-buildinfo
-  , ghc (>= 8.0.1)
+  , ghc (>= 7.10.2.20151030-2)
   , cdbs
   , ${misc:Depends}
   , html-xml-utils
@@ -44,7 +44,7 @@ Description: Tools to help Debian developers build Haskell packages
 Package: haskell-devscripts
 Architecture: all
 Depends: ${misc:Depends}
-  , haskell-devscripts-nocolour
+  , haskell-devscripts-minimal
   , hscolour
 Description: Tools to help Debian developers build Haskell packages
  This package provides a collection of scripts to help build Haskell

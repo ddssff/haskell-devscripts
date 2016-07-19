@@ -106,6 +106,10 @@ hc_hoogle(){
     echo "/usr/lib/${hc}-doc/hoogle/"
 }
 
+strip_hash(){
+    echo "$1" | sed 's/-................................$//'
+}
+
 sort_uniq(){
     {
         for i in "$@" ; do
@@ -138,8 +142,14 @@ providing_package_for_ghc(){
     local dirs
     local lib
     local hc
+    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
     hc=$1
-    dep=$2
+    if dpkg --compare-versions "${ghcversion}" '>=' 8
+    then
+        dep=$2
+    else
+        dep=`strip-hash $2`
+    fi
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
@@ -158,8 +168,14 @@ providing_package_for_ghc_prof(){
     local dirs
     local lib
     local hc
+    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
     hc=$1
-    dep=$2
+    if dpkg --compare-versions "${ghcversion}" '>=' 8
+    then
+        dep=$2
+    else
+        dep=`strip-hash $2`
+    fi
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
@@ -211,10 +227,12 @@ hashed_dependency(){
     local type
     local pkgid
     local virpkg
+    local ghcpkg
     hc=$1
     type=$2
     pkgid=$3
-    virtual_pkg=`package_id_to_virtual_package "${hc}" "$type" $pkgid ghc-pkg`
+    ghcpkg="`usable_ghc_pkg`"
+    virtual_pkg=`package_id_to_virtual_package "${hc}" "$type" $pkgid "${ghcpkg}"`
     # As a transition measure, check if dpkg knows about this virtual package
     if dpkg-query -W $virtual_pkg >/dev/null 2>/dev/null;
     then
@@ -276,21 +294,38 @@ depends_for_ghc_prof(){
     echo $packages | sed -e 's/^,[ ]*//'
 }
 
-tmp_package_db() {
+usable_ghc_pkg() {
+    local ghcpkg
+    local version
     if [ -x inplace/bin/ghc-pkg ]
     then
         # We are building ghc and need to use the new ghc-pkg
-        ghcpkg="inplace/bin/ghc-pkg --package-db debian/tmp-db/"
+        ghcpkg="inplace/bin/ghc-pkg"
+        version="`dpkg-parsechangelog -S Version`"
     else
-        ghcpkg="ghc-pkg --package-db debian/tmp-db/"
+        ghcpkg="ghc-pkg"
+        version="`dpkg-query --showformat '${Version}' --show ghc`"
     fi
-    if [ ! -f debian/tmp-db/package.cache ]
+    # ghc-pkg prior to version 8 is unusable for our purposes.
+    if dpkg --compare-versions "$version" '>=' 8
     then
-        mkdir debian/tmp-db
-        cp $@ debian/tmp-db/
-        $ghcpkg --package-db debian/tmp-db/ recache
+        echo "${ghcpkg}"
     fi
-    echo "$ghcpkg"
+}
+
+tmp_package_db() {
+    local ghcpkg
+    ghcpkg="`usable_ghc_pkg`"
+    if [ -n "${ghcpkg}" ]
+    then
+        if [ ! -f debian/tmp-db/package.cache ]
+        then
+            mkdir debian/tmp-db
+            cp $@ debian/tmp-db/
+            $ghcpkg --package-db debian/tmp-db/ recache
+        fi
+        echo "${ghcpkg} --package-db debian/tmp-db"
+    fi
 }
 
 provides_for_ghc(){
@@ -328,10 +363,18 @@ package_id_to_virtual_package(){
         type="$2"
         pkgid="$3"
         ghcpkg="$4"
-        name=`${ghcpkg} --simple-output field "${pkgid}" name`
-        version=`${ghcpkg} --simple-output field "${pkgid}" version`
-        abi=`${ghcpkg} --simple-output field "${pkgid}" abi | cut -c1-5`
-        echo "lib${hc}-${name}-${version}-${type}-${abi}" | tr A-Z a-z
+        if [ -n "$ghcpkg" ]
+        then
+            name=`${ghcpkg} --simple-output field "${pkgid}" name`
+            version=`${ghcpkg} --simple-output field "${pkgid}" version`
+            abi=`${ghcpkg} --simple-output field "${pkgid}" abi | cut -c1-5`
+            echo "lib${hc}-${name}-${version}-${type}-${abi}" | tr A-Z a-z
+        else
+            # We don't have a usable ghc-pkg, so we fall back to parsing the package id.
+            echo ${pkgid} | tr A-Z a-z | \
+                grep '[a-z0-9]\+-[0-9\.]\+-................................' | \
+                perl -pe 's/([a-z0-9-]+)-([0-9\.]+)-(.....).........................../lib'${hc}'-\1-'$type'-\2-\3/'
+        fi
 }
 
 depends_for_hugs(){
