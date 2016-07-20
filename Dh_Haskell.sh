@@ -368,7 +368,7 @@ package_id_to_virtual_package(){
             name=`${ghcpkg} --simple-output field "${pkgid}" name`
             version=`${ghcpkg} --simple-output field "${pkgid}" version`
             abi=`${ghcpkg} --simple-output field "${pkgid}" abi | cut -c1-5`
-            echo "lib${hc}-${name}-${version}-${type}-${abi}" | tr A-Z a-z
+            echo "lib${hc}-${name}-${type}-${version}-${abi}" | tr A-Z a-z
         else
             # We don't have a usable ghc-pkg, so we fall back to parsing the package id.
             echo ${pkgid} | tr A-Z a-z | \
