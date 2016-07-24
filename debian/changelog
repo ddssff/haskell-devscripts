@@ -14,8 +14,6 @@ haskell-devscripts (0.11.0) experimental; urgency=medium
   * Respect user's debian/libghc-*-doc.links.  (Closes: #823689)
     Create the link ourselves rather than just overwriting
     debian/libghc-*-doc.links.
-  * Fix "unescaped left brace" perl warning in dh_haskell_blurbs.
-    (Closes: #826501)
   * Use secure Vcs-* URIs.
 
   [ Sven Bartscher ]
