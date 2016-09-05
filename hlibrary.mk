@@ -63,14 +63,8 @@ NO_GHCI_FLAG = $(shell test -e /usr/bin/ghci || echo --ghc-option=-DDEBIAN_NO_GH
 
 DEB_COMPRESS_EXCLUDE += .haddock .hs .txt
 
-# We do not want to take dependency information
-# from libHS*.so files, because
-# * dh_haskell_shlibs takes care of that and
-# * it would introduced unwanted dependencies on libgmp
-# If the latter can be avoided, this could be changed to
-# DEB_DH_SHLIBDEPS_ARGS_ALL += -- --ignore-missing-info
 # (because we do not (yet) have shlibs files for libHS libraries)
-DEB_DH_SHLIBDEPS_ARGS_ALL += -XlibHS
+DEB_DH_SHLIBDEPS_ARGS_ALL += -- --ignore-missing-info
 DEB_DH_MAKESHLIBS_ARGS_ALL += -XlibHS
 
 # TODO:
