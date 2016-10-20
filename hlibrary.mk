@@ -79,7 +79,8 @@ DEB_SETUP_BIN_NAME ?= debian/hlibrary.setup
 GHC6_VERSION = $(shell ghc --numeric-version)
 GHC_VERSION = $(shell ghc --numeric-version)
 
-DEB_HADDOCK_OPTS += --html --hoogle
+DEB_HADDOCK_OPTS += --html --hoogle \
+	--haddock-options="--mathjax=file:///usr/share/javascript/mathjax/MathJax.js"
 ifndef DEB_NO_IMPLICIT_HADDOCK_HYPERLINK
 DEB_HADDOCK_OPTS += --hyperlink-source
 endif

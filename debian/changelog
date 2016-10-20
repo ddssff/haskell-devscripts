@@ -1,3 +1,13 @@
+haskell-devscripts (0.13) unstable; urgency=medium
+
+  * Pass `--mathjax` option to haddock
+    Starting from version 2.17.0, haddock supports typesetting of mathematical
+    expressions via Mathjax. Pass the `--mathjax` option to haddock to
+    instruct it to use the Debian provided JS library, instead of pointing to
+    the CDN. As a result, every *-doc package now recommends libjs-mathjax.
+
+ -- Ilias Tsitsimpis <i.tsitsimpis@gmail.com>  Thu, 20 Oct 2016 16:14:22 +0300
+
 haskell-devscripts (0.12) unstable; urgency=medium
 
   [ Sean Whitton ]
