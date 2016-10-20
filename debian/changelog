@@ -5,6 +5,7 @@ haskell-devscripts (0.13) unstable; urgency=medium
     expressions via Mathjax. Pass the `--mathjax` option to haddock to
     instruct it to use the Debian provided JS library, instead of pointing to
     the CDN. As a result, every *-doc package now recommends libjs-mathjax.
+  * Bump ghc dependency to 8.0.1
 
  -- Ilias Tsitsimpis <i.tsitsimpis@gmail.com>  Thu, 20 Oct 2016 16:14:22 +0300
 
