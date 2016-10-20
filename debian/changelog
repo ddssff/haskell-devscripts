@@ -1,4 +1,4 @@
-haskell-devscripts (0.13) unstable; urgency=medium
+haskell-devscripts (0.13) experimental; urgency=medium
 
   * Pass `--mathjax` option to haddock
     Starting from version 2.17.0, haddock supports typesetting of mathematical
