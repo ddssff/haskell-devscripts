@@ -12,8 +12,9 @@ haskell-devscripts (0.13) experimental; urgency=medium
   * Bump debhelper dependency to 9.20151219
     We need a newer version of dh_strip in order to pass the
     `--no-automatic-dbgsym` option.
+  * Convert d/copyright to DEP-5 format
 
- -- Ilias Tsitsimpis <i.tsitsimpis@gmail.com>  Thu, 20 Oct 2016 16:14:22 +0300
+ -- Ilias Tsitsimpis <i.tsitsimpis@gmail.com>  Fri, 21 Oct 2016 12:44:44 +0300
 
 haskell-devscripts (0.12) unstable; urgency=medium
 
