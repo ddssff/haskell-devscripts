@@ -6,6 +6,9 @@ haskell-devscripts (0.13) experimental; urgency=medium
     instruct it to use the Debian provided JS library, instead of pointing to
     the CDN. As a result, every *-doc package now recommends libjs-mathjax.
   * Bump ghc dependency to 8.0.1
+  * Disable automatic generation of debug symbol packages
+    GHC cannot produce debugging symbols, so the dbgsym package ends
+    up being empty.
 
  -- Ilias Tsitsimpis <i.tsitsimpis@gmail.com>  Thu, 20 Oct 2016 16:14:22 +0300
 

@@ -67,6 +67,11 @@ DEB_COMPRESS_EXCLUDE += .haddock .hs .txt
 DEB_DH_SHLIBDEPS_ARGS_ALL += -- --ignore-missing-info
 DEB_DH_MAKESHLIBS_ARGS_ALL += -XlibHS
 
+# Starting from debhelper v9.20151219, dh_strip automatically generats debug
+# symbol packages. GHC cannot produce debugging symbols so the dbgsym
+# package ends up being empty. Disable dbgsym generation.
+DEB_DH_STRIP_ARGS += --no-automatic-dbgsym
+
 # TODO:
 # - some of this would probably be useful for generic Haskell programs,
 #   not just libraries
