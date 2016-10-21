@@ -15,7 +15,7 @@ Vcs-Git: https://anonscm.debian.org/git/pkg-haskell/haskell-devscripts.git
 Package: haskell-devscripts-minimal
 Architecture: all
 Depends: dctrl-tools
-  , debhelper
+  , debhelper (>= 9.20151219)
   , dh-buildinfo
   , ghc (>= 8.0.1)
   , cdbs

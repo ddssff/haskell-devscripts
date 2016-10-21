@@ -9,6 +9,9 @@ haskell-devscripts (0.13) experimental; urgency=medium
   * Disable automatic generation of debug symbol packages
     GHC cannot produce debugging symbols, so the dbgsym package ends
     up being empty.
+  * Bump debhelper dependency to 9.20151219
+    We need a newer version of dh_strip in order to pass the
+    `--no-automatic-dbgsym` option.
 
  -- Ilias Tsitsimpis <i.tsitsimpis@gmail.com>  Thu, 20 Oct 2016 16:14:22 +0300
 
