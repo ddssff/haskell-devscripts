@@ -1,3 +1,9 @@
+haskell-devscripts (0.13.1) unstable; urgency=medium
+
+  * Upload to unstable as part of GHC 8 transition.
+
+ -- Clint Adams <clint@debian.org>  Thu, 27 Oct 2016 18:45:08 -0400
+
 haskell-devscripts (0.13) experimental; urgency=medium
 
   * Pass `--mathjax` option to haddock
