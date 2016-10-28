@@ -17,7 +17,7 @@ Architecture: all
 Depends: dctrl-tools
   , debhelper (>= 9.20151219)
   , dh-buildinfo
-  , ghc (>= 8.0.1)
+  , ghc
   , cdbs
   , ${misc:Depends}
   , html-xml-utils
@@ -44,6 +44,7 @@ Description: Tools to help Debian developers build Haskell packages
 Package: haskell-devscripts
 Architecture: all
 Depends: ${misc:Depends}
+  , ghc (>= 8.0.1)
   , haskell-devscripts-minimal
   , hscolour
 Description: Tools to help Debian developers build Haskell packages

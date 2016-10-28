@@ -1,3 +1,10 @@
+haskell-devscripts (0.13.2) unstable; urgency=medium
+
+  * Move versioned ghc dependency to -minimal to break
+    dependency loop for ghc.
+
+ -- Clint Adams <clint@debian.org>  Thu, 27 Oct 2016 22:12:23 -0400
+
 haskell-devscripts (0.13.1) unstable; urgency=medium
 
   * Upload to unstable as part of GHC 8 transition.
