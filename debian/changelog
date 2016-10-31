@@ -1,3 +1,10 @@
+haskell-devscripts (0.13.3) unstable; urgency=medium
+
+  * Patch from Chris Lamb to sort haskell:Recommends substvar.
+    closes: #842708.
+
+ -- Clint Adams <clint@debian.org>  Mon, 31 Oct 2016 19:43:28 -0400
+
 haskell-devscripts (0.13.2) unstable; urgency=medium
 
   * Move versioned ghc dependency to -minimal to break

@@ -141,7 +141,7 @@ for pkg in `dh_listpackages $args`; do
                 | sed -e 's,^file:/,,' \
                 | grep ^/ \
                 | cut -d# -f1 \
-                | sort -u \
+                | LANG=C sort -u \
                 | xargs -r dpkg -S \
                 | cut -d: -f1 \
                 | sort -u \
