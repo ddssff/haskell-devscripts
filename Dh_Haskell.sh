@@ -84,8 +84,8 @@ hc_prefix(){
 
 hc_haddock(){
     case $1 in
-        ghc) echo "haddock";;
-        ghcjs) echo "haddock-ghcjs";;
+        ghc) which "haddock";;
+        ghcjs) which "haddock-ghcjs";;
         *) echo "Don't know pkgdir for $1" >&2; exit 1;;
     esac
 }
