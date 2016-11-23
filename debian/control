@@ -17,11 +17,9 @@ Architecture: all
 Depends: dctrl-tools
   , debhelper
   , dh-buildinfo
-  , ghc (>= 7.10.2.20151030-2)
   , cdbs
   , ${misc:Depends}
   , html-xml-utils
-  , ghc-haddock
 Breaks: haskell-devscripts (<= 0.10.2.3)
 Replaces: haskell-devscripts (<= 0.10.2.3)
 Suggests: haskell-devscripts
