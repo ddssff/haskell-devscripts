@@ -6,11 +6,11 @@ run () {
 }
 
 cpu(){
-  ghc -e 'putStr System.Info.arch'
+  ghc -ignore-dot-ghci -e 'putStr System.Info.arch'
 }
 
 os(){
-  ghc -e 'putStr System.Info.os'
+  ghc -ignore-dot-ghci -e 'putStr System.Info.os'
 }
 
 ghcjs_version(){
