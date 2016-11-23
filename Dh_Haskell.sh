@@ -493,8 +493,8 @@ haddock_recipe(){
     # local PS5=$PS4; PS4=" + haddock_recipe> "; set -x
     hc=`packages_hc`
     haddock=`hc_haddock ${hc}`
-    if [ -x /usr/bin/${haddock} ] && \
-          ! run ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hc} --with-haddock=/usr/bin/${haddock} --with-ghc=${hc} --verbose=2 ${DEB_HADDOCK_OPTS} ; then
+    if [ -x ${haddock} ] && \
+          ! run ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hc} --with-haddock=${haddock} --with-ghc=${hc} --verbose=2 ${DEB_HADDOCK_OPTS} ; then
        echo "Haddock failed (no modules?), refusing to create empty documentation package."
        exit 1
     fi
