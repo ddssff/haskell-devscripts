@@ -27,6 +27,14 @@ ghcjs_ghc_version(){
   ghcjs --numeric-ghc-version
 }
 
+ghc_version(){
+  case $1 in
+    ghc) ghc --numeric-version;;
+    ghcjs) ghcjs --numeric-ghc-version;;
+    *) echo "ghc_version - unexpected compiler \"$1\"" >&2; exit 1;;
+  esac
+}
+
 package_prefix(){
     echo $1 | sed -n -e 's|^\([^-]*\)-.*-[^-]*$|\1|p'
 }
@@ -50,7 +58,7 @@ package_ext(){
 packages_hc(){
     hcs=`{ for i in ${DEB_PACKAGES}; do package_hc $i; done; } | LC_ALL=C sort -u`
     if [ `echo ${hcs} | wc -w` = 0 ]; then hcs=${DEB_DEFAULT_COMPILER}; fi
-    if [ `echo ${hcs} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hc}"; exit 1; fi
+    if [ `echo ${hcs} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hcs}"; exit 1; fi
     echo ${hcs}
 }
 
@@ -485,7 +493,9 @@ build_recipe(){
 check_recipe(){
     # local PS5=$PS4; PS4=" + check_recipe> "; set -x
     hc=`packages_hc`
-    run ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=direct
+    version=`ghc_version ${hc}`
+    if dpkg --compare-versions "$version" '>=' 8; then arg=direct; else arg="always"; fi
+    run ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=$arg
     # PS4=$PS5
 }
 
