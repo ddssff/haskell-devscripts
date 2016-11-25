@@ -39,22 +39,31 @@ package_prefix(){
     echo $1 | sed -n -e 's|^\([^-]*\)-.*-[^-]*$|\1|p'
 }
 
+# Extract the compiler name from a package name like libghcjs-text-dev.
+# Special case for when the compiler itself is the argument.
 package_hc(){
     case $1 in
-        ghc|ghc-prof) echo "ghc";;
-        *) echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p';;
+        ghc|ghc-prof) executable_package "ghc";;
+        *) hc=`echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p'`
+	   executable_package ${hc};;
     esac
+}
+
+executable_package(){
+    dpkg-query -S "`which $1`" | sed 's/: .*//'
 }
 
 package_ext(){
     case $1 in
         # I'm told the ghc build uses these scripts, hence these special cases
-        ghc) echo "dev";;
-        ghc-prof) echo "prof";;
-        *) echo $1 | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
+        *-prof) echo "prof";;
+        ghc*) echo "dev";;
+        lib*) echo $1 | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
     esac
 }
 
+# Collect the compiler list for all the binary packages, make sure
+# they all match.
 packages_hc(){
     hcs=`{ for i in ${DEB_PACKAGES}; do package_hc $i; done; } | LC_ALL=C sort -u`
     if [ `echo ${hcs} | wc -w` = 0 ]; then hcs=${DEB_DEFAULT_COMPILER}; fi
