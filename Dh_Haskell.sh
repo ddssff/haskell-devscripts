@@ -15,7 +15,9 @@ os(){
 
 # info ghc "Global Package DB" -> /usr/lib/ghc/package.conf.d
 info(){
-  ghc -ignore-dot-ghci -e "System.Process.readProcess \"$1\" [\"--info\"] \"\" >>= putStr . Data.Maybe.fromJust . lookup \"$2\" . (read :: String -> [(String, String)])"
+  local hcexe=$1
+  local key=$2
+  ${hcexe} --info | ghc -ignore-dot-ghci -e "getContents >>= putStrLn . Data.Maybe.fromJust . lookup \"${key}\" . (read :: String -> [(String, String)])"
 }
 
 ghcjs_version(){
