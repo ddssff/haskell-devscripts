@@ -45,13 +45,13 @@ package_prefix(){
 # Special case for when the compiler itself is the argument.
 package_hc(){
     case $1 in
-        ghc|ghc-prof) executable_package "ghc";;
+        ghc|ghc-prof) file_package "ghc";;
         *) hc=`echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p'`
-	   executable_package ${hc};;
+	   file_package ${hc};;
     esac
 }
 
-executable_package(){
+file_package(){
     dpkg-query -S "`which $1`" | sed 's/: .*//'
 }
 
