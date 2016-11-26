@@ -43,88 +43,106 @@ package_prefix(){
 
 # Extract the compiler name from a package name like libghcjs-text-dev.
 # Special case for when the compiler itself is the argument.
-package_hc(){
-    case $1 in
-        ghc|ghc-prof) file_package "ghc";;
-        *) hc=`echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p'`
-	   file_package ${hc};;
+package_hc_deb(){
+    local deb=$1
+    file_package `package_hc_flavor ${deb}`
+}
+
+package_hc_flavor(){
+    local deb=$1
+    case ${deb} in
+        ghc|ghc-prof) echo "ghc";;
+        *) echo ${deb} | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p';;
     esac
 }
 
 file_package(){
+    local hcflavor=$1
     dpkg-query -S "`which $1`" | sed 's/: .*//'
 }
 
 package_ext(){
-    case $1 in
+    local deb=$1
+    case ${deb} in
         # I'm told the ghc build uses these scripts, hence these special cases
         *-prof) echo "prof";;
         ghc*) echo "dev";;
-        lib*) echo $1 | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
+        lib*) echo ${deb} | sed -n -e 's|lib^[^-]*-.*-\([^-]*\)$|\1|p';;
     esac
 }
 
-# Collect the compiler list for all the binary packages, make sure
-# they all match.
-packages_hc(){
-    hcs=`{ for i in ${DEB_PACKAGES}; do package_hc $i; done; } | LC_ALL=C sort -u`
-    if [ `echo ${hcs} | wc -w` = 0 ]; then hcs=${DEB_DEFAULT_COMPILER}; fi
-    if [ `echo ${hcs} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hcs}"; exit 1; fi
-    echo ${hcs}
+# Collect the compiler list for all the binary debs named in
+# DEB_PACKAGES, make sure they all match.
+packages_hc_flavor(){
+    hcflavors=`{ for i in ${DEB_PACKAGES}; do package_hc_flavor $i; done; } | LC_ALL=C sort -u`
+    if [ `echo ${hcflavors} | wc -w` = 0 ]; then hcflavors="ghc"; fi
+    if [ `echo ${hcflavors} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hcflavors}"; exit 1; fi
+    echo ${hcflavors}
+}
+
+packages_hc_deb(){
+    local DEB_PACKAGES=$1
+    file_package "`packages_hc_flavor ${DEB_PACKAGES}`"
 }
 
 hc_libdir(){
-    case $1 in
+    local hcflavor=$1
+    case ${hcflavor} in
       ghc) echo "usr/lib/haskell-packages/ghc/lib";;
       ghcjs) echo "usr/lib/ghcjs/.cabal/lib";;
-      *) echo "Don't know package_libdir for $1" >&2; exit 1;;
+      *) echo "Don't know package_libdir for ${hcflavor}" >&2; exit 1;;
     esac
 }
 
 package_libdir(){
-    hc_libdir `package_hc $1`
+    local deb=$1
+    hc_libdir `package_hc_flavor ${deb}`
 }
 
 hc_pkgdir(){
+    local hcexe=$1
     info $1 "Global Package DB" | sed 's:^/::'
 }
 
 package_pkgdir(){
-    hc_pkgdir `package_hc $1`
+    local deb=$1
+    hc_pkgdir `package_hc_deb ${deb}`
 }
 
 hc_prefix(){
-    case $1 in
+    local hcdeb=$1
+    case ${hcdeb} in
       ghc) echo "usr";;
       ghcjs) echo "usr/lib/ghcjs";;
-      *) echo "Don't know prefix for compiler $1" >&2; exit 1;;
+      ghc-*) echo "opt/ghc";;
+      *) echo "Don't know prefix for compiler ${hcdeb}" >&2; exit 1;;
     esac
 }
 
 hc_haddock(){
-    case $1 in
+    local hcflavor=$1
+    case ${hcflavor} in
         ghc) which "haddock";;
         ghcjs) which "haddock-ghcjs";;
-        *) echo "Don't know pkgdir for $1" >&2; exit 1;;
+        *) echo "Don't know haddock dir for ${hcflavor}" >&2; exit 1;;
     esac
 }
 
 hc_docdir(){
-    hc=$1
-    pkgid=$2
-    echo "usr/lib/${hc}-doc/haddock/${pkgid}/"
+    local hcdeb=$1
+    local pkgid=$2
+    echo "usr/lib/${hcdeb}-doc/haddock/${pkgid}/"
 }
 
 hc_htmldir(){
-    hc=$1
-    CABAL_PACKAGE=$2
-    echo "usr/share/doc/lib${hc}-${CABAL_PACKAGE}-doc/html/"
+    local hcflavor=$1
+    local CABAL_PACKAGE=$2
+    echo "usr/share/doc/lib${hcflavor}-${CABAL_PACKAGE}-doc/html/"
 }
 
 hc_hoogle(){
-    local hc
-    hc=$1
-    echo "/usr/lib/${hc}-doc/hoogle/"
+    local hcdeb=$1
+    echo "/usr/lib/${hcdeb}-doc/hoogle/"
 }
 
 strip_hash(){
@@ -140,12 +158,9 @@ sort_uniq(){
 }
 
 dependency(){
-    local package
-    local version
-    local next_upstream_version
-    package=$1
-    version=`dpkg-query --showformat='${Version}' -W $package`
-    next_upstream_version=`echo $version | sed  -e 's/-[^-]*$//' -e 's/$/+/'`
+    local package=$1
+    local version=`dpkg-query --showformat='${Version}' -W $package`
+    local next_upstream_version=`echo $version | sed  -e 's/-[^-]*$//' -e 's/$/+/'`
     echo "$package (>= $version), $package (<< $next_upstream_version)"
 }
 
@@ -432,7 +447,7 @@ find_config_for_ghc(){
 clean_recipe(){
     # local PS5=$PS4; PS4=" + clean_recipe> "; set -x
     [ ! -x "${DEB_SETUP_BIN_NAME}" ] || run ${DEB_SETUP_BIN_NAME} clean
-    run rm -rf dist dist-ghc dist-ghcjs dist-hugs ${DEB_SETUP_BIN_NAME} Setup.hi Setup.ho Setup.o .*config*
+    run rm -rf dist dist-ghc* dist-ghcjs* dist-hugs* ${DEB_SETUP_BIN_NAME} Setup.hi Setup.ho Setup.o .*config*
     run rm -f configure-ghc-stamp configure-ghcjs-stamp build-ghc-stamp build-ghcjs-stamp build-hugs-stamp build-haddock-stamp
     run rm -rf debian/tmp-inst-ghc debian/tmp-inst-ghcjs
     run rm -f debian/extra-depends-ghc debian/extra-depends-ghcjs
@@ -462,7 +477,8 @@ make_setup_recipe(){
 
 configure_recipe(){
     # local PS5=$PS4; PS4=" + configure_recipe> "; set -x
-    hc=`packages_hc`
+    hcflavor=`packages_hc_flavor ${DEB_PACKAGES}`
+    hcdeb=`packages_hc_deb ${DEB_PACKAGES}`
 
     ENABLE_PROFILING=`{ for i in ${DEB_PACKAGES}; do package_ext $i | grep prof; done; } | LC_ALL=C sort -u | sed 's/prof/--enable-library-profiling/'`
     local GHC_OPTIONS
@@ -474,17 +490,17 @@ configure_recipe(){
     # DEB_SETUP_GHC_CONFIGURE_ARGS can contain multiple arguments with their own quoting,
     # so run this through eval
     eval run ${DEB_SETUP_BIN_NAME} \
-        configure "--${hc}" \
+        configure "--${hcflavor}" \
         -v2 \
-        --package-db=/`hc_pkgdir ${hc}` \
-        --prefix=/`hc_prefix ${hc}` \
-        --libdir=/`hc_libdir ${hc}` \
+        --package-db=/`hc_pkgdir ${hcflavor}` \
+        --prefix=/`hc_prefix ${hcdeb}` \
+        --libdir=/`hc_libdir ${hcflavor}` \
         --libexecdir=/usr/lib \
-        --builddir=dist-${hc} \
+        --builddir=dist-${hcdeb} \
         ${GHC_OPTIONS} \
-        --haddockdir=/`hc_docdir ${hc} ${CABAL_PACKAGE}-${CABAL_VERSION}` \
+        --haddockdir=/`hc_docdir ${hcflavor} ${CABAL_PACKAGE}-${CABAL_VERSION}` \
         --datasubdir=${CABAL_PACKAGE}\
-        --htmldir=/`hc_htmldir ${hc} ${CABAL_PACKAGE}` \
+        --htmldir=/`hc_htmldir ${hcflavor} ${CABAL_PACKAGE}` \
         ${ENABLE_PROFILING} \
         ${NO_GHCI_FLAG} \
         ${DEB_SETUP_GHC6_CONFIGURE_ARGS} \
@@ -496,26 +512,27 @@ configure_recipe(){
 
 build_recipe(){
     # local PS5=$PS4; PS4=" + build_recipe> "; set -x
-    hc=`packages_hc`
-    run ${DEB_SETUP_BIN_NAME} build --builddir=dist-${hc}
+    hcdeb=`packages_hc_deb ${DEB_PACKAGES}`
+    run ${DEB_SETUP_BIN_NAME} build --builddir=dist-${hcdeb}
     # PS4=$PS5
 }
 
 check_recipe(){
     # local PS5=$PS4; PS4=" + check_recipe> "; set -x
-    hc=`packages_hc`
+    hcdeb=`packages_hc_deb ${DEB_PACKAGES}`
     version=`ghc_version ${hc}`
     if dpkg --compare-versions "$version" '>=' 8; then arg=direct; else arg="always"; fi
-    run ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=$arg
+    run ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hcdeb} --show-details=$arg
     # PS4=$PS5
 }
 
 haddock_recipe(){
     # local PS5=$PS4; PS4=" + haddock_recipe> "; set -x
-    hc=`packages_hc`
-    haddock=`hc_haddock ${hc}`
+    hcflavor=`packages_hc_flavor ${DEB_PACKAGES}`
+    hcdeb=`packages_hc_deb ${DEB_PACKAGES}`
+    haddock=`hc_haddock ${hcflavor}`
     if [ -x ${haddock} ] && \
-          ! run ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hc} --with-haddock=${haddock} --with-ghc=${hc} --verbose=2 ${DEB_HADDOCK_OPTS} ; then
+          ! run ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hcdeb} --with-haddock=${haddock} --with-ghc=${hcflavor} --verbose=2 ${DEB_HADDOCK_OPTS} ; then
        echo "Haddock failed (no modules?), refusing to create empty documentation package."
        exit 1
     fi
@@ -524,9 +541,9 @@ haddock_recipe(){
 
 extra_depends_recipe(){
     # local PS5=$PS4; PS4=" + extra_depends_recipe> "; set -x
-    hc=$1
-    pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hc} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
-    run dh_haskell_extra_depends ${hc} $pkg_config
+    hcdeb=$1
+    pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hcdeb} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
+    run dh_haskell_extra_depends ${hcdeb} $pkg_config
     rm $pkg_config
     # PS4=$PS5
 }
@@ -535,14 +552,14 @@ install_dev_recipe(){
     # local PS5=$PS4; PS4=" + install_dev_recipe> "; set -x
     PKG=$1
 
-    hc=`package_hc ${PKG}`
+    hcdeb=`package_hc_deb ${PKG}`
     libdir=`package_libdir ${PKG}`
     pkgdir=`package_pkgdir ${PKG}`
 
-    ( run cd debian/tmp-inst-${hc} ; run mkdir -p ${libdir} ; run find ${libdir}/ \
+    ( run cd debian/tmp-inst-${hcdeb} ; run mkdir -p ${libdir} ; run find ${libdir}/ \
         \( ! -name "*_p.a" ! -name "*.p_hi" ! -type d \) \
         -exec install -Dm 644 '{}' ../${PKG}/'{}' ';' )
-    pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hc} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
+    pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hcdeb} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
     if [ "${HASKELL_HIDE_PACKAGES}" ]; then sed -i 's/^exposed: True$/exposed: False/' $pkg_config; fi
     run install -Dm 644 $pkg_config debian/${PKG}/${pkgdir}/$pkg_config
     run rm -f $pkg_config
@@ -564,7 +581,7 @@ install_prof_recipe(){
     # local PS5=$PS4; PS4=" + install_prof_recipe> "; set -x
     PKG=$1
     libdir=`package_libdir ${PKG}`
-    ( run cd debian/tmp-inst-`package_hc ${PKG}`
+    ( run cd debian/tmp-inst-`package_hc_deb ${PKG}`
       run mkdir -p ${libdir}
       run find ${libdir}/ \
         ! \( ! -name "*_p.a" ! -name "*.p_hi" \) \
@@ -577,19 +594,19 @@ install_prof_recipe(){
 install_doc_recipe(){
     # local PS5=$PS4; PS4=" + install_doc_recipe> "; set -x
     PKG=$1
-    hc=`package_hc ${PKG}`
+    hcdeb=`package_hc_deb ${PKG}`
     pkgid=${CABAL_PACKAGE}-${CABAL_VERSION}
-    docdir=`hc_docdir ${hc} ${pkgid}`
-    htmldir=`hc_htmldir ${hc} ${CABAL_PACKAGE}`
-    hoogle=`hc_hoogle ${hc}`
+    docdir=`hc_docdir ${hcdeb} ${pkgid}`
+    htmldir=`hc_htmldir ${hcflavor} ${CABAL_PACKAGE}`
+    hoogle=`hc_hoogle ${hcdeb}`
     run mkdir -p debian/${PKG}/${htmldir}
-    ( run cd debian/tmp-inst-${hc}/ ;
+    ( run cd debian/tmp-inst-${hcdeb}/ ;
       run find ./${htmldir} \
         ! -name "*.haddock" ! -type d -exec install -Dm 644 '{}' \
         ../${PKG}/'{}' ';' )
     run mkdir -p debian/${PKG}/${docdir}
-    [ 0 = `ls debian/tmp-inst-${hc}/${docdir}/ 2>/dev/null | wc -l` ] ||
-        run cp -r debian/tmp-inst-${hc}/${docdir}/*.haddock debian/${PKG}/${docdir}
+    [ 0 = `ls debian/tmp-inst-${hcdeb}/${docdir}/ 2>/dev/null | wc -l` ] ||
+        run cp -r debian/tmp-inst-${hcdeb}/${docdir}/*.haddock debian/${PKG}/${docdir}
     if [ "${DEB_ENABLE_HOOGLE}" = "yes" ]
     then
         # We cannot just invoke dh_link here because that acts on

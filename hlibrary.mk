@@ -179,10 +179,12 @@ build/libhugs-$(CABAL_PACKAGE):: dist-hugs
 	$(DEB_SETUP_BIN_NAME) build --builddir=dist-hugs
 
 debian/tmp-inst-ghc: $(DEB_SETUP_BIN_NAME) build-ghc-stamp
-	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-ghc --destdir=debian/tmp-inst-ghc
+	. /usr/share/haskell-devscripts/Dh_Haskell.sh && \
+	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-`packages_hc_deb ${DEB_PACKAGES}` --destdir=debian/tmp-inst-`packages_hc_deb ${DEB_PACKAGES}`
 
 debian/tmp-inst-ghcjs: $(DEB_SETUP_BIN_NAME) build-ghc-stamp
-	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-ghcjs --destdir=debian/tmp-inst-ghcjs
+	. /usr/share/haskell-devscripts/Dh_Haskell.sh && && \
+	$(DEB_SETUP_BIN_NAME) copy --builddir=dist-`packages_hc_deb ${DEB_PACKAGES}` --destdir=debian/tmp-inst-`packages_hc_deb ${DEB_PACKAGES}`
 
 debian/extra-depends-ghc: debian/tmp-inst-ghc
 	. /usr/share/haskell-devscripts/Dh_Haskell.sh && \

@@ -15,7 +15,7 @@ shift
 # set -x
 
 packages=`dh_listpackages`
-hc=`packages_hc ${DEB_DEFAULT_COMPILER} ${packages}`
+hc=`packages_hc_deb ${DEB_DEFAULT_COMPILER} ${packages}`
 
 for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars

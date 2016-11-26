@@ -63,7 +63,8 @@ for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars
     touch $sfile
 
-    hc=`package_hc ${pkg}`
+    hc=`package_hc_flavor ${pkg}`
+    hcdeb=`package_hc_deb ${pkg}`
     ext=`package_ext ${pkg}`
 
     case "$hc,$ext" in
@@ -85,7 +86,7 @@ for pkg in `dh_listpackages $args`; do
                         -e ^haskell:Recommends \
                         -e ^haskell:Suggests \
                         $sfile > $sfile.tmp || true
-		    echo "haskell:Depends=`depends_for_ghc ${hc} $cfiles`" >> $sfile.tmp
+		    echo "haskell:Depends=`depends_for_ghc ${hcdeb} $cfiles`" >> $sfile.tmp
                     echo "haskell:Recommends=" >> $sfile.tmp
                     doc=`echo $pkg | sed -e 's/-dev$/-doc/'`
                     prof=`echo $pkg | sed -e 's/-dev$/-prof/'`
@@ -109,7 +110,7 @@ for pkg in `dh_listpackages $args`; do
                         $sfile > $sfile.tmp || true
                     dev=`echo $pkg | sed -e 's/-prof$/-dev/'`
                     version='(=${binary:Version})'
-                    depends="$dev ${version}, `depends_for_ghc_prof ${hc} $cfiles`"
+                    depends="$dev ${version}, `depends_for_ghc_prof ${hcdeb} $cfiles`"
 		    echo "haskell:Depends=$depends" >> $sfile.tmp
                     echo "haskell:Recommends=" >> $sfile.tmp
                     echo "haskell:Suggests=" >> $sfile.tmp
@@ -146,7 +147,7 @@ for pkg in `dh_listpackages $args`; do
                 | cut -d: -f1 \
                 | sort -u \
                 | sed -e :a -e '$!N; s/\n/, /; ta'`
-            dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/lib${hc}-\1-dev/'`
+            dev=`echo $pkg | sed -e 's/^[^-]\+-\(.\+\)-doc/lib${hcdeb}-\1-dev/'`
             grep -av '^#' debian/control | grep $dev > /dev/null \
                 && recommends="$recommends, $dev" \
                 || recommends="$recommends"
