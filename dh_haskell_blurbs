@@ -16,6 +16,8 @@ shift
 
 packages=`dh_listpackages`
 hc=`packages_hc ${DEB_DEFAULT_COMPILER} ${packages}`
+hcpath=`which "${hc}"`
+hcdeb=`file_package "${hcpath}"`
 
 for pkg in `dh_listpackages $args`; do
     sfile=debian/$pkg.substvars
@@ -67,9 +69,9 @@ haskell:ShortDescription=$shortDescription
 haskell:LongDescription=$longDescription
 __END__
 
-    version=$(dpkg-query --showformat='${version}' --show ${hc} | egrep -o ".*-" \
+    version=$(dpkg-query --showformat='${version}' --show ${hcdeb} | egrep -o ".*-" \
 	| egrep -o "[^-]*")
-    echo "haskell:${hc}-version=${hc} (>= ${version}), ${hc} (<< ${version}+)" >> $sfile.tmp
+    echo "haskell:${hc}-version=${hcdeb} (>= ${version}), ${hcdeb} (<< ${version}+)" >> $sfile.tmp
 
     mv $sfile.tmp $sfile
 done
