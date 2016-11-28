@@ -17,11 +17,9 @@ Architecture: all
 Depends: dctrl-tools
   , debhelper
   , dh-buildinfo
-  , ghc (>= 7.10.2.20151030-2)
   , cdbs
   , ${misc:Depends}
   , html-xml-utils
-  , ghc-haddock
 Breaks: haskell-devscripts (<= 0.10.2.3)
 Replaces: haskell-devscripts (<= 0.10.2.3)
 Suggests: haskell-devscripts
@@ -46,6 +44,8 @@ Architecture: all
 Depends: ${misc:Depends}
   , haskell-devscripts-minimal
   , hscolour
+  , ghc (>= 7.10.2.20151030-2)
+  , ghc-haddock
 Description: Tools to help Debian developers build Haskell packages
  This package provides a collection of scripts to help build Haskell
  packages for Debian.  Unlike haskell-utils, this package is not
