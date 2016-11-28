@@ -15,9 +15,9 @@ os(){
 
 # info ghc "Global Package DB" -> /usr/lib/ghc/package.conf.d
 info(){
-  local hcexe=$1
+  local hcbin=$1
   local key=$2
-  ${hcexe} --info | ghc -ignore-dot-ghci -e "getContents >>= putStrLn . Data.Maybe.fromJust . lookup \"${key}\" . (read :: String -> [(String, String)])"
+  ${hcbin} --info | ghc -ignore-dot-ghci -e "getContents >>= putStrLn . Data.Maybe.fromJust . lookup \"${key}\" . (read :: String -> [(String, String)])"
 }
 
 ghcjs_version(){
@@ -154,13 +154,12 @@ providing_package_for_ghc(){
     local dirs
     local lib
     local hc
-    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
     hc=$1
-    if dpkg --compare-versions "${ghcversion}" '>=' 8
+    if dpkg --compare-versions `ghc_version ${hc}` '>=' 8
     then
         dep=$2
     else
-        dep=`strip-hash $2`
+        dep=`strip_hash $2`
     fi
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
@@ -180,13 +179,12 @@ providing_package_for_ghc_prof(){
     local dirs
     local lib
     local hc
-    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
     hc=$1
-    if dpkg --compare-versions "${ghcversion}" '>=' 8
+    if dpkg --compare-versions `ghc_version ${hc}` '>=' 8
     then
         dep=$2
     else
-        dep=`strip-hash $2`
+        dep=`strip_hash $2`
     fi
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
