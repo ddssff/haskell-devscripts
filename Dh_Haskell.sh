@@ -51,7 +51,8 @@ package_prefix(){
 package_hc(){
     local deb=$1
     case ${deb} in
-        ghc|ghc-prof) echo "ghc";;
+	ghcjs*) echo "ghcjs";;
+        ghc*) echo "ghc";;
         *) echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p';;
     esac
 }
@@ -60,8 +61,8 @@ package_ext(){
     local deb=$1
     case ${deb} in
         # I'm told the ghc build uses these scripts, hence these special cases
-        ghc) echo "dev";;
-        ghc-prof) echo "prof";;
+        ghc*-prof) echo "prof";;
+        ghc*) echo "dev";;
         *) echo ${deb} | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
     esac
 }
