@@ -248,7 +248,7 @@ cabal_depends(){
 hashed_dependency(){
     local type
     local pkgid
-    local virpkg
+    local virtual_pkg
     local ghcpkg
     local hc=$1
     type=$2
