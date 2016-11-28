@@ -30,30 +30,34 @@ ghcjs_ghc_version(){
 }
 
 ghc_version(){
-  case $1 in
+  local hc=$1
+  case ${hc} in
     ghc) ghc --numeric-version;;
     ghcjs) ghcjs --numeric-ghc-version;;
-    *) echo "ghc_version - unexpected compiler \"$1\"" >&2; exit 1;;
+    *) echo "ghc_version - unexpected compiler \"${hc}\"" >&2; exit 1;;
   esac
 }
 
 package_prefix(){
-    echo $1 | sed -n -e 's|^\([^-]*\)-.*-[^-]*$|\1|p'
+    local deb=$1
+    echo ${deb} | sed -n -e 's|^\([^-]*\)-.*-[^-]*$|\1|p'
 }
 
 package_hc(){
-    case $1 in
+    local deb=$1
+    case ${deb} in
         ghc|ghc-prof) echo "ghc";;
         *) echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p';;
     esac
 }
 
 package_ext(){
-    case $1 in
+    local deb=$1
+    case ${deb} in
         # I'm told the ghc build uses these scripts, hence these special cases
         ghc) echo "dev";;
         ghc-prof) echo "prof";;
-        *) echo $1 | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
+        *) echo ${deb} | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
     esac
 }
 
@@ -65,56 +69,61 @@ packages_hc(){
 }
 
 hc_libdir(){
-    case $1 in
+    local hc=$1
+    case ${hc} in
       ghc) echo "usr/lib/haskell-packages/ghc/lib";;
       ghcjs) echo "usr/lib/ghcjs/.cabal/lib";;
-      *) echo "Don't know package_libdir for $1" >&2; exit 1;;
+      *) echo "Don't know hc_libdir for ${hc}" >&2; exit 1;;
     esac
 }
 
 package_libdir(){
-    hc_libdir `package_hc $1`
+    local deb=$1
+    hc_libdir `package_hc ${deb}`
 }
 
 hc_pkgdir(){
-    info $1 "Global Package DB" | sed 's:^/::'
+    local hc=$1
+    info ${hc} "Global Package DB" | sed 's:^/::'
 }
 
 package_pkgdir(){
-    hc_pkgdir `package_hc $1`
+    local deb=$1
+    hc_pkgdir `package_hc ${deb}`
 }
 
 hc_prefix(){
-    case $1 in
+    local hc=$1
+    case ${hc} in
       ghc) echo "usr";;
       ghcjs) echo "usr/lib/ghcjs";;
-      *) echo "Don't know prefix for compiler $1" >&2; exit 1;;
+      *) echo "Don't know prefix for compiler ${hc}" >&2; exit 1;;
     esac
 }
 
 hc_haddock(){
-    case $1 in
+    local hc=$1
+    case ${hc} in
         ghc) which "haddock";;
         ghcjs) which "haddock-ghcjs";;
-        *) echo "Don't know pkgdir for $1" >&2; exit 1;;
+        *) echo "Don't know pkgdir for ${hc}" >&2; exit 1;;
     esac
 }
 
 hc_docdir(){
-    hc=$1
-    pkgid=$2
+    local hc=$1
+    local pkgid=$2
     echo "usr/lib/${hc}-doc/haddock/${pkgid}/"
 }
 
 hc_htmldir(){
-    hc=$1
+    local hc=$1
     CABAL_PACKAGE=$2
     echo "usr/share/doc/lib${hc}-${CABAL_PACKAGE}-doc/html/"
 }
 
 hc_hoogle(){
-    local hc
-    hc=$1
+    local hc=$1
     echo "/usr/lib/${hc}-doc/hoogle/"
 }
 
@@ -141,9 +150,9 @@ dependency(){
 }
 
 ghc_pkg_field(){
-    hc=$1
-    pkg=$2
-    field=$3
+    local hc=$1
+    local pkg=$2
+    local field=$3
     ${hc}-pkg --global field ${pkg} ${field} | head -n1
 }
 
@@ -153,16 +162,15 @@ providing_package_for_ghc(){
     local dir
     local dirs
     local lib
-    local hc
-    hc=$1
+    local hc=$1
     if dpkg --compare-versions `ghc_version ${hc}` '>=' 8
     then
         dep=$2
     else
         dep=`strip_hash $2`
     fi
-    dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
-    lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
+    dirs=`ghc_pkg_field ${hc} $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
+    lib=`ghc_pkg_field ${hc} $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
         if [ -e "${dir}/lib${lib}.a" ] ; then
             package=`dpkg-query -S ${dir}/lib${lib}.a | cut -d':' -f 1` || exit $?
@@ -178,16 +186,15 @@ providing_package_for_ghc_prof(){
     local dir
     local dirs
     local lib
-    local hc
-    hc=$1
+    local hc=$1
     if dpkg --compare-versions `ghc_version ${hc}` '>=' 8
     then
         dep=$2
     else
         dep=`strip_hash $2`
     fi
-    dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
-    lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
+    dirs=`ghc_pkg_field ${hc} $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
+    lib=`ghc_pkg_field ${hc} $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
         if [ -e "${dir}/lib${lib}_p.a" ] ; then
             package=`dpkg-query -S ${dir}/lib${lib}_p.a | cut -d':' -f 1` || exit $?
@@ -233,12 +240,11 @@ cabal_depends(){
 }
 
 hashed_dependency(){
-    local hc
     local type
     local pkgid
     local virpkg
     local ghcpkg
-    hc=$1
+    local hc=$1
     type=$2
     pkgid=$3
     ghcpkg="`usable_ghc_pkg`"
@@ -254,14 +260,13 @@ depends_for_ghc(){
     local dep
     local packages
     local pkgid
-    local hc
-    hc=$1
+    local hc=$1
     shift
     for pkgid in `cabal_depends $@` ; do
         dep=`hashed_dependency ${hc} dev $pkgid`
         if [ -z "$dep" ]
         then
-          pkg=`providing_package_for_ghc $hc $pkgid`
+          pkg=`providing_package_for_ghc ${hc} $pkgid`
           if [ -n "$pkg" ]
           then
               dep=`dependency $pkg`
@@ -281,14 +286,13 @@ depends_for_ghc_prof(){
     local dep
     local packages
     local pkgid
-    local hc
-    hc=$1
+    local hc=$1
     shift
     for pkgid in `cabal_depends $@` ; do
         dep=`hashed_dependency ${hc} prof $pkgid`
         if [ -z "$dep" ]
         then
-          pkg=`providing_package_for_ghc_prof $hc $pkgid`
+          pkg=`providing_package_for_ghc_prof ${hc} $pkgid`
           if [ -n "$pkg" ]
           then
               dep=`dependency $pkg`
@@ -339,10 +343,9 @@ tmp_package_db() {
 }
 
 provides_for_ghc(){
-    local hc
     local dep
     local packages
-    hc=$1
+    local hc=$1
     shift
     ghcpkg="`tmp_package_db $@`"
     for package_id in `cabal_package_ids $@` ; do
@@ -352,10 +355,9 @@ provides_for_ghc(){
 }
 
 provides_for_ghc_prof(){
-    local hc
     local dep
     local packages
-    hc=$1
+    local hc=$1
     shift
     ghcpkg="`tmp_package_db $@`"
     for package_id in `cabal_package_ids $@` ; do
@@ -365,11 +367,10 @@ provides_for_ghc_prof(){
 }
 
 package_id_to_virtual_package(){
-        local hc
         local type
         local pkgid
         local ghcpkg
-        hc="$1"
+        local hc="$1"
         type="$2"
         pkgid="$3"
         ghcpkg="$4"
@@ -485,7 +486,7 @@ configure_recipe(){
 
 build_recipe(){
     # local PS5=$PS4; PS4=" + build_recipe> "; set -x
-    hc=`packages_hc`
+    local hc=`packages_hc`
     run ${DEB_SETUP_BIN_NAME} build --builddir=dist-${hc}
     # PS4=$PS5
 }
@@ -513,7 +514,7 @@ haddock_recipe(){
 
 extra_depends_recipe(){
     # local PS5=$PS4; PS4=" + extra_depends_recipe> "; set -x
-    hc=$1
+    local hc=$1
     pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hc} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
     run dh_haskell_extra_depends ${hc} $pkg_config
     rm $pkg_config
@@ -522,7 +523,7 @@ extra_depends_recipe(){
 
 install_dev_recipe(){
     # local PS5=$PS4; PS4=" + install_dev_recipe> "; set -x
-    PKG=$1
+    local PKG=$1
 
     hc=`package_hc ${PKG}`
     libdir=`package_libdir ${PKG}`

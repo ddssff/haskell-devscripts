@@ -88,7 +88,7 @@ for pkg in `dh_listpackages $args`; do
 	            grep -a -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
-	            echo "haskell:Provides=`provides_for_ghc $hc $cfiles`" >> $sfile.tmp
+	            echo "haskell:Provides=`provides_for_ghc ${hc} $cfiles`" >> $sfile.tmp
 		    mv $sfile.tmp $sfile
 	            grep -a -v \
                         -e ^haskell:${hc}-package \
@@ -100,7 +100,7 @@ for pkg in `dh_listpackages $args`; do
 	            grep -a -v \
                         -e ^haskell:Provides \
                         $sfile > $sfile.tmp || true
-	            echo "haskell:Provides=`provides_for_ghc_prof $hc $cfiles`" >> $sfile.tmp
+	            echo "haskell:Provides=`provides_for_ghc_prof ${hc} $cfiles`" >> $sfile.tmp
 		    mv $sfile.tmp $sfile
 		    ;;
 	    esac

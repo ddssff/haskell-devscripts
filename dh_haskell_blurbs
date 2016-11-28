@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2013 Joachim Breitner <nomeata@debian.org>
 
-set -e 
+set -e
 
 DEB_DEFAULT_COMPILER=$1
 shift
