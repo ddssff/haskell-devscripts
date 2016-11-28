@@ -13,8 +13,16 @@ os(){
   ghc -ignore-dot-ghci -e 'putStr System.Info.os'
 }
 
+# info ghc "Global Package DB" -> /usr/lib/ghc/package.conf.d
+info(){
+  local hcexe=$1
+  local key=$2
+  ${hcexe} --info | ghc -ignore-dot-ghci -e "getContents >>= putStrLn . Data.Maybe.fromJust . lookup \"${key}\" . (read :: String -> [(String, String)])"
+}
+
 ghcjs_version(){
   ghcjs --numeric-ghcjs-version
+  # Probably equivalant to info ghcjs "Project Version"
 }
 
 ghcjs_ghc_version(){
@@ -61,11 +69,7 @@ package_libdir(){
 }
 
 hc_pkgdir(){
-    case $1 in
-        ghc) echo "var/lib/ghc/package.conf.d";;
-        ghcjs) echo "usr/lib/ghcjs/.ghcjs/`cpu`-`os`-`ghcjs_version`-`ghcjs_ghc_version`/ghcjs/package.conf.d";;
-        *) echo "Don't know pkgdir for $1" >&2; exit 1;;
-    esac
+    info $1 "Global Package DB" | sed 's:^/::'
 }
 
 package_pkgdir(){
