@@ -140,7 +140,7 @@ for pkg in `dh_listpackages $args`; do
 	    # The debian and ubuntu ghc packages provide the haddock-interface-*
 	    # virtual package, the hvr debs do not
 	    depends="haddock-interface-`haddock --interface-version`"
-	    [ ! "$provided_h_i" ] || echo "haskell:Depends=$depends" >> $sfile.tmp;;
+	    [ ! "$provided_h_i" ] || echo "haskell:Depends=$depends" >> $sfile.tmp
             recommends=` \
                 find debian/$pkg -name \*.html -exec hxwls -r \{\} \; \
                 | sed -e 's,^file:/,,' \
