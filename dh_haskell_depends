@@ -67,7 +67,7 @@ for pkg in `dh_listpackages $args`; do
     file=`which ${hc}`
     deb=`file_package ${file}`
     ext=`package_ext ${pkg}`
-    provided_h_i=`dpkg-query --showformat='${Provides}' -W ${deb} | sed 's:, :\n:g' | grep '^haddock-interface-'`
+    provided_h_i=`dpkg-query --showformat='${Provides}' -W ${deb} || true | sed 's:, :\n:g' | grep '^haddock-interface-'`
 
     case "$hc,$ext" in
 	ghc,dev|ghc,prof|ghcjs,dev|ghcjs,prof)
