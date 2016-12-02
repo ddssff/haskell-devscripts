@@ -21,6 +21,15 @@ ghcjs_ghc_version(){
   ghcjs --numeric-ghc-version
 }
 
+ghc_version(){
+  local hc=$1
+  case ${hc} in
+    ghc) ghc --numeric-version;;
+    ghcjs) ghcjs --numeric-ghc-version;;
+    *) echo "ghc_version - unexpected compiler \"${hc}\"" >&2; exit 1;;
+  esac
+}
+
 package_prefix(){
     echo $1 | sed -n -e 's|^\([^-]*\)-.*-[^-]*$|\1|p'
 }
@@ -483,7 +492,9 @@ build_recipe(){
 check_recipe(){
     # local PS5=$PS4; PS4=" + check_recipe> "; set -x
     hc=`packages_hc`
-    run ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=direct
+    version=`ghc_version ${hc}`
+    if dpkg --compare-versions "$version" '>=' 8; then arg=direct; else arg="always"; fi
+    run ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=$arg
     # PS4=$PS5
 }
 
