@@ -64,10 +64,7 @@ for pkg in `dh_listpackages $args`; do
     touch $sfile
 
     hc=`package_hc ${pkg}`
-    file=`which ${hc}`
-    deb=`file_package ${file}`
     ext=`package_ext ${pkg}`
-    provided_h_i=`dpkg-query --showformat='${Provides}' -W ${deb} || true | sed 's:, :\n:g' | grep '^haddock-interface-'`
 
     case "$hc,$ext" in
 	ghc,dev|ghc,prof|ghcjs,dev|ghcjs,prof)
@@ -137,10 +134,8 @@ for pkg in `dh_listpackages $args`; do
                 -e ^haskell:Recommends \
                 -e ^haskell:Suggests \
                 $sfile > $sfile.tmp || true
-	    # The debian and ubuntu ghc packages provide the haddock-interface-*
-	    # virtual package, the hvr debs do not
-	    depends="haddock-interface-`haddock --interface-version`"
-	    [ ! "$provided_h_i" ] || echo "haskell:Depends=$depends" >> $sfile.tmp
+	    depends=haddock-interface-`haddock --interface-version`
+            echo "haskell:Depends=$depends" >> $sfile.tmp
             recommends=` \
                 find debian/$pkg -name \*.html -exec hxwls -r \{\} \; \
                 | sed -e 's,^file:/,,' \

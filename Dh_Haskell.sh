@@ -5,11 +5,6 @@ run () {
   "$@"
 }
 
-file_package(){
-    local path=$1
-    dpkg-query -S "${path}" | cut -d':' -f 1
-}
-
 cpu(){
   ghc -ignore-dot-ghci -e 'putStr System.Info.arch'
 }
@@ -18,118 +13,96 @@ os(){
   ghc -ignore-dot-ghci -e 'putStr System.Info.os'
 }
 
-# info ghc "Global Package DB" -> /usr/lib/ghc/package.conf.d
-info(){
-  local hcbin=$1
-  local key=$2
-  ${hcbin} --info | ghc -ignore-dot-ghci -e "getContents >>= putStrLn . Data.Maybe.fromJust . lookup \"${key}\" . (read :: String -> [(String, String)])"
-}
-
 ghcjs_version(){
   ghcjs --numeric-ghcjs-version
-  # Probably equivalant to info ghcjs "Project Version"
 }
 
 ghcjs_ghc_version(){
   ghcjs --numeric-ghc-version
 }
 
-ghc_version(){
-  local hc=$1
-  case ${hc} in
-    ghc) ghc --numeric-version;;
-    ghcjs) ghcjs --numeric-ghc-version;;
-    *) echo "ghc_version - unexpected compiler \"${hc}\"" >&2; exit 1;;
-  esac
-}
-
 package_prefix(){
-    local deb=$1
-    echo ${deb} | sed -n -e 's|^\([^-]*\)-.*-[^-]*$|\1|p'
+    echo $1 | sed -n -e 's|^\([^-]*\)-.*-[^-]*$|\1|p'
 }
 
 package_hc(){
-    local deb=$1
-    case ${deb} in
-	ghcjs*) echo "ghcjs";;
-        ghc*) echo "ghc";;
+    case $1 in
+        ghc|ghc-prof) echo "ghc";;
         *) echo $1 | sed -n -e 's|^lib\([^-]*\)-.*-[^-]*$|\1|p';;
     esac
 }
 
 package_ext(){
-    local deb=$1
-    case ${deb} in
+    case $1 in
         # I'm told the ghc build uses these scripts, hence these special cases
-        ghc*-prof) echo "prof";;
-        ghc*) echo "dev";;
-        *) echo ${deb} | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
+        ghc) echo "dev";;
+        ghc-prof) echo "prof";;
+        *) echo $1 | sed -n -e 's|^[^-]*-.*-\([^-]*\)$|\1|p';;
     esac
 }
 
 packages_hc(){
     hcs=`{ for i in ${DEB_PACKAGES}; do package_hc $i; done; } | LC_ALL=C sort -u`
     if [ `echo ${hcs} | wc -w` = 0 ]; then hcs=${DEB_DEFAULT_COMPILER}; fi
-    if [ `echo ${hcs} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hcs}"; exit 1; fi
+    if [ `echo ${hcs} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hc}"; exit 1; fi
     echo ${hcs}
 }
 
 hc_libdir(){
-    local hc=$1
-    case ${hc} in
+    case $1 in
       ghc) echo "usr/lib/haskell-packages/ghc/lib";;
       ghcjs) echo "usr/lib/ghcjs/.cabal/lib";;
-      *) echo "Don't know hc_libdir for ${hc}" >&2; exit 1;;
+      *) echo "Don't know package_libdir for $1" >&2; exit 1;;
     esac
 }
 
 package_libdir(){
-    local deb=$1
-    hc_libdir `package_hc ${deb}`
+    hc_libdir `package_hc $1`
 }
 
 hc_pkgdir(){
-    local hc=$1
-    info ${hc} "Global Package DB" | sed 's:^/::'
+    case $1 in
+        ghc) echo "var/lib/ghc/package.conf.d";;
+        ghcjs) echo "usr/lib/ghcjs/.ghcjs/`cpu`-`os`-`ghcjs_version`-`ghcjs_ghc_version`/ghcjs/package.conf.d";;
+        *) echo "Don't know pkgdir for $1" >&2; exit 1;;
+    esac
 }
 
 package_pkgdir(){
-    local deb=$1
-    hc_pkgdir `package_hc ${deb}`
+    hc_pkgdir `package_hc $1`
 }
 
 hc_prefix(){
-    local hc=$1
-    case ${hc} in
+    case $1 in
       ghc) echo "usr";;
       ghcjs) echo "usr/lib/ghcjs";;
-      *) echo "Don't know prefix for compiler ${hc}" >&2; exit 1;;
+      *) echo "Don't know prefix for compiler $1" >&2; exit 1;;
     esac
 }
 
 hc_haddock(){
-    local hc=$1
-    case ${hc} in
-        ghc) which "haddock";;
-        ghcjs) which "haddock-ghcjs";;
-        *) echo "Don't know pkgdir for ${hc}" >&2; exit 1;;
+    case $1 in
+        ghc) echo "haddock";;
+        ghcjs) echo "haddock-ghcjs";;
+        *) echo "Don't know pkgdir for $1" >&2; exit 1;;
     esac
 }
 
 hc_docdir(){
-    local hc=$1
-    local pkgid=$2
+    hc=$1
+    pkgid=$2
     echo "usr/lib/${hc}-doc/haddock/${pkgid}/"
 }
 
 hc_htmldir(){
-    local hc=$1
+    hc=$1
     CABAL_PACKAGE=$2
     echo "usr/share/doc/lib${hc}-${CABAL_PACKAGE}-doc/html/"
 }
 
 hc_hoogle(){
-    local hc=$1
+    local hc
+    hc=$1
     echo "/usr/lib/${hc}-doc/hoogle/"
 }
 
@@ -156,9 +129,9 @@ dependency(){
 }
 
 ghc_pkg_field(){
-    local hc=$1
-    local pkg=$2
-    local field=$3
+    hc=$1
+    pkg=$2
+    field=$3
     ${hc}-pkg --global field ${pkg} ${field} | head -n1
 }
 
@@ -168,18 +141,20 @@ providing_package_for_ghc(){
     local dir
     local dirs
     local lib
-    local hc=$1
-    if dpkg --compare-versions `ghc_version ${hc}` '>=' 8
+    local hc
+    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
+    hc=$1
+    if dpkg --compare-versions "${ghcversion}" '>=' 8
     then
         dep=$2
     else
-        dep=`strip_hash $2`
+        dep=`strip-hash $2`
     fi
-    dirs=`ghc_pkg_field ${hc} $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
-    lib=`ghc_pkg_field ${hc} $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
+    dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
+    lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
         if [ -e "${dir}/lib${lib}.a" ] ; then
-            package=`file_package ${dir}/lib${lib}.a` || exit $?
+            package=`dpkg-query -S ${dir}/lib${lib}.a | cut -d':' -f 1` || exit $?
             continue
         fi
     done
@@ -192,18 +167,20 @@ providing_package_for_ghc_prof(){
     local dir
     local dirs
     local lib
-    local hc=$1
-    if dpkg --compare-versions `ghc_version ${hc}` '>=' 8
+    local hc
+    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
+    hc=$1
+    if dpkg --compare-versions "${ghcversion}" '>=' 8
     then
         dep=$2
     else
-        dep=`strip_hash $2`
+        dep=`strip-hash $2`
     fi
-    dirs=`ghc_pkg_field ${hc} $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
-    lib=`ghc_pkg_field ${hc} $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
+    dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
+    lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
         if [ -e "${dir}/lib${lib}_p.a" ] ; then
-            package=`file_package ${dir}/lib${lib}_p.a` || exit $?
+            package=`dpkg-query -S ${dir}/lib${lib}_p.a | cut -d':' -f 1` || exit $?
             continue
         fi
     done
@@ -246,14 +223,15 @@ cabal_depends(){
 }
 
 hashed_dependency(){
+    local hc
     local type
     local pkgid
-    local virtual_pkg
+    local virpkg
     local ghcpkg
-    local hc=$1
+    hc=$1
     type=$2
     pkgid=$3
-    ghcpkg="`usable_ghc_pkg ${hc}`"
+    ghcpkg="`usable_ghc_pkg`"
     virtual_pkg=`package_id_to_virtual_package "${hc}" "$type" $pkgid "${ghcpkg}"`
     # As a transition measure, check if dpkg knows about this virtual package
     if dpkg-query -W $virtual_pkg >/dev/null 2>/dev/null;
@@ -266,13 +244,14 @@ depends_for_ghc(){
     local dep
     local packages
     local pkgid
-    local hc=$1
+    local hc
+    hc=$1
     shift
     for pkgid in `cabal_depends $@` ; do
         dep=`hashed_dependency ${hc} dev $pkgid`
         if [ -z "$dep" ]
         then
-          pkg=`providing_package_for_ghc ${hc} $pkgid`
+          pkg=`providing_package_for_ghc $hc $pkgid`
           if [ -n "$pkg" ]
           then
               dep=`dependency $pkg`
@@ -292,13 +271,14 @@ depends_for_ghc_prof(){
     local dep
     local packages
     local pkgid
-    local hc=$1
+    local hc
+    hc=$1
     shift
     for pkgid in `cabal_depends $@` ; do
         dep=`hashed_dependency ${hc} prof $pkgid`
         if [ -z "$dep" ]
         then
-          pkg=`providing_package_for_ghc_prof ${hc} $pkgid`
+          pkg=`providing_package_for_ghc_prof $hc $pkgid`
           if [ -n "$pkg" ]
           then
               dep=`dependency $pkg`
@@ -317,19 +297,17 @@ depends_for_ghc_prof(){
 usable_ghc_pkg() {
     local ghcpkg
     local version
-    local hc=$1
-    if [ -x inplace/bin/${hc}-pkg ]
+    if [ -x inplace/bin/ghc-pkg ]
     then
         # We are building ghc and need to use the new ghc-pkg
         ghcpkg="inplace/bin/ghc-pkg"
         version="`dpkg-parsechangelog -S Version`"
     else
-	local hcdeb=
-        ghcpkg="${hc}-pkg"
-        version="`dpkg-query --showformat '${Version}' --show ${hcdeb}`"
+        ghcpkg="ghc-pkg"
+        version="`dpkg-query --showformat '${Version}' --show ghc`"
     fi
     # ghc-pkg prior to version 8 is unusable for our purposes.
-    if dpkg --compare-versions `ghc_version ${hc}` '>=' 8
+    if dpkg --compare-versions "$version" '>=' 8
     then
         echo "${ghcpkg}"
     fi
@@ -337,9 +315,7 @@ usable_ghc_pkg() {
 
 tmp_package_db() {
     local ghcpkg
-    local hc=$1
-    shift
-    ghcpkg="`usable_ghc_pkg ${hc}`"
+    ghcpkg="`usable_ghc_pkg`"
     if [ -n "${ghcpkg}" ]
     then
         if [ ! -f debian/tmp-db/package.cache ]
@@ -353,11 +329,12 @@ tmp_package_db() {
 }
 
 provides_for_ghc(){
+    local hc
     local dep
     local packages
-    local hc=$1
+    hc=$1
     shift
-    ghcpkg="`tmp_package_db ${hc} $@`"
+    ghcpkg="`tmp_package_db $@`"
     for package_id in `cabal_package_ids $@` ; do
         packages="$packages, `package_id_to_virtual_package "${hc}" dev $package_id "${ghcpkg}"`"
     done
@@ -365,11 +342,12 @@ provides_for_ghc(){
 }
 
 provides_for_ghc_prof(){
+    local hc
     local dep
     local packages
-    local hc=$1
+    hc=$1
     shift
-    ghcpkg="`tmp_package_db ${hc} $@`"
+    ghcpkg="`tmp_package_db $@`"
     for package_id in `cabal_package_ids $@` ; do
         packages="$packages, `package_id_to_virtual_package "${hc}" prof $package_id "${ghcpkg}"`"
     done
@@ -377,10 +355,11 @@ provides_for_ghc_prof(){
 }
 
 package_id_to_virtual_package(){
+        local hc
         local type
         local pkgid
         local ghcpkg
-        local hc="$1"
+        hc="$1"
         type="$2"
         pkgid="$3"
         ghcpkg="$4"
@@ -496,7 +475,7 @@ configure_recipe(){
 
 build_recipe(){
     # local PS5=$PS4; PS4=" + build_recipe> "; set -x
-    local hc=`packages_hc`
+    hc=`packages_hc`
     run ${DEB_SETUP_BIN_NAME} build --builddir=dist-${hc}
     # PS4=$PS5
 }
@@ -504,9 +483,7 @@ build_recipe(){
 check_recipe(){
     # local PS5=$PS4; PS4=" + check_recipe> "; set -x
     hc=`packages_hc`
-    version=`ghc_version ${hc}`
-    if dpkg --compare-versions "$version" '>=' 8; then arg=direct; else arg="always"; fi
-    run ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=$arg
+    run ${DEB_SETUP_BIN_NAME} test --builddir=dist-${hc} --show-details=direct
     # PS4=$PS5
 }
 
@@ -514,8 +491,8 @@ haddock_recipe(){
     # local PS5=$PS4; PS4=" + haddock_recipe> "; set -x
     hc=`packages_hc`
     haddock=`hc_haddock ${hc}`
-    if [ -x ${haddock} ] && \
-          ! run ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hc} --with-haddock=${haddock} --with-ghc=${hc} --verbose=2 ${DEB_HADDOCK_OPTS} ; then
+    if [ -x /usr/bin/${haddock} ] && \
+          ! run ${DEB_SETUP_BIN_NAME} haddock --builddir=dist-${hc} --with-haddock=/usr/bin/${haddock} --with-ghc=${hc} --verbose=2 ${DEB_HADDOCK_OPTS} ; then
        echo "Haddock failed (no modules?), refusing to create empty documentation package."
        exit 1
     fi
@@ -524,7 +501,7 @@ haddock_recipe(){
 
 extra_depends_recipe(){
     # local PS5=$PS4; PS4=" + extra_depends_recipe> "; set -x
-    local hc=$1
+    hc=$1
     pkg_config=`${DEB_SETUP_BIN_NAME} register --builddir=dist-${hc} --gen-pkg-config | tr -d ' \n' | sed -r 's,^.*:,,'`
     run dh_haskell_extra_depends ${hc} $pkg_config
     rm $pkg_config
@@ -533,7 +510,7 @@ extra_depends_recipe(){
 
 install_dev_recipe(){
     # local PS5=$PS4; PS4=" + install_dev_recipe> "; set -x
-    local PKG=$1
+    PKG=$1
 
     hc=`package_hc ${PKG}`
     libdir=`package_libdir ${PKG}`
