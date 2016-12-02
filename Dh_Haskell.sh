@@ -53,7 +53,7 @@ package_ext(){
 packages_hc(){
     hcs=`{ for i in ${DEB_PACKAGES}; do package_hc $i; done; } | LC_ALL=C sort -u`
     if [ `echo ${hcs} | wc -w` = 0 ]; then hcs=${DEB_DEFAULT_COMPILER}; fi
-    if [ `echo ${hcs} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hc}"; exit 1; fi
+    if [ `echo ${hcs} | wc -w` != 1 ]; then echo "Multiple compilers not supported: ${hcs}"; exit 1; fi
     echo ${hcs}
 }
 
