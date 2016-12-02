@@ -157,7 +157,7 @@ providing_package_for_ghc(){
     then
         dep=$2
     else
-        dep=`strip-hash $2`
+        dep=`strip_hash $2`
     fi
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
@@ -183,7 +183,7 @@ providing_package_for_ghc_prof(){
     then
         dep=$2
     else
-        dep=`strip-hash $2`
+        dep=`strip_hash $2`
     fi
     dirs=`ghc_pkg_field $hc $dep library-dirs | grep -i ^library-dirs | cut -d':' -f 2`
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
