@@ -235,7 +235,7 @@ hashed_dependency(){
     local hc
     local type
     local pkgid
-    local virpkg
+    local virtual_pkg
     local ghcpkg
     hc=$1
     type=$2
