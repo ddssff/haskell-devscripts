@@ -161,9 +161,8 @@ providing_package_for_ghc(){
     local dir
     local dirs
     local lib
-    local hc
-    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
-    hc=$1
+    local hc=$1
+    local ghcversion=`ghc_version ${hc}`
     if dpkg --compare-versions "${ghcversion}" '>=' 8
     then
         dep=$2
@@ -187,9 +186,8 @@ providing_package_for_ghc_prof(){
     local dir
     local dirs
     local lib
-    local hc
-    local ghcversion=`dpkg-query --showformat '${Version}' --show ghc`
-    hc=$1
+    local hc=$1
+    local ghcversion=`ghc_version ${hc}`
     if dpkg --compare-versions "${ghcversion}" '>=' 8
     then
         dep=$2
@@ -325,7 +323,7 @@ usable_ghc_pkg() {
         version="`dpkg-parsechangelog -S Version`"
     else
         ghcpkg="${hc}-pkg"
-        version="`dpkg-query --showformat '${Version}' --show ${hc}`"
+        version="`ghc_version ${hc}`"
     fi
     # ghc-pkg prior to version 8 is unusable for our purposes.
     if dpkg --compare-versions "$version" '>=' 8
