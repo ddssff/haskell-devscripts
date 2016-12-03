@@ -251,7 +251,7 @@ hashed_dependency(){
     hc=$1
     type=$2
     pkgid=$3
-    ghcpkg="`usable_ghc_pkg`"
+    ghcpkg="`usable_ghc_pkg ${hc}`"
     virtual_pkg=`package_id_to_virtual_package "${hc}" "$type" $pkgid "${ghcpkg}"`
     # As a transition measure, check if dpkg knows about this virtual package
     if dpkg-query -W $virtual_pkg >/dev/null 2>/dev/null;
@@ -317,14 +317,15 @@ depends_for_ghc_prof(){
 usable_ghc_pkg() {
     local ghcpkg
     local version
+    local hc=$1
     if [ -x inplace/bin/ghc-pkg ]
     then
         # We are building ghc and need to use the new ghc-pkg
         ghcpkg="inplace/bin/ghc-pkg"
         version="`dpkg-parsechangelog -S Version`"
     else
-        ghcpkg="ghc-pkg"
-        version="`dpkg-query --showformat '${Version}' --show ghc`"
+        ghcpkg="${hc}-pkg"
+        version="`dpkg-query --showformat '${Version}' --show ${hc}`"
     fi
     # ghc-pkg prior to version 8 is unusable for our purposes.
     if dpkg --compare-versions "$version" '>=' 8
@@ -335,7 +336,9 @@ usable_ghc_pkg() {
 
 tmp_package_db() {
     local ghcpkg
-    ghcpkg="`usable_ghc_pkg`"
+    local hc=$1
+    shift
+    ghcpkg="`usable_ghc_pkg ${hc}`"
     if [ -n "${ghcpkg}" ]
     then
         if [ ! -f debian/tmp-db/package.cache ]
@@ -354,7 +357,7 @@ provides_for_ghc(){
     local packages
     hc=$1
     shift
-    ghcpkg="`tmp_package_db $@`"
+    ghcpkg="`tmp_package_db ${hc} $@`"
     for package_id in `cabal_package_ids $@` ; do
         packages="$packages, `package_id_to_virtual_package "${hc}" dev $package_id "${ghcpkg}"`"
     done
@@ -367,7 +370,7 @@ provides_for_ghc_prof(){
     local packages
     hc=$1
     shift
-    ghcpkg="`tmp_package_db $@`"
+    ghcpkg="`tmp_package_db ${hc} $@`"
     for package_id in `cabal_package_ids $@` ; do
         packages="$packages, `package_id_to_virtual_package "${hc}" prof $package_id "${ghcpkg}"`"
     done
