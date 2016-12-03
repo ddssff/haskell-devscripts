@@ -5,6 +5,11 @@ run () {
   "$@"
 }
 
+file_package(){
+    local path=$1
+    dpkg-query --search "${path}" | cut -d':' -f 1
+}
+
 cpu(){
   ghc -ignore-dot-ghci -e 'putStr System.Info.arch'
 }
@@ -169,7 +174,7 @@ providing_package_for_ghc(){
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries |  sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
         if [ -e "${dir}/lib${lib}.a" ] ; then
-            package=`dpkg-query -S ${dir}/lib${lib}.a | cut -d':' -f 1` || exit $?
+            package=`file_package ${dir}/lib${lib}.a` || exit $?
             continue
         fi
     done
@@ -195,7 +200,7 @@ providing_package_for_ghc_prof(){
     lib=`ghc_pkg_field $hc $dep hs-libraries | grep -i ^hs-libraries | sed -e 's|hs-libraries: *\([^ ]*\).*|\1|' `
     for dir in $dirs ; do
         if [ -e "${dir}/lib${lib}_p.a" ] ; then
-            package=`dpkg-query -S ${dir}/lib${lib}_p.a | cut -d':' -f 1` || exit $?
+            package=`file_package ${dir}/lib${lib}_p.a` || exit $?
             continue
         fi
     done
