@@ -1,3 +1,10 @@
+haskell-devscripts (0.12.1) unstable; urgency=low
+
+  * Changes to use hvr's compiler packages.  0.12.1 includes
+    patches starting at c3cd8fd08297317f7d5f937a7bf393a2f81955d2.
+
+ -- David Fox <dsf@seereason.com>  Sat, 03 Dec 2016 07:59:51 -0800
+
 haskell-devscripts (0.12) unstable; urgency=medium
 
   [ Sean Whitton ]
